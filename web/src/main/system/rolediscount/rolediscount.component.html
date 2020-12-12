@@ -1,0 +1,50 @@
+<x-inner class="au-inner">
+    <div class="au-panel au-tree-left" [x-loading]="treeLoading" style="width: 22rem;"> 
+      <h4>
+        <span>角色折扣</span> 
+      </h4>
+      <x-tree
+        #treeCom
+        au-adaption
+        [outerHeight]="131"
+        [data]="data"
+        expandedLevel="0"
+        [activatedId]="activatedId"
+        [nodeHeight]="1.875"
+        [actions]="treeActions"
+        (activatedChange)="action('info', $event)"
+      >
+      </x-tree>
+    </div>
+    <div class="au-form-right">
+      <au-tool top>
+        <x-buttons [space]="0.5">
+          <x-button
+            icon="fto-save"
+            type="primary"
+            plain
+            (click)="!form.formGroup.invalid && !disabled && action('save', selected)"
+            [disabled]="form.formGroup.invalid || disabled"
+          >
+            保存
+          </x-button>
+        </x-buttons>
+      </au-tool>
+      <x-form
+        class="au-panel au-overflow-auto"
+        au-adaption
+        #form
+        [outerHeight]="86"
+        [disabled]="disabled"
+        [controls]="controls"
+        direction="row"
+        labelSuffix=":"
+        labelWidth="6rem"
+        width="24rem"
+        labelAlign="end"
+        span="20"
+        space="2"
+      ></x-form>
+    </div>
+  </x-inner>
+

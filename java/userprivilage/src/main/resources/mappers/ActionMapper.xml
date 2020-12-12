@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.userprivilage.dao.ActionMapper">
+<resultMap type="com.bjdfzh.userprivilage.entity.Action" id="ActionMap">
+<id column="id" property="id"/>
+<result column="name" property="name" />
+<result column="organizationId" property="organizationId" /> 
+</resultMap>
+
+    <select id="getroles" parameterType="string" resultMap="ActionMap">
+        select  
+				id
+				,name
+				,code
+				,icon
+				,menuId
+				,sort 
+		        from  
+		        t_action
+				 
+    </select> 
+    <select id="getaction" parameterType="string" resultMap="ActionMap">
+       select  
+				id
+				,name
+				,code
+				,icon
+				,menuId
+				,sort 
+		        from  
+		        t_action
+        where  id=#{id} 
+    </select> 
+    <select id="getactionbymenu" parameterType="string" resultMap="ActionMap">
+        select  id
+				,name
+				,code
+				,icon
+				,menuId
+				,sort 
+		        from  
+		        t_action
+        where  menuId=#{menuId} 
+    </select> 
+    <select id="getactionbymenurole" parameterType="string" resultMap="ActionMap">
+        select  id
+				,name
+				,code
+				,icon
+				,menuId
+				,sort 
+		        from  
+		        t_action sa
+		        ,t_role_action sra
+        where sra.actionid=sa.id and  sa.menuId=#{menuId} and sra.roleid=#{roleId} 
+    </select> 
+    <insert id="addaction" parameterType="com.bjdfzh.userprivilage.entity.Action">
+      insert into t_action(
+               id
+				,name
+				,code
+				,icon
+				,menuId
+				,sort
+         ) values
+         (
+                 #{id}
+				,#{name}
+				,#{code}
+				,#{icon}
+				,#{menuId}
+				,#{sort}
+         )
+    </insert>
+    <delete id="deleteaction" parameterType="string">
+      delete from t_action where id=#{Id}
+    </delete>
+    <delete id="deleteactionbymenu" parameterType="string">
+      delete from t_action where menuId=#{menuId}
+    </delete>
+     <insert id="addroleactionmap" parameterType="java.util.ArrayList">
+     insert t_role_action(roleId,actionId)values
+     <foreach collection="list" index="index" separator="," item="item">
+            (#{item.left},#{item.right})
+     </foreach>
+    </insert>
+    <delete id="deleteroleactionmap" parameterType="string">
+      delete from t_role_action where actionid 
+      in ( select id from t_action where menuId=#{menuId} ) and roleid=#{roleId}
+    </delete> 
+     <delete id="deleteroleactionmapbymenu" parameterType="string">
+      delete from t_role_action where actionid 
+      in ( select id from t_action where menuId=#{menuId} )
+    </delete> 
+</mapper>

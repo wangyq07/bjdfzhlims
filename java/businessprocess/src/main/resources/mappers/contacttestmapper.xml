@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.businessprocess.dao.ContactTestProjectMapper">
+<resultMap type="com.bjdfzh.businessprocess.entity.ContactTestProject" id="ContactTestProjectMap"> 
+<id column="id" property="id" />  
+ <result column="sampleid" property="sampleid"/>
+	 <result column="qualificationid" property="qualificationid"  /> 
+	 <result column="price" property="price"  />
+	 <result column="testproject" property="testproject"  />
+	 <result column="methodname" property="methodname"  />
+	 <result column="outsitecustomerid" property="outsitecustomerid"  />
+	 <result column="remark" property="remark"  /> 
+	 <result column="realprice" property="realprice" />
+	 <result column="limitmax" property="limitmax"/>
+	  <result column="limitmin" property="limitmin"/>
+</resultMap>
+
+    <select id="getcontacttestprojects" parameterType="string" resultMap="ContactTestProjectMap">
+       select
+			 t.id 
+			,t.sampleid
+			,t.qualificationid
+			,t.outsitecustomerid
+			,tc.testproject
+			,tm.methodname
+			,tq.price
+			,t.realprice
+			,isextern
+			,limitmax
+			,limitmin
+			from t_test_project t
+			inner join t_qualification tq
+			on tq.id=t.qualificationid
+			inner join t_test_category tc
+			on tc.id=tq.testprojectid
+			left join t_test_method tm
+			on tm.id=tq.methodid
+	 where contactid=#{id} and sampleid=#{sampleid}
+    </select>  
+    <insert id="addcontactprojects" parameterType="java.util.ArrayList">
+        insert into t_test_project
+        ( 
+         id
+		,sampleid
+		,qualificationid
+		,outsitecustomerid
+		,realprice
+		,isextern
+		,testcount
+		,limitmax
+		,limitmin
+		,remark
+       )values
+       <foreach collection="list" index="index" separator="," item="item">
+           (
+		     UUID()
+			,#{item.sampleid}
+			,#{item.qualificationid}
+			,#{item.outsitecustomerid}
+			,#{item.realprice}
+			,#{item.isextern}
+			,#{item.testcount}
+			,#{item.limitmax}
+			,#{item.limitmin}
+			,#{item.remark} 
+			) 
+         </foreach>
+    </insert>
+     <delete id="deleteproject" parameterType="string">
+      delete from t_test_project t where
+		exists
+		(
+		  select 1 from
+			(
+		  select sampleid from t_sample t3
+			where exists
+			(
+		  select projectid from
+			(
+			  select projectid from t_business_project t3
+			  where t3.projectid=#{id} 
+			)t2 
+			where t2.projectid
+			=t3.projectid
+			)
+			) t4
+			where t4.sampleid=t.sampleid
+		)
+     </delete> 
+     <delete id="deleteprojectbysample">delete from t_test_project where  sampleid=#{sampleid}</delete>
+</mapper>

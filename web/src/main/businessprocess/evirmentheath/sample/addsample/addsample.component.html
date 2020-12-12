@@ -1,0 +1,120 @@
+ <x-dialog #dialogqulification width="80%" height="50%" placement="top"   [(visible)]="qvisible"  
+(confirm)="quaconfirm()"
+ > 
+  <app-qualification #selqual [tablespan]=15 [treespan]=5 style="width:100%;height:100%" ></app-qualification>
+</x-dialog>
+<x-dialog #dialogexterqulification width="35%" height="50%"   [(visible)]="qexternvisible"  
+(confirm)="exterquaconfirm()" placement="top"
+ > 
+  <app-qualification #externselqual [tablespan]=10 [treespan]=10 style="width:100%;height:100%" ></app-qualification>
+</x-dialog> 
+<x-inner class="au-inner au-column">
+  <x-row><x-col span=4> 
+      <x-button (click)="action('cancel')" plain size="small" icon="fto-chevron-left">返回</x-button></x-col>
+      <x-col span=4>
+      <x-button icon="fto-save" type="primary" plain size="small" (click)="!formInvalid && action('save')" [disabled]="formInvalid||disabled">
+        保存
+      </x-button> 
+  </x-col><x-col span=16>
+    <div id="displaytag"   style="color: crimson;font-size: 10pt;" >{{invalidstring}}</div></x-col> </x-row>
+   <x-row style="height: 20px;"> 
+  </x-row> 
+      <x-row>
+        <x-col span=8>
+        <x-input #inputsamplename    label="样品名称" [disabled]="disabled" required [(ngModel)]="currentsample.samplename" direction="row"></x-input>
+        </x-col>
+        <x-col span=2>
+         领域
+        </x-col>
+        <x-col span=8> 
+          <x-select [disabled]="domaindisabled||disabled" [data]="domaindata" [(ngModel)]="currentsample.domainid"></x-select>
+        </x-col>
+      </x-row> 
+    <x-row style="height: 20px;"> 
+    </x-row> 
+      <x-row> 
+        <x-col span=8>
+          <x-input #inputsampleprice    label="样品价格" [disabled]="disabled"  required [(ngModel)]="currentsample.price" direction="row"></x-input>
+          </x-col>
+        <!--<x-col span=8>
+          <x-input #inputexternice    label="外包价格" [disabled]="disabled"    [(ngModel)]="currentsample.externprice" direction="row"></x-input>
+        </x-col> -->
+      </x-row>
+      <x-row style="height: 20px;"> 
+      </x-row> 
+      <x-row> 
+      <x-col style="text-align: center;font-weight: bolder;font-size: 12pt;">
+        检测项目信息
+        </x-col>
+    </x-row>
+    <x-row style="height: 20;"></x-row>
+    <x-row>
+       <x-col span=4 > 
+           <x-button    icon="ado-search" plain size="small" type="primary" [disabled]="methodInvalid||disabled"   (click)="!methodInvalid&&projectaction('add')" >
+              添加  
+           </x-button> 
+       </x-col>
+      
+   </x-row>
+      <x-row> 
+        <x-col>
+        <x-table
+            class="x-table.x-pagination"
+            #projecttable
+            [data]="projectdata"
+            [columns]="projectcolumns" 
+            [(index)]="projectindex"
+            [(size)]="projectsize"
+            [total]="projecttotal" 
+            [query]="projectquery" 
+            adaptionHeight="600"
+            [bodyColumnTpl]="{ actions: projectTpl}"
+            virtualScroll
+            loading 
+            >
+          </x-table>
+        </x-col>
+    </x-row> 
+    <x-row>
+      <x-col style="text-align: center;font-weight: bolder;font-size: 12pt;">
+        外包项目信息
+        </x-col>
+    </x-row>
+    <x-row style="height: 20;"></x-row>
+    <x-row>
+       <x-col span=4 > 
+           <x-button     plain size="small" icon="ado-search" type="primary" [disabled]="methodInvalid||disabled"   (click)="!methodInvalid&&externprojectaction('add')" >
+              添加  
+           </x-button> 
+       </x-col> 
+   </x-row>
+      <x-row> 
+        <x-col>
+        <x-table 
+            #projecttable
+            [data]="externprojectdata"
+            [columns]="externprojectcolumns" 
+            [(index)]="externprojectindex"
+            [(size)]="externprojectsize"
+            [total]="externtotal" 
+            [query]="externprojectquery" 
+            adaptionHeight="600"
+            [bodyColumnTpl]="{ actions: exprojectTpl}"
+            virtualScroll
+            loading 
+            >
+          </x-table>
+        </x-col>
+      </x-row>
+     
+    </x-inner> 
+    <ng-template #projectTpl let-column="$column" let-row="$row">
+      <div class="au-table-actions">
+         <x-link [disabled]="formInvalid||disabled" icon="fto-trash-2" (click)="!disabled&&!methodInvalid && projectaction('delete', row)" title="删除"></x-link>
+      </div>
+    </ng-template> 
+    <ng-template #exprojectTpl let-column="$column" let-row="$row">
+      <div class="au-table-actions">
+        <x-link [disabled]="formInvalid||disabled" icon="fto-trash-2" (click)="!disabled&&!methodInvalid && externprojectaction('delete', row)" title="删除"></x-link>
+      </div>
+    </ng-template> 

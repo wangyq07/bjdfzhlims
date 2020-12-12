@@ -1,0 +1,44 @@
+<x-dialog #dialogcustomer  width="30%" height="70%" [(visible)]="visible"   
+[showConfirm]="false" [showCancel]="false">
+    <app-addcustomers #customercomponent style="width:100%;height:100%" (sendmessage)="handlecustomerchange($event)"></app-addcustomers>
+</x-dialog>
+<x-row> 
+<x-col span=3 > 
+  <div id ="buttonpanel" [style.display]="hidebutton">
+    <x-button   icon="fto-plus"    plain [disabled]="!auth['add']" (click)="auth['add'] && action('add')" >
+       新增   
+    </x-button> 
+  </div>
+</x-col>
+<x-col span=4 >
+    <x-input   #searchcustom placeholder="请输入内容" icon="ado-search" (keyup)="searchkeydown()"></x-input>
+</x-col>
+</x-row>
+<x-row>
+ <x-col span=24 #customerd>
+   <x-table
+   #customtable
+   [columns]="columns"
+   [data]="data"
+   [(index)]="index"
+   [(size)]="size"
+   [(query)]="query"
+   [total]="total"
+   [adaptionHeight]="customeradaption"
+   [bodyColumnTpl]="{ actions: actionsTpl }"
+   (activatedRowChange)="customerchange($event)" 
+   (indexChange)="indexChange($event)"
+    (sortChange)="sortChange($event)"
+   virtualScroll
+   loading 
+   >
+ </x-table>
+ </x-col>
+</x-row>
+<ng-template #actionsTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions">
+      <x-link [disabled]="!auth['info']" icon="fto-eye" (click)="auth['info'] && action('info', row)" title="查看"></x-link>
+      <x-link [disabled]="!auth['edit']" icon="fto-edit" (click)="auth['edit'] && action('edit', row)" title="修改"></x-link>
+      <x-link [disabled]="!auth['delete']" icon="fto-trash-2" (click)="auth['delete'] && action('delete', row)" title="删除"></x-link>
+    </div>
+  </ng-template>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.flow.dao.ProjectContactCustomerMapper">
+<resultMap type="com.bjdfzh.flow.entity.ProjectContactCustomer" id="ProjectContactMap">
+<id column="id" property="id"/>
+<result column="contactid" property="contactid" />
+<result column="projectid" property="projectid" /> 
+<result column="customerid" property="customerid" /> 
+</resultMap>  
+ <select id="getitembyid" parameterType="string" resultMap="ProjectContactMap">
+		 select
+			tc.contactid,tc.customerid,tb.projectid
+			from
+			(
+			select
+			 tc.contactid,tc.customerid
+			 from t_contact_customer tc
+			 where tc.customertype=1 and tc.contactid=#{contactid}
+			 LIMIT 0,1
+			 ) tc
+			 inner join 
+			 (
+			 select
+			 tb.contactid,tb.projectid
+			 from t_business_project tb
+			 where tb.contactid=#{contactid}
+			 LIMIT 0,1
+			 ) tb
+			 on tc.contactid=tb.contactid        
+    </select>  
+     
+     
+</mapper>

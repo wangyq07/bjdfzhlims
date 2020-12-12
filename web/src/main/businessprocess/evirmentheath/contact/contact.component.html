@@ -1,0 +1,38 @@
+<x-row>
+    <x-col span=3 > 
+        <x-button   icon="fto-plus" plain  [disabled]="!auth['add']" (click)="auth['add'] && cotactaction('add')" >
+           新增   
+        </x-button> 
+    </x-col>
+    <x-col span=3 > 
+        <x-button   icon="fto-plus"  plain  [disabled]="!auth['add']" (click)="auth['add'] && copaycotactaction()" >
+           复制新增   
+        </x-button> 
+    </x-col>
+</x-row>
+<x-row> 
+    <x-col>
+    <x-table
+        #contacttable
+        [data]="contactdata"
+        [columns]="contactcolumns" 
+        [(index)]="contactindex"
+        [(size)]="contactsize"
+        [total]="contacttotal" 
+        [query]="contactquery"
+        [adaptionHeight]="470"
+        [bodyColumnTpl]="{ actions: contactTpl }"
+        virtualScroll
+        (activatedRowChange)="contactchange($event)" 
+        (indexChange)="contactIndexChange($event)"
+        loading 
+        >
+      </x-table>
+    </x-col>
+</x-row> 
+<ng-template #contactTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions"> 
+      <x-link [disabled]="!auth['delete']" icon="fto-trash-2" (click)="auth['delete'] && cotactaction('delete', row)" title="删除"></x-link>
+      <x-link [disabled]="!auth['submit']" icon="fto-check" type="success" (click)="auth['submit'] && cotactaction('submit', row)" title="提交"></x-link> 
+    </div>
+  </ng-template>

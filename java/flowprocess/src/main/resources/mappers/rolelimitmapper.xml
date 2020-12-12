@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.flow.dao.RoleDiscountMapper">
+<resultMap type="com.bjdfzh.flow.entity.RoleDiscount" id="RoleDiscountMap">
+<id column="id" property="id"/>
+<result column="label" property="label" />
+<result column="pid" property="pid" /> 
+<result column="discount" property="discount" />
+<association property="role" javaType="com.bjdfzh.userprivilage.entity.Role">
+ <id column="roleid" property="id" />
+ <result column="label" property="name"/>
+</association>
+</resultMap>  
+ <select id="getrolediscount" parameterType="string" resultMap="RoleDiscountMap">
+		         SELECT 
+				concat(roleid, domainid) id
+				,tr.name label
+				,trd.domainid pid
+				,trd.roleid
+				,trd.discount
+				FROM  t_role_discount trd
+				inner join t_role tr
+				on tr.id=trd.roleid 
+				UNION
+				SELECT 
+				   ID
+					 ,LABEL
+					 ,null PID
+					 ,null ROLEID
+					 ,1 DISCOUNT
+					 FROM t_role_discount_domaintype
+    </select>  
+     <select id="getrolediscountbyid" parameterType="string" resultMap="RoleDiscountMap">
+		        SELECT 
+				concat(roleid, domainid) id
+				,tr.name label
+				,trd.domainid pid
+				,trd.roleid
+				,trd.discount
+				FROM  t_role_discount trd
+				inner join t_role tr
+				on tr.id=trd.roleid
+				where roleid=#{roleid} and domainid=#{domainid}
+    </select>
+    <insert id="addrolediscount" parameterType="com.bjdfzh.flow.entity.RoleDiscount">
+     insert into t_role_discount(roleid
+							,domainid
+							,discount  
+							)values
+							(#{role.id}
+							,#{pid}
+							,#{discount} 
+							)
+    </insert>
+     <update id="updaterolediscount" parameterType="com.bjdfzh.flow.entity.RoleDiscount">
+      update t_role_discount
+      set discount=#{discount}
+      where roleid=#{role.id} and domainid=#{pid}
+      </update>
+    <delete id="deleteflownode" parameterType="string">
+    delete from t_role_discount  where roleid=#{roleid} and domainid=#{domainid}
+    </delete> 
+</mapper>

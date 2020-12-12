@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.businessprocess.dao.QualificationMapper">
+<resultMap type="com.bjdfzh.businessprocess.entity.Qualification" id="QualificationMap"> 
+<id column="id" property="id"/>
+<result column="testprojectid" property="testprojectid" />
+ <result column="methodid" property="methodid" />
+ <result column="projectsort" property="projectsort" />
+ <result column="testproject" property="testproject" />
+  <result column="methodname" property="methodname" />
+ <result column="methodsort" property="methodsort" />
+  <result column="limitcomment" property="limitcomment" />
+ <result column="price" property="price" />
+ <result column="companyid" property="companyid" /> 
+</resultMap>
+
+    <select id="getqualifications" parameterType="integer" resultMap="QualificationMap">
+        select  
+			t.id,t.companyid,t.testprojectid,t.methodid,t.projectsort,t3.testproject,tm.methodname,t.methodsort,t.limitcomment,t.price
+			from t_qualification t
+			inner join  
+			(
+			select id,testproject from (
+			
+			              select t1.id,t1.level,t1.testproject,
+			
+			              if(find_in_set(pid, @pids) > 0, @pids := concat(@pids, ',', id), 0) as ischild
+			
+			              from (
+			
+			                   select id,pid,level,testproject from t_test_category t   order by pid, id
+			
+			                  ) t1,
+			
+			                  (select @pids := #{id}) t2
+			
+			             ) t3 where ischild != 0 and level=3
+			       union
+				 select id,testproject from t_test_category where level=3 and id = #{id}  
+				)t3
+				on t3.id=t.testprojectid
+				left join t_test_method tm
+				on tm.id=t.methodid
+				where t.companyid=1
+				order by t.projectsort,t.methodsort
+    </select> 
+    <select id="getqualificationsbyids" parameterType="string" resultMap="QualificationMap">
+        select  
+			t.id,t.companyid,t.testprojectid,t.methodid,t.projectsort,t3.testproject,tm.methodname,t.methodsort,t.limitcomment,t.price
+			from t_qualification t
+			inner join  t_test_category t3
+				on t3.id=t.testprojectid
+				left join t_test_method tm
+				on tm.id=t.methodid
+				where t.id in (${ids})
+				order by t.projectsort,t.methodsort
+    </select> 
+    <select id="getqualificationsbycompany" parameterType="integer" resultMap="QualificationMap">
+        select  
+			t.id,t.companyid,t.testprojectid,t.methodid,t.projectsort,t3.testproject,tm.methodname,t.methodsort,t.limitcomment,t.price
+			from t_qualification t
+			inner join  
+			(
+			select id,testproject from (
+			
+			              select t1.id,t1.level,t1.testproject,
+			
+			              if(find_in_set(pid, @pids) > 0, @pids := concat(@pids, ',', id), 0) as ischild
+			
+			              from (
+			
+			                   select id,pid,level,testproject from t_test_category t   order by pid, id
+			
+			                  ) t1,
+			
+			                  (select @pids := #{id}) t2
+			
+			             ) t3 where ischild != 0 and level=3
+			       union
+				 select id,testproject from t_test_category where level=3 and id = #{id}  
+				)t3
+				on t3.id=t.testprojectid
+				left join t_test_method tm
+				on tm.id=t.methodid
+				where t.companyid=#{companyid}
+				order by t.projectsort,t.methodsort
+    </select> 
+    <insert id="addqualification" parameterType="com.bjdfzh.businessprocess.entity.Qualification"
+    useGeneratedKeys="true" keyProperty="id"
+    >
+      insert into t_qualification
+      (
+        testprojectid,
+        companyid,
+        methodid
+        ,price
+       )
+       values(
+       #{testprojectid}
+       ,#{companyid}
+       ,#{methodid}
+       ,#{price}
+       )
+    </insert>
+</mapper>

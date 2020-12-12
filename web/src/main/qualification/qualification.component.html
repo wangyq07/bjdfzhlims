@@ -1,0 +1,64 @@
+<x-dialog [(visible)]="addvisible" #Seldialog width="20%" height="30%" placement="top"
+[showConfirm]="false" [showCancel]="false">  
+<app-addqualificaiton #addqualificaiton style="height:100%;width:100%" (SaveQualification)="SaveQualification($event)"></app-addqualificaiton>
+</x-dialog>
+<x-row>
+  <x-col span=10>
+  <div id="selcompany" style="display:none;">
+    <x-select [data]="companydata" [(ngModel)]="company" label="公司" direction="row"></x-select>
+  </div>
+  </x-col>
+  <x-col span=10>
+  <x-input [(ngModel)]="searchkey" label="搜索" direction="row"></x-input></x-col>
+    <x-col span=4>
+     <x-button title="查询" icon="ado-search" plain style="color:blue" (click)="search()">查询</x-button>
+    </x-col>
+    <x-col span=4>
+      <x-button  icon="ado-plus" plain style="color:blue" (click)="add()">添加项目</x-button>
+     </x-col>
+</x-row>
+<x-row>
+<x-col  [span]="treespan">
+<div style="overflow: scroll;height: 630px;"> 
+<x-tree
+      #treeCom
+      au-adaption
+      [outerHeight]="50"
+      [data]="data" 
+      expandedLevel="0" 
+      [activatedId]="activatedId"
+      [nodeHeight]="1.875" 
+      (activatedChange)="action($event)"  
+    >
+</x-tree>
+</div>
+</x-col>
+<x-col [span]="tablespan">
+  <x-table
+  #qualtable
+  [columns]="tablecolumns" 
+  [data]="tabledata" 
+  [(size)]="tablesize"
+  [total]="tabletotal"
+  [(index)]="tableindex"
+  [query]="tablequery" 
+  [bodyHeight]="420"
+  (indexChange)="indexChange($event)"
+  (sortChange)="sortChange($event)" 
+  [virtualScroll]="true"
+  scrollYWidth="50"
+  loading
+  adaptionHeight="380"
+  (activatedRowChange)="tablerowchange($event)"
+  ></x-table>
+</x-col> 
+<x-col span=4>
+  <div>
+    <x-row *ngFor="let v of selquali">
+      <x-col span=15>{{v.testproject}}</x-col>
+      <x-col span=7><x-input [(ngModel)]="v.testcount"></x-input></x-col>
+      <x-col span=2><x-link  icon="ado-close" title="删除" style="color: red;" (click)="delsel(v)"></x-link></x-col>
+    </x-row>
+  </div> 
+</x-col>
+</x-row>

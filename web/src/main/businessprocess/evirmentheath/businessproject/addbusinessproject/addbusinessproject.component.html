@@ -1,0 +1,83 @@
+ <x-dialog [(visible)]="selvisible" #Seldialog width="50%" height="30%" placement="top"
+ (confirm)="selconfirm()"
+ >
+<app-customer #selcustomer [customeradaption]="customeradaption" [hidebutton]="hidebutton" style="width:100%;height: 100%;"></app-customer>
+ </x-dialog>
+ <x-inner class="au-inner au-column"> 
+    <div id="displaytag" *ngIf="showTableBoolean" style="color: crimson;font-size: 10pt;" >{{invalidinfo}}</div>
+ <x-row>
+  <table>
+    <tr> 
+        <td><x-button [disabled]="disabled||contactdisabled" style="flex:1"  plain icon="fto-plus" size="small"  (click)="!contactdisabled&&!disabled&&addcustomer('delegate')">添加委托客户</x-button></td>
+        <td> <div class="row"><x-tag   [disabled]="disabled||contactdisabled" type="info"  style="flex:1;" *ngFor="let delegate of delegates" closable (close)="!contactdisabled&&!disabled&&tagclose(delegate,'delegate')">{{delegate.customername}}</x-tag></div></td>
+        <td><x-button style="flex:1"  [disabled]="disabled||contactdisabled"  plain icon="fto-plus"  size="small" (click)="!contactdisabled&&!disabled&&addcustomer('pay')">添加付款单位</x-button> </td>
+        <td><x-tag type="info"  [disabled]="disabled||contactdisabled" style="flex:1;" *ngFor="let pay of pays" closable (close)="!contactdisabled&&!disabled&&tagclose(pay,'pay')">{{pay.customername}}</x-tag></td>
+        <td><x-button style="flex:1;"  [disabled]="disabled||contactdisabled"  plain   size="small" icon="fto-plus"  (click)="!contactdisabled&&!disabled&&addcustomer('inspect')">添加受检单位</x-button> </td>
+        <td> <x-tag type="info"  [disabled]="disabled||contactdisabled" style="flex:1;" *ngFor="let inspect of inspects" closable (close)="!contactdisabled&&!disabled&&tagclose(inspect,'inspect')">{{inspect.customername}}</x-tag></td>    
+   </tr>
+</table>
+   
+</x-row>
+<x-row style="height: 20px;"></x-row>
+<x-row>
+  <x-col span="2">样品来源</x-col>
+  <x-col span="7">
+      <x-radio  [disabled]="disabled||contactdisabled" [data]="samplesourcedata" [(ngModel)]="samplesource"></x-radio>
+    </x-col>
+     <x-col span="2">是否判定</x-col>
+    <x-col span=5><x-radio [disabled]="disabled||contactdisabled" [data]="judgedata" [(ngModel)]="currentcontact.isjudgement"></x-radio></x-col> 
+</x-row>
+<x-row style="height: 20px;"></x-row>
+<x-row>
+  <x-col span="2">资质盖章</x-col>
+  <x-col span="7">
+      <x-checkbox [disabled]="disabled||contactdisabled" [data]="sealdata" [(ngModel)]="seal"></x-checkbox>
+    </x-col>
+    <x-col span="2">服务类型</x-col>
+    <x-col span='5'>
+      <x-radio [disabled]="disabled||contactdisabled" [data]="servicetypedata" [(ngModel)]="servicetype"></x-radio>
+    </x-col>
+</x-row> 
+<x-row style="height: 20px;"></x-row>
+<x-row>
+  <x-col span=2 class="x-radio-label">报告形式</x-col> <x-col span=4><x-radio [disabled]="disabled" [data]="multiplereportdata" [(ngModel)]="currentproject.mergereport"></x-radio></x-col>
+  <x-col span=1 class="x-radio-label">采样费</x-col><x-col span=2><x-input [disabled]="disabled||contactdisabled" [(ngModel)]="currentcontact.collectionfee" #invalidcollectionfee></x-input></x-col>
+  <x-col span=1 class="x-radio-label">业务费</x-col><x-col span=2><x-input [disabled]="disabled||contactdisabled" [(ngModel)]="currentcontact.businessfee" #invalidbusinessfee></x-input></x-col> 
+  <x-col span=1 class="x-radio-label">外包费</x-col><x-col span=2><x-input [disabled]="disabled||contactdisabled" [(ngModel)]="currentcontact.externfee" #invalidexternfee></x-input></x-col> 
+  <x-col span=2>报告份数</x-col><x-col span=1><x-input [disabled]="disabled" [(ngModel)]="currentproject.reportcount" #invalidreportcount></x-input></x-col>
+</x-row>
+<x-row style="height: 30px;"></x-row> 
+    <x-row>
+        <app-sample   #sampledata  ></app-sample>
+    </x-row>
+<x-row> 
+<table>
+    <tr>
+  <td style="width: 90%;">  
+   </td>
+  <td style="width: 5%;">
+    
+        <x-button (click)="action('cancel')" plain icon="fto-chevron-left">返回</x-button> 
+  </td>
+  <td style="width: 5%;">
+        <x-button icon="fto-save" type="primary" plain [disabled]="formInvalid||disabled" (click)="!disabled&&!formInvalid && action('save')" >
+          保存
+        </x-button></td> 
+</tr> 
+</table>
+</x-row>    
+</x-inner>
+      
+  <!--
+     
+        <x-button style="flex:1" type="primary" icon="fto-plus"  (click)="addcustomer('pay')">添加付款单位</x-button> 
+    
+  
+      <x-tag style="flex:1;" *ngFor="let pay of pays" closable (close)="tagclose(pay,'pay')">{{pay.customername}}</x-tag>
+  
+   
+        <x-button style="flex:1;" style="flex:1" type="primary" icon="fto-plus"  (click)="addcustomer('inspect')">添加受检单位</x-button> 
+  
+ 
+      <x-tag style="flex:1;" *ngFor="let inspect of inspects" closable (close)="tagclose(inspect,'inspect')">{{inspect.customername}}</x-tag>-->
+    

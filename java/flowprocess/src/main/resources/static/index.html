@@ -1,0 +1,22 @@
+<html>
+<script src="http://cdn.bootcss.com/sockjs-client/1.1.1/sockjs.min.js"></script>  
+<script src="http://cdn.bootcss.com/stomp.js/2.3.3/stomp.js"></script>  
+<script type="text/javascript">
+var socket = new SockJS('/stompwebsocket');
+var stompClient = Stomp.over(socket);
+stompClient.connect({}, function(frame) {
+	stompClient.subscribe('/topic/public.messages', function(txt) {
+		alert(txt);
+	});
+});
+ 
+function send(txt) {
+	console.log(txt);
+	stompClient.send("/app/send.message", {}, txt);
+}
+</script>
+<body>
+<button   οnclick="send(new Date())"  > send</button>
+</body>
+
+</html>

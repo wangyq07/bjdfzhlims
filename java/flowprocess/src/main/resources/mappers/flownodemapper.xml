@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.flow.dao.FlowNodeMapper">
+<resultMap type="com.bjdfzh.flow.entity.TaskNode" id="FlowNodeMap">
+<id column="id" property="id"/>
+<result column="tasknodeid" property="tasknodeid" />
+<result column="flowid" property="flowid" />
+<result column="processkey" property="processkey" />
+<result column="tasknodename" property="label" />
+  <association property="menu" javaType="com.bjdfzh.userprivilage.entity.Menu"> 
+ <id column="menuid" property="id" /> 
+ <result column="mlabel" property="label" /> 
+ <result column="router" property="router"/>
+ </association>
+ <collection property="roles" ofType="com.bjdfzh.userprivilage.entity.Role">
+ <id column="roleid" property="id"/>
+<result column="rolename" property="name" />
+ </collection> 
+</resultMap>
+<select id="getFlowNodes" parameterType="string" resultMap="FlowNodeMap">
+		       select
+		     concat(tf.flowid, tf.id) id
+			,tf.id tasknodeid
+			,tf.name tasknodename
+			,tf.flowid
+			,tf.processkey
+			,tm.id menuid
+			,tm.label mlabel
+			,tm.router
+			,tar.roleid
+			,tr.`name` rolename
+			from t_task_flow tf
+			inner join t_task_role tar
+			on tar.tasknodeid=tf.id
+			and tar.flowid=tf.flowid
+			inner join t_role tr
+			on tr.id=tar.roleid
+			inner join t_menu tm
+			on tm.id=tf.menuid
+			where tf.flowid=#{flowid} 
+    </select>  
+ <select id="getFlowNodeById" parameterType="string" resultMap="FlowNodeMap">
+		       select
+		     concat(tf.flowid, tf.id) id
+			,tf.id tasknodeid
+			,tf.name tasknodename
+			,tf.flowid
+			,tf.processkey
+			,tm.id menuid
+			,tm.label mlabel
+			,tm.router
+			,tar.roleid
+			,tr.`name` rolename
+			from t_task_flow tf
+			inner join t_task_role tar
+			on tar.tasknodeid=tf.id
+			and tar.flowid=tf.flowid
+			inner join t_role tr
+			on tr.id=tar.roleid
+			inner join t_menu tm
+			on tm.id=tf.menuid
+			where tf.flowid=#{flowid} and tf.id=#{id}
+    </select>  
+    <insert id="addflownode" parameterType="com.bjdfzh.flow.entity.TaskNode">
+     insert into t_task_flow(id
+							,name
+							,flowid
+							,processkey
+							,menuid
+							)values
+							(#{tasknodeid}
+							,#{label}
+							,#{flowid}
+							,#{processkey}
+							,#{menu.id}
+							)
+    </insert>
+    <insert id="addflowrole" parameterType="java.util.ArrayList">
+     insert into t_task_role(id,flowid,tasknodeid,roleid)values
+     <foreach collection="list" index="index" separator="," item="item">
+     (UUID(),#{item.flowid},#{item.tasknodeid},#{item.roleid})
+     </foreach>
+    </insert> 
+    <delete id="deleteflownode" parameterType="string">
+    delete from t_task_flow where id=#{id} and flowid=#{flowid}
+    </delete>
+    <delete id="deleteflowrole" parameterType="string">
+    delete from t_task_role where tasknodeid=#{id} and flowid=#{flowid}
+    </delete>
+</mapper>

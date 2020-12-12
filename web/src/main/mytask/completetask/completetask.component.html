@@ -1,0 +1,25 @@
+<x-row>
+    <x-col span=8>
+      <div   class="au-panel au-content" au-adaption [outerHeight]="50"> 
+    <x-table [columns]="columns"
+    [data]="data"
+    [(index)]="index"
+    [(size)]="size"
+    [total]="total" 
+    (indexChange)="indexChange($event)"
+    (sortChange)="sortChange($event)"
+    [virtualScroll]="true"  
+    (activatedRowChange)="activatedRow($event)"
+    [bodyHeight]="750"
+    loading
+    > 
+    </x-table>
+  </div>
+  </x-col>
+  <x-col span=16>  
+    <div id="svg_my" class="au-panel au-content" au-adaption [outerHeight]="50"> 
+    </div>
+</x-col>
+</x-row>
+
+ 

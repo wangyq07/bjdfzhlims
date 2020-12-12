@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.businessprocess.dao.TestProjectMapper">
+<resultMap type="com.bjdfzh.businessprocess.entity.TestProject" id="TestProjectMap">
+<id column="id" property="id"/>
+<result column="testproject" property="label" />
+<result column="pid" property="pid" /> 
+<result column="level" property="level" /> 
+</resultMap>
+
+    <select id="gettestprojects" parameterType="string" resultMap="TestProjectMap">
+        select id,testproject,pid,level from t_test_category 
+    </select>
+   <insert id="addtestProject" 
+               parameterType="com.bjdfzh.businessprocess.entity.TestProject"
+              useGeneratedKeys="true" keyProperty="id">
+     insert into t_test_category( 
+							testproject
+							,pid
+							,level
+							     )
+							    values
+							    (
+							      #{label},#{pid},#{level}
+							    )
+   </insert>
+</mapper>

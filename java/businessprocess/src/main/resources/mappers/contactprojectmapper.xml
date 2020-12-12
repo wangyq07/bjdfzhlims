@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.businessprocess.dao.ContactProjectMapper">
+<resultMap type="com.bjdfzh.businessprocess.entity.ContactProject" id="ContactProjectMap"> 
+<id column="projectid" property="id" /> 
+<result column="contactid" property="contactid"  />  
+<result column="projectnumber" property="projectnumber"  />  
+<result column="reportcount" property="reportcount"  />  
+<result column="projectstatus" property="projectstatus" />
+ <result column="domain" property="domainlabel" />
+ <result column="createdate" property="createdate"/>
+ <association property="domain" javaType="com.bjdfzh.userprivilage.entity.CommonType">
+   <id column="domainid" property="id"/> 
+   <result column="domain" property="label"/>
+ </association>  
+ <collection property="samples" ofType="com.bjdfzh.businessprocess.entity.Sample">
+    <id column="sampleid" property="id"/>
+	<result column="projectctid" property="projectctid" />
+	<result column="samplename" property="samplename" />
+	<result column="samplenumber" property="samplenumber" />  
+	<result column="samplequality" property="samplequality" />
+	<result column="samplespec" property="samplespec" />
+	<result column="samplevolume" property="samplevolume" />
+	<result column="storeid" property="storeid" />
+	<result column="storeother" property="storeother" />
+	<result column="statusid" property="statusid" />
+	<result column="statusother" property="statusother" />
+	<result column="processid" property="processid" />
+	<result column="processother" property="processother" />
+	<result column="sampleuserid" property="sampleuserid" />
+	<result column="sampledate" property="sampledate" />
+	<result column="manufactory" property="manufactory" />
+	<result column="manufactoryaddress" property="manufactoryaddress" />
+	<result column="purty" property="purty" />
+	<result column="brand" property="brand" />
+	<result column="manufactoryphone" property="manufactoryphone" />
+	<result column="manudate" property="manudate" />
+	<result column="manuno" property="manuno" />
+	<result column="remark" property="remark" />
+	<result column="expiredday" property="expiredday" />
+	<result column="price" property="price" />
+	<result column="externprice" property="externprice" /> 
+	<result column="stestproject" property="testproject" /> 
+    <result column="smethodname" property="methodname" />
+    <result column="domainid" property="domainid"/> 
+    <collection  property="testprojects" ofType="com.bjdfzh.businessprocess.entity.ContactTestProject">  
+	     <id column="tpid" property="id" />  
+		 <result column="sampleid" property="sampleid"/>
+		 <result column="qualificationid" property="qualificationid"  /> 
+		 <result column="realprice" property="price"  />
+		 <result column="testproject" property="testproject"  />
+		 <result column="methodname" property="methodname"  />
+		 <result column="outsitecustomerid" property="outsitecustomerid"  />
+		 <result column="remark" property="remark"  /> 
+		 <result column="realprice" property="realprice" />
+		 <result column="testcount" property="testcount"/>
+		 <result column="limitmax" property="limitmax"/>
+		 <result column="limitmin" property="limitmin"/>
+    </collection>
+  </collection> 
+</resultMap>
+    <select id="getcontactprojects" parameterType="string" resultMap="ContactProjectMap">
+    select 
+		contactid
+		,t.projectid
+		,projectnumber 
+		,reportcount 
+		,domainid
+		,t.createdate
+		,tsd.label domain 
+		,projectstatus
+    ,ts.sampleid 
+		,ts.samplename
+		,ts.samplenumber 
+		,ts.samplequality
+		,ts.samplespec
+		,ts.samplevolume
+		,ts.storeid
+		,ts.storeother
+		,ts.statusid
+		,ts.statusother
+		,ts.processid
+		,ts.processother
+		,ts.sampleuserid
+		,ts.sampledate
+		,ts.manufactory
+		,ts.manufactoryaddress
+		,ts.purty
+		,ts.brand
+		,ts.manufactoryphone
+		,ts.manudate
+		,ts.manuno
+		,ts.remark
+		,ts.expiredday
+		,ts.price
+		,ts.externprice
+		,ts.testproject stestproject
+		,ts.methodname smethodname  
+	  ,tp.id tpid  
+		,tp.qualificationid
+		,tp.outsitecustomerid
+		,tp.realprice
+		,tp.isextern tpisextern
+		,tp.limitmax
+		,tp.limitmin
+		,tp.testcount
+	  ,tc.testproject
+	  ,tm.methodname 
+	from t_business_project t 
+	left join t_sample_domain tsd
+	on tsd.id=t.domainid
+	left join (
+	  select
+		ts.sampleid 
+		,ts.projectid
+		,samplename
+		,samplenumber 
+		,samplequality
+		,samplespec
+		,samplevolume
+		,storeid
+		,storeother
+		,statusid
+		,statusother
+		,processid
+		,processother
+		,sampleuserid
+		,sampledate
+		,manufactory
+		,manufactoryaddress
+		,purty
+		,brand
+		,manufactoryphone
+		,manudate
+		,manuno
+		,remark
+		,expiredday
+		,price
+		,tm.testproject
+		,tm.methodname
+		,externprice 
+		 from t_sample ts
+		 left join
+		 (
+		  select
+			 t.sampleid,
+			GROUP_CONCAT(tc.testproject) testproject,
+			GROUP_CONCAT(tm.methodname) methodname
+			from t_test_project t
+			inner join t_qualification tq
+			on tq.id=t.qualificationid
+			inner join t_test_category tc
+			on tc.id=tq.testprojectid
+			left join t_test_method tm
+			on tm.id=tq.methodid
+			group by  t.sampleid
+		 ) tm
+		 on   tm.sampleid=ts.sampleid
+	 ) ts
+	on ts.projectid=t.projectid  
+	left join t_test_project tp
+	on tp.sampleid=ts.sampleid
+	left join t_qualification tqf
+	on tqf.id=tp.qualificationid
+	left join t_test_category tc
+	on tc.id=tqf.testprojectid
+	left join t_test_method tm
+	on tm.id=tqf.methodid
+		 where  contactid=#{contactid} and  t.projectstatus !=-1
+    </select>
+     <select id="getcontactproject" parameterType="string" resultMap="ContactProjectMap">
+    select 
+		contactid
+		,t.projectid
+		,projectnumber 
+		,reportcount 
+		,domainid
+		,t.createdate
+		,tsd.label domain 
+		,projectstatus
+    ,ts.sampleid 
+		,ts.samplename
+		,ts.samplenumber 
+		,ts.samplequality
+		,ts.samplespec
+		,ts.samplevolume
+		,ts.storeid
+		,ts.storeother
+		,ts.statusid
+		,ts.statusother
+		,ts.processid
+		,ts.processother
+		,ts.sampleuserid
+		,ts.sampledate
+		,ts.manufactory
+		,ts.manufactoryaddress
+		,ts.purty
+		,ts.brand
+		,ts.manufactoryphone
+		,ts.manudate
+		,ts.manuno
+		,ts.remark
+		,ts.expiredday
+		,ts.price
+		,ts.externprice
+		,ts.testproject stestproject
+		,ts.methodname smethodname  
+	  ,tp.id tpid  
+		,tp.qualificationid
+		,tp.outsitecustomerid
+		,tp.realprice
+		,tp.isextern tpisextern
+		,tp.limitmax
+		,tp.limitmin
+		,tp.testcount
+	  ,tc.testproject
+	  ,tm.methodname 
+	from t_business_project t 
+	left join t_sample_domain tsd
+	on tsd.id=t.domainid
+	left join (
+	  select
+		ts.sampleid 
+		,ts.projectid
+		,samplename
+		,samplenumber 
+		,samplequality
+		,samplespec
+		,samplevolume
+		,storeid
+		,storeother
+		,statusid
+		,statusother
+		,processid
+		,processother
+		,sampleuserid
+		,sampledate
+		,manufactory
+		,manufactoryaddress
+		,purty
+		,brand
+		,manufactoryphone
+		,manudate
+		,manuno
+		,remark
+		,expiredday
+		,price
+		,tm.testproject
+		,tm.methodname
+		,externprice 
+		 from t_sample ts
+		 left join
+		 (
+		  select
+			 t.sampleid,
+			GROUP_CONCAT(tc.testproject) testproject,
+			GROUP_CONCAT(tm.methodname) methodname
+			from t_test_project t
+			inner join t_qualification tq
+			on tq.id=t.qualificationid
+			inner join t_test_category tc
+			on tc.id=tq.testprojectid
+			left join t_test_method tm
+			on tm.id=tq.methodid
+			group by  t.sampleid
+		 ) tm
+		 on   tm.sampleid=ts.sampleid
+	 ) ts
+	on ts.projectid=t.projectid  
+	left join t_test_project tp
+	on tp.sampleid=ts.sampleid
+	left join t_qualification tqf
+	on tqf.id=tp.qualificationid
+	left join t_test_category tc
+	on tc.id=tqf.testprojectid
+	left join t_test_method tm
+	on tm.id=tqf.methodid
+		 where  t.projectid=#{id} and  t.projectstatus !=-1
+    </select>
+     <insert id="addcontactprojects" parameterType="java.util.ArrayList">
+        insert t_business_project(
+		   contactid
+			,projectid
+			,projectnumber 
+			,reportcount 
+			,domainid 
+			,projectstatus 
+		)values
+		<foreach collection="list" index="index" separator="," item="item">
+		(
+		 #{item.contactid}
+		,#{item.id}
+		,#{item.projectnumber} 
+		,#{item.reportcount} 
+		,#{item.domain.id} 
+		,0 
+		) 
+		 </foreach>
+    </insert>
+    <update id="updatecontactproject" parameterType="com.bjdfzh.businessprocess.entity.ContactProject">
+        update t_business_project 
+        set
+		contactid =#{contactid}
+		,projectnumber=#{projectnumber} 
+		,reportcount=#{reportcount} 
+		,domainid=#{domain.id}  
+		 where projectid=#{id} 
+    </update>
+    <delete id="deletecustomer"  parameterType="string">
+     delete from  t_business_project_customer t where  projectid=#{id}
+    </delete>
+    <delete id="deleteproject"  parameterType="string">
+    delete from  t_business_project t where  projectid=#{id}
+    </delete>
+    <delete id="deletecontacttestbyproject" parameterType="string">
+     delete from t_test_project t where
+		exists
+		(
+		  select 1 from
+			(
+		  select sampleid from t_sample t3
+			where  t3.projectid=#{id}
+			) t4
+			where t4.sampleid=t.sampleid
+		)
+     </delete>
+    <delete id="deletesamplebyproject" parameterType="string">
+     delete from t_sample where projectid=#{id}
+    </delete>
+</mapper>

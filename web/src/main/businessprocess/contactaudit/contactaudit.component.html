@@ -1,0 +1,121 @@
+<x-row>
+  <x-col span=8 style="display: inline;"> 
+    <div   class="au-panel au-content" au-adaption [outerHeight]="50"> 
+      <x-table [columns]="columns"
+      #tablecom
+      [data]="data"
+      [(index)]="index"
+      [(size)]="size"
+      [total]="total" 
+      (indexChange)="indexChange($event)"
+      (sortChange)="sortChange($event)"
+      [virtualScroll]="true" 
+      
+      (activatedRowChange)="activatedRow($event)"
+      [bodyHeight]="750"
+      loading
+      > 
+      </x-table>
+    </div>
+  </x-col>
+  <x-col span=16>
+    <div   class="au-panel au-content" au-adaption [outerHeight]="50"> 
+    <x-row style="height: 20px;"></x-row>
+    <x-row>
+      <x-col span=5><x-button icon="ado-check" style="color: green;" plain type="primary" (click)="acction(1)">提交</x-button></x-col>  
+      </x-row>
+      <x-row style="height: 20px;"></x-row>
+      <x-row>
+        <x-col span=12>委托客户:{{delegatecustomer}}</x-col><x-col span=6>付款客户:{{paycustomer}}</x-col><x-col span=6>受检客户:{{testcustomer}}</x-col>
+      </x-row>
+      <x-row style="height: 20px;"></x-row>
+      <x-row>
+      <x-col span=4>样品来源:{{samplesource}}</x-col>
+      <x-col span=4>是否判定:{{ispanding}}</x-col>
+      <x-col span=4>资质盖章:{{seal}}</x-col>
+      <x-col span=4>服务类型:{{servicetype}}</x-col>
+      </x-row>
+      <x-row style="height: 20;"></x-row>
+      <x-row [hidden]="showprice">  
+              <x-col span=4>总费用:{{totalfee}}</x-col>
+              <x-col span=4>业务费:{{businessfee}}</x-col>
+              <x-col span=4>采样费:{{collectionfee}}</x-col> 
+              <x-col span=4>外包费:{{externfee}}</x-col> 
+      </x-row>
+      <x-row>
+        <x-col span=4>成交价格:{{testfee}}</x-col>
+              <x-col span=4> <x-input label="标准检测费" direction="row" [(ngModel)]="standfee"></x-input></x-col>
+              <x-col span=4>折扣:{{getroundvalue(testfee,standfee)}}</x-col> 
+      </x-row>
+      <x-row style="height: 20px;"></x-row>
+      <x-row >
+       <x-col span=24> 
+         
+      <table id="sampledata" style="height: 100%;width: 100%;" border="1">
+        <thead>
+          <td  style="  width:10%; text-align: center;">项目</td>
+          <td  style=" width:5%; text-align: center;">报告</td>
+          <td  style=" width:10%; text-align: center;">领域</td>
+          <td  style=" width:10%; text-align: center;">样品</td>
+          <td [style.display]="showtablecel"   style="width:5%;text-align: center;">检测费</td>
+          <td  style=" width:10%; text-align: center">项目</td>
+          <td  style="width:40%;  text-align: center">方法</td>
+          <td  style=" width:5%; text-align: center">外包</td>
+          <td  style=" width:5%; text-align: center">次数</td>
+        </thead>
+        <tr *ngFor="let project of projects">
+          <td   style=" width:10%; text-align: center;">{{project.projectnumber}}</td> 
+          <td style="width:5%;  text-align: center;">{{project.reportcount}}</td>
+          <td style=" width:10%; text-align: center;">{{project.domain.label}}</td>
+          <td   [style.display]="showtablecel"  style="width: 10%; text-align: center">
+            <ng-container *ngFor="let sample of project.samples;">
+            {{sample.samplename}}<br>
+            </ng-container>
+          </td> 
+          <td   [style.display]="showtablecel"  style="width: 5%; text-align: center">
+            <ng-container *ngFor="let sample of project.samples;">
+            {{sample.price}}<br>
+            </ng-container>
+          </td>
+           <td  style=" width:10%; text-align: center">
+            <ng-container *ngFor="let sample of project.samples;"> 
+            <ng-container *ngFor="let t of sample.testprojects;">
+            {{t.testproject}}<br>
+          </ng-container> 
+          </ng-container>
+          </td>
+          <td  style=" width:40%; text-align: center">
+            <ng-container *ngFor="let sample of project.samples;"> 
+            <ng-container *ngFor="let f of sample.testprojects;">
+            {{f.methodname}}<br>
+          </ng-container> 
+        </ng-container>
+          </td>
+          <td  style="width:5%;  text-align: center">
+            <ng-container *ngFor="let sample of project.samples;"> 
+              <ng-container *ngFor="let d of sample.testprojects;">
+            {{d.isextern}}<br>
+          </ng-container> 
+        </ng-container>
+          </td>
+          <td  style=" width:5%; text-align: center">
+            <ng-container *ngFor="let sample of project.samples;"> 
+              <ng-container *ngFor="let e of sample.testprojects;">
+            {{e.testcount}}<br>
+          </ng-container> 
+          </ng-container>
+          </td>
+        </tr> 
+      </table>
+        
+       </x-col>
+      </x-row>
+    </div>
+
+  </x-col>
+</x-row>
+
+  
+
+  
+  

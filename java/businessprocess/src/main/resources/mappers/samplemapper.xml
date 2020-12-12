@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.businessprocess.dao.SampleMapper">
+<resultMap type="com.bjdfzh.businessprocess.entity.Sample" id="SampleMap">
+<id column="id" property="id"/>
+	<result column="projectctid" property="projectctid" />
+	<result column="samplename" property="samplename" />
+	<result column="samplenumber" property="samplenumber" />
+	<result column="testtypeid" property="testtypeid" />
+	<result column="testothertype" property="testothertype" />
+	<result column="samplesourceid" property="samplesourceid" />
+	<result column="samplequality" property="samplequality" />
+	<result column="samplespec" property="samplespec" />
+	<result column="samplevolume" property="samplevolume" />
+	<result column="storeid" property="storeid" />
+	<result column="storeother" property="storeother" />
+	<result column="statusid" property="statusid" />
+	<result column="statusother" property="statusother" />
+	<result column="processid" property="processid" />
+	<result column="processother" property="processother" />
+	<result column="sampleuserid" property="sampleuserid" />
+	<result column="sampledate" property="sampledate" />
+	<result column="manufactory" property="manufactory" />
+	<result column="manufactoryaddress" property="manufactoryaddress" />
+	<result column="purty" property="purty" />
+	<result column="brand" property="brand" />
+	<result column="manufactoryphone" property="manufactoryphone" />
+	<result column="manudate" property="manudate" />
+	<result column="manuno" property="manuno" />
+	<result column="remark" property="remark" />
+	<result column="expiredday" property="expiredday" />
+	<result column="price" property="price" />
+	<result column="externprice" property="externprice" /> 
+</resultMap>
+
+    <select id="getsamples" parameterType="string" resultMap="SampleMap">
+       select
+		ts.sampleid id
+		,ts.projectid
+		,samplename
+		,samplenumber
+		,testtypeid
+		,testothertype
+		,samplesourceid
+		,samplequality
+		,samplespec
+		,samplevolume
+		,storeid
+		,storeother
+		,statusid
+		,statusother
+		,processid
+		,processother
+		,sampleuserid
+		,sampledate
+		,manufactory
+		,manufactoryaddress
+		,purty
+		,brand
+		,manufactoryphone
+		,manudate
+		,manuno
+		,remark
+		,expiredday
+		,price
+		,tm.testproject
+		,tm.methodname
+		,externprice 
+		 from t_sample ts
+		 left join
+		 (
+		  select
+			t.contactid,t.sampleid,
+			GROUP_CONCAT(tc.testproject) testproject,
+			GROUP_CONCAT(tm.methodname) methodname
+			from t_test_project t
+			inner join t_qualification tq
+			on tq.id=t.qualificationid
+			inner join t_test_category tc
+			on tc.id=tq.testprojectid
+			left join t_test_method tm
+			on tm.id=tq.methodid
+			group by t.contactid,t.sampleid
+		 ) tm
+		 on tm.contactid=ts.contactid
+		 and tm.sampleid=ts.sampleid
+		  where ts.contactid=#{id}
+    </select> 
+    <select id="getsample" parameterType="string" resultMap="SampleMap">
+       select
+		ts.sampleid id
+		,ts.projectid
+		,samplename
+		,samplenumber
+		,testtypeid
+		,testothertype
+		,samplesourceid
+		,samplequality
+		,samplespec
+		,samplevolume
+		,storeid
+		,storeother
+		,statusid
+		,statusother
+		,processid
+		,processother
+		,sampleuserid
+		,sampledate
+		,manufactory
+		,manufactoryaddress
+		,purty
+		,brand
+		,manufactoryphone
+		,manudate
+		,manuno
+		,remark
+		,expiredday
+		,price ,price
+		,tm.testproject
+		,tm.methodname
+		 from t_sample ts
+		 left join
+		 (
+		  select
+			t.contactid,t.sampleid,
+			GROUP_CONCAT(tc.testproject) testproject,
+			GROUP_CONCAT(tm.methodname) methodname
+			from t_test_project t
+			inner join t_qualification tq
+			on tq.id=t.qualificationid
+			inner join t_test_category tc
+			on tc.id=tq.testprojectid
+			left join t_test_method tm
+			on tm.id=tq.methodid
+			group by t.contactid,t.sampleid
+		 ) tm
+		 on tm.contactid=ts.contactid
+		 and tm.sampleid=ts.sampleid
+		  where ts.sampleid=#{id}
+    </select> 
+      <insert id="addsample" parameterType="com.bjdfzh.businessprocess.entity.Sample" >
+     insert into t_sample(
+        sampleid  
+		,projectid
+		,samplename
+		,samplenumber 
+		,samplequality
+		,samplespec
+		,samplevolume
+		,storeid
+		,storeother
+		,statusid
+		,statusother
+		,processid
+		,processother
+		,sampleuserid
+		,sampledate
+		,manufactory
+		,manufactoryaddress
+		,purty
+		,brand
+		,manufactoryphone
+		,manudate
+		,manuno
+		,remark
+		,expiredday
+		,price 
+		 )values(
+		#{id}
+		,#{projectid}
+		,#{samplename}
+		,#{samplenumber} 
+		,#{samplequality}
+		,#{samplespec}
+		,#{samplevolume}
+		,#{storeid}
+		,#{storeother}
+		,#{statusid}
+		,#{statusother}
+		,#{processid}
+		,#{processother}
+		,#{sampleuserid}
+		,#{sampledate}
+		,#{manufactory}
+		,#{manufactoryaddress}
+		,#{purty}
+		,#{brand}
+		,#{manufactoryphone}
+		,#{manudate}
+		,#{manuno}
+		,#{remark}
+		,#{expiredday}
+		,#{price}
+		 
+		)
+     </insert>
+     <update id="updatesample" parameterType="com.bjdfzh.businessprocess.entity.Sample">
+			  update t_sample set
+			  projectid=#{contactid}
+			,samplename=#{samplename}
+			,samplenumber=#{samplenumber} 
+			,samplequality=#{samplequality}
+			,samplespec=#{samplespec}
+			,samplevolume=#{samplevolume}
+			,storeid=#{storeid}
+			,storeother=#{storeother}
+			,statusid=#{statusid}
+			,statusother=#{statusother}
+			,processid=#{processid}
+			,processother=#{processother}
+			,sampleuserid=#{sampleuserid}
+			,sampledate=#{sampledate}
+			,manufactory=#{manufactory}
+			,manufactoryaddress=#{manufactoryaddress}
+			,purty=#{purty}
+			,brand=#{brand}
+			,manufactoryphone=#{manufactoryphone}
+			,manudate=#{manudate}
+			,manuno=#{manuno}
+			,remark=#{remark}
+			,expiredday=#{expiredday}
+			,price=#{price} 
+			where sampleid=#{id}
+     </update>
+      <insert id="addsamples" parameterType="java.util.ArrayList">
+     insert t_sample(
+         sampleid  
+		,projectid
+		,samplename
+		,samplenumber 
+		,samplequality
+		,samplespec
+		,samplevolume
+		,storeid
+		,storeother
+		,statusid
+		,statusother
+		,processid
+		,processother
+		,sampleuserid
+		,sampledate
+		,manufactory
+		,manufactoryaddress
+		,purty
+		,brand
+		,manufactoryphone
+		,manudate
+		,manuno
+		,remark
+		,expiredday
+		,price
+		 )values
+     <foreach collection="list"   index="index" separator="," item="item">
+        (
+         #{item.id}  
+		,#{item.projectid}
+		,#{item.samplename}
+		,#{item.samplenumber} 
+		,#{item.samplequality}
+		,#{item.samplespec}
+		,#{item.samplevolume}
+		,#{item.storeid}
+		,#{item.storeother}
+		,#{item.statusid}
+		,#{item.statusother}
+		,#{item.processid}
+		,#{item.processother}
+		,#{item.sampleuserid}
+		,#{item.sampledate}
+		,#{item.manufactory}
+		,#{item.manufactoryaddress}
+		,#{item.purty}
+		,#{item.brand}
+		,#{item.manufactoryphone}
+		,#{item.manudate}
+		,#{item.manuno}
+		,#{item.remark}
+		,#{item.expiredday}
+		,#{item.price} 
+        )  
+     </foreach>
+    </insert> 
+      <delete id="deletesample"  parameterType="string">
+       delete from t_sample where sampleid=#{id}
+     </delete>
+</mapper>

@@ -1,0 +1,262 @@
+<div class="au-panel au-content" au-adaption [outerHeight]="97">
+  <div class="row"><table style="height:100%;width:100%"><tr><td align="right">
+    <x-button style="align-items: flex-end;" type="primary" (click)="print('report')">新增</x-button>
+    <x-button style="align-items: flex-end;" type="primary" (click)="print('report')">保存</x-button>
+      <x-button style="align-items: flex-end;" type="primary" (click)="print('report')">打印</x-button>
+    </td></tr></table></div>
+  <div   class="row print" id="report">
+   
+     <table style="height: 100%;width: 100%;" >
+    <tr align="right" height=5%>
+        <td colspan="6"  style="align-content: center;">
+            <table  border="1" cellspacing="0" sytle="width:100%">
+                <tr>
+                    <td>业务项目编号:</td>
+                    <td>
+                    <input type="text" id="prpject" value="" style="border-width: 0;">
+                    </td></tr></table></td>
+    </tr>
+    <tr height=5%><td><input type="text" value="EAAC-GL-"  style="border-width: 0;"/></td><td colspan="5" style="font-size: 20;font-weight: bold;font-family:微软雅黑;">环 境 委 托 检 验 协 议 书</td></tr>
+    <tr height=85%>
+      <td colspan="6">
+  <table border="1" cellspacing="0"  style="width: 100%;height: 100%;"> 
+      <tr height=20px>  
+  <td colspan="6">
+  <table style="height:100%;width: 100%;">
+      <tr>
+      <td style="font-size: 9pt;width: 100px;">委托单位名称:</td>
+      <td colspan="5" (click)="weituoclick('customer')"  id="weituo" style="cursor: pointer;" tag=null>  
+      </td>
+  </tr></table>
+</td>
+</tr>
+<tr style="height: 20px;">  
+  <td colspan="6" style="font-size: 9pt;">
+  <table style="height:100%;width: 100%;">
+      <tr>
+      <td style="font-size: 9pt;width: 100px;">委托单位地址:</td>
+      <td colspan="5" id="weituoaddr">  
+      </td>
+  </tr></table>
+  </td>
+  </tr>
+  <tr style="height: 20px;" ><td colspan="6" style="font-size: 9pt;">
+    <table style="width: 100%;height:100%">
+        <tr>
+        <td style="font-size: 9pt;width: 100px;">付款单位名称:</td>
+        <td colspan="5"  id="fukuan">  
+        </td>
+    </tr></table>
+</td></tr>
+<tr style="height: 20px;">
+    <td colspan="6">
+    <table style="width: 100%;height:100%">
+        <tr style="font-size: 9pt;">
+            <td width=10%>联系人: </td><td id="contact" width=7%></td>
+            <td width=10%>电话(Tel):</td><td id="telphone" width=10%></td>
+            <td width=13%>传真(Fax):</td><td id="fax" width=10%></td>
+            <td width=10%>邮编:</td><td id="youbian" width=7%></td>
+            <td width=13%>电邮(E-mail):</td><td id="email" width=10%></td>
+            </tr>
+    </table>
+    </td>
+        </tr>
+        <tr height=20px ><td colspan="6" style="font-size: 9pt;">
+          <table style="height:100%;width: 100%;">
+              <tr>
+              <td style="font-size: 9pt;width: 100px;">受检单位名称:</td>
+              <td colspan="5" id="shoujian">    
+              </td>
+          </tr></table>
+      </td></tr>
+      <tr  height=20px><td colspan="6" style="font-size: 9pt;">
+          <table style="height:100%;width: 100%;">
+              <tr>
+              <td style="font-size: 9pt;width: 100px;">受检单位地址:</td>
+              <td colspan="5"  id="shoujianaddr" ></td>    
+          </tr></table>
+      </td></tr> 
+      
+          <tr  style="font-size:9pt;height:80px">
+           <td style="text-align: center;" width=10%>样品(业务项目)<br>名称</td>
+           <td width=40%><input type="text" style="border-width: 0; width:100%;height:100%"  id="hetongmingcheng" /></td>
+           <td width=10% style="text-align: center;">监测(检测)<br>类别</td>
+           <td width=44%>
+            <table id="jianceleibie"></table>
+           </td>
+          </tr>
+          <tr style="font-size:9pt">
+              <td style="text-align: center;" width=12%>样品(业务项目)<br>来源</td>
+              <td width=38%><input type="text" style="border-width: 0; width:100%;height:100%"  id="hetongmingcheng" /></td>
+              <td width=12% style="text-align: center;">样品规格/数量<br>(体积)</td>
+              <td width=38%>
+                <input type="text" style="width:100%;height:100%;border-width: 0;" id="yangpintiji" />
+              </td>
+             </tr>
+             <tr style="font-size:9pt">
+              <td style="text-align: center;" width=12%>保存条件</td>
+              <td colspan="3" width=88%><table id="baocuntiaojian" style="height:100%;width:100%"></table>
+              </td>
+             </tr>
+             <tr style="font-size:9pt">
+              <td style="text-align: center;" width=12%>样品状态</td>
+              <td width=38%><table id="yangpinstatus" style="height:100%;width:100%"></table>
+                  <td width=12% style="text-align: center;">样品处理</td>
+                  <td width=38%>
+                    <table id="yangpinchuli" style="height:100%;width: 100%;"></table>
+              </td>
+             </tr>
+             <tr style="font-size:9pt;height:60px">
+              <td style="text-align: center;" width=12%>监测(检测)<br>用途</td>
+              <td width=88% colspan="3">
+                  <table id="jianceyongtu" style="height:100%;width:100%"></table>
+              </td>
+             </tr>
+             <tr style="font-size:9pt;height:60px">
+              <td style="text-align: center;" width=12%>监测(检测)<br>项目</td>
+              <td width=88% colspan="3">
+                  <table id="jiancexiangmu" style="height:100%;width:100%"></table>
+              </td>
+             </tr>
+             <tr style="font-size:9pt">
+              <td style="text-align: center;" width=12%>监测(检测)<br>依据</td>
+              <td width=88% colspan="3">
+                  <table id="jianceyiju" style="height:100%;width:100%"></table>
+              </td>
+             </tr>
+             <tr style="font-size:9pt">
+              <td style="text-align: center;" width=12%>是否分包</td>
+              <td width=38%>
+                  <table  style="height:100%;width: 100%;font-size:9pt">
+                      <tr id="fenbao">
+                          <td>
+                  <input type="checkbox" (click)="ch_click('fenbao','fenbaois')" id="fenbaois"  >是
+                          </td>
+                  <td>
+                  <input type="checkbox" (click)="ch_click('fenbao','fenbaono')" id="fenbaono"   >否
+              </td>
+          </tr>
+          </table>
+              </td>
+              <td width=12% style="text-align: center;">是否判定</td>
+              <td width=38%>
+                  <table  style="height:100%;width: 100%;font-size:9pt">
+                      <tr id="panding">
+                          <td>
+                  <input (click)="ch_click('panding','pandingis')" type="checkbox" id="pandingis"  >是
+              </td>
+              <td>
+                  <input type="checkbox" (click)="ch_click('panding','pandingno')" id="pandingno"  >否
+              </td>
+              </tr>
+              </table>
+              </td>
+             </tr>
+             <tr style="font-size:9pt">
+              <td style="text-align: center;" width=12%>判定标准 
+                </td>
+              <td width=38%><input type="text" style="border-width: 0; width:100%;height:100%"  id="pandingbiaozhun" /></td>
+              <td width=12% style="text-align: center;">执行等级</td>
+              <td width=38%>
+                <input type="text" style="width:100%;height:100%;border-width: 0;" id="zhixingdengji" />
+              </td>
+             </tr>
+             <tr style="font-size:9pt">
+              <td style="text-align: center;" width=12%>资质盖章</td>
+              <td colspan=3 width=88%>
+                  <table id="zizhigaizhang" style="height:100%;width:100%"></table> 
+              </td>
+             </tr>
+             <tr style="font-size:9pt;height:40px">
+              <td style="text-align: center;" width=12%>服务类型</td>
+              <td colspan=3 width=88%>
+                  <table id="fuwuleixing" style="height:100%;width:100%"></table> 
+              </td>
+             </tr>
+             <tr style="font-size:9pt">
+              <td style="text-align: center;" width=12%>报告形式</td>
+              <td width=40%>
+                  <table id="baogaoxingshi" style="height:100%;width:100%"></table> 
+              </td>
+              <td width=8% style="text-align: center;">报告份数</td>
+              <td width=44%>
+                 一式<input type="text" id="baogaofenshu" style="border-width: 0; width:25px" />份(2份以上每份报告加收<input type="text" id="baogaofenshu" style="border-width:0;width:25px" />元)
+              </td>
+             </tr>
+             <tr style="font-size:9pt">
+              <td style="text-align: center;" width=12%>报告交付方式</td>
+              <td width=38%> 
+                  <table id="baogaojiaofufangshi" style="height:100%;width:100%"></table> 
+              </td>
+              <td width=12% style="text-align: center;">交付日期</td>
+              <td width=38% id="jiaofuriqi">
+                <x-row id="setdate">
+                    <x-col span="6">
+                      <x-date-picker clearable="false" id="seldate"></x-date-picker>
+                    </x-col>
+                  </x-row>
+              </td>
+             </tr>
+             <tr style="font-size:9pt">
+              <td style="text-align: center;" width=12%>报告邮寄地址</td>
+              <td colspan="3" width=88%><input type="text" style="border-width: 0; width:100%;height:100%"  id="hetongmingcheng" />
+              </td> 
+             </tr>
+             <tr style="font-size:9pt">
+              <td style="text-align: center;" width=12%>监测(检测)费</td>
+              <td width=38%><input type="text" style="border-width: 0; width:100%;height:100%"  id="jiancefei" /></td>
+              <td width=12% style="text-align: center;">加急费</td>
+              <td width=38%>
+                <input type="text" style="width:100%;height:100%;border-width: 0;" id="jiajifei" />
+              </td>
+             </tr>
+             <tr style="font-size:9pt;font-weight: bolder;">
+              <td style="text-align: center;" width=8%>委托单位声明</td>
+              <td colspan="3" width=88%> 
+              对样品及相关资料的真实性负责，并同意背面双方约定条款，委托单正面，背面及相应附件的内容均属委<br>托单位组成部分，委托单位签字表明已看过并理解委托单背面双方约定条款，双方同意履行。
+              </td>
+             </tr>
+             <tr style="font-size:9pt;height: 40px;">
+              <td style="text-align: center;" width=12%>备注</td>
+              <td colspan="3" width=88%><input type="text" style="border-width: 0; width:100%;height:100%"  id="beizhu" /></td>
+               
+             </tr>
+             <tr style="font-size:9pt;height:120px">
+              <td  colspan="2"  width=50% style="vertical-align: text-top;">
+                  <br>委托单位盖章:<br><br><br>代理人签字:<br>日期:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日
+              </td>
+              <td width=50% colspan="2"> 
+                  <br>检测单位:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;检测单位盖章<br><br>业务人员签字:<br>日期:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日
+              </td>
+             </tr> 
+    </table></td>
+</tr> 
+    <tr height=5%>
+        <td colspan="6">
+            <table style="width: 100%;height: 100%;">
+                <tr>
+                    <td colspan="6" style="font-size: 9pt;">
+                    单位名称：<label id="danweimingcheng"></label>
+                     
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="font-size: 9pt;">
+                    开 户 行：<label id="kaihuhang"></label>
+                    </td>
+                    <td colspan="2" style="font-size: 9pt;">账  号：<label id="zhanghao"></label></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="font-size: 9pt;">
+                    通讯地址(邮政编码)：<label id="tongxundizhiyoubian"></label>
+                    </td>
+                    <td colspan="2" style="font-size: 9pt;">
+                    联系电话：<label id="dianhua"></label>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table> 
+</div>
+</div>

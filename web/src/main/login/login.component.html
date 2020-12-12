@@ -1,0 +1,25 @@
+<form (submit)="login()" [formGroup]="userForm">
+  <ul>
+    <li class="login">
+      <img class="logo" src="assets/img/logo/topLogo.png" />
+      <span>北京东方纵横产品检测</span>
+    </li>
+    <li>
+      <x-input formControlName="account" icon="ado-user" iconLayout="left"></x-input>
+    </li>
+    <li>
+      <x-input formControlName="password" icon="ado-lock" type="password" iconLayout="left" (keyup)="presskey($event)"></x-input>
+    </li>
+    <li class="submit">
+      <x-button type="primary" (click)="login()" [loading]="loading">登 录</x-button>
+    </li>
+    <!--<li class="submit">
+      <x-button type="primary" (click)="send()" [loading]="loading">send</x-button>
+    </li>
+    <li>
+     <div id="svgin"> 
+       <svg id="svg_my" style="border:1px solid #000;width:200px;height:200px" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    </li>-->
+  </ul>
+</form><!---->

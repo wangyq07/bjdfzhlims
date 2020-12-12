@@ -1,0 +1,51 @@
+<x-row>
+<x-col span=7>
+<x-input label="姓名" direction="row" [(ngModel)]="auth.user.name"></x-input>
+</x-col>
+</x-row>
+<x-row style="height: 20px;"></x-row>
+<x-row>
+    <x-col span=7>
+    <x-input disabled="true" label="密码" type="password" direction="row" [ngModel]="auth.user.password"></x-input>
+    </x-col>
+    <x-col span=2><x-link icon="fto-edit" style="color: blue;" (click)="modifypassword='inline'"></x-link></x-col>
+</x-row>
+<x-row style="height: 20px;"></x-row>
+<div [style.display]="modifypassword">
+    <x-row>
+        <x-col span=7>
+        <x-input   label="原始密码" [(ngModel)]="orignalpass"   type="password" direction="row"></x-input>
+        </x-col> 
+    </x-row>
+    <x-row style="height: 20px;"></x-row>
+    <x-row>
+        <x-col span=7>
+        <x-input [(ngModel)]="newpas"  label="新密码" type="password" direction="row"></x-input>
+        </x-col> 
+    </x-row>
+    <x-row style="height: 20px;"></x-row>
+    <x-row>
+        <x-col span=7>
+        <x-input   [(ngModel)]="repeatpas"  label="确认密码" type="password" direction="row"></x-input>
+        </x-col> 
+    </x-row>
+    <x-row style="height: 20px;"></x-row>
+    <x-row>
+        <x-col span=3>
+        <x-button plain type="info" (click)="editconfirm()">修改</x-button>
+        </x-col> 
+        <x-col span=3>
+            <x-button plain type="info" (click)="modifypassword='none'">取消</x-button>
+            </x-col> 
+    </x-row>
+</div>
+<x-row>
+    <x-col span=3>
+        <x-button plain icon='fto-save' type="info" (click)="save()">保存</x-button>
+        </x-col> 
+        <x-col span=3>
+            <x-button plain type="info" (click)="back()">返回</x-button>
+            </x-col> 
+</x-row>
+ 
+     

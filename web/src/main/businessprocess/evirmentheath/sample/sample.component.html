@@ -1,0 +1,41 @@
+<x-dialog #dialogsample  width="50%" height="60%" placement="top" [(visible)]="samplevisible"   
+[showConfirm]="false" [showCancel]="false">
+    <app-addsample #samplecomponent [currentsample]="currentsample" [domaindisabled]="domaindisabled" style="width:100%;height:100%;" (sendaddsample)="handlesamplechange($event)"></app-addsample>
+</x-dialog>  
+<x-row>
+    <x-col span=2 > 
+        <x-button   icon="fto-plus" plain size="small" type="primary" [disabled]=" disabled" (click)=" !disabled&& sampleaction('add')" >
+           新增
+        </x-button> 
+    </x-col>
+    <x-col span=2 > 
+      <x-button   icon="fto-plus" plain size="small" type="primary" [disabled]=" disabled" (click)=" !disabled&& sampleaction('copyadd')" >
+         复制新增
+      </x-button> 
+  </x-col>
+</x-row>
+<x-row> 
+    <x-col>
+    <x-table
+        #sampletable
+        [data]="sampledata"
+        [columns]="samplecolumns" 
+        [(index)]="sampleindex"
+        [(size)]="samplesize"
+        [total]="sampletotal" 
+        adaptionHeight="520"
+        [bodyColumnTpl]="{ actions: sampleTpl }"
+        (activatedRowChange)="activechange($event)" 
+        virtualScroll
+        loading 
+        >
+      </x-table>
+    </x-col>
+</x-row>
+<ng-template #sampleTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions">
+      <x-link   icon="fto-eye" (click)="sampleaction('info', row)" title="查看"></x-link>
+      <x-link [disabled]="disabled" icon="fto-edit" (click)="!disabled && sampleaction('edit', row)" title="修改"></x-link>
+      <x-link [disabled]="disabled" icon="fto-trash-2" (click)="!disabled&& sampleaction('delete', row)" title="删除"></x-link>
+    </div>
+  </ng-template> 

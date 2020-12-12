@@ -1,0 +1,30 @@
+    <x-row>
+      <x-col span=8>
+        <div   class="au-panel au-content" au-adaption [outerHeight]="50"> 
+      <x-table [columns]="columns"
+      [data]="data"
+      [(index)]="index"
+      [(size)]="size"
+      [total]="total" 
+      (indexChange)="indexChange($event)"
+      (sortChange)="sortChange($event)"
+      [virtualScroll]="true" 
+      [bodyColumnTpl]="{ actions: actionsTpl }"
+      (activatedRowChange)="activatedRow($event)"
+      [bodyHeight]="750"
+      loading
+      > 
+      </x-table>
+    </div>
+    </x-col>
+    <x-col span=16>  
+      <div id="svg_my" class="au-panel au-content" au-adaption [outerHeight]="50"> 
+      </div>
+  </x-col>
+  </x-row>
+ 
+<ng-template #actionsTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions">
+      <x-link [disabled]="!auth['info']" icon="fto-eye" style="color:green;" (click)="auth['info'] && action('info', row)" title="提交"></x-link> 
+    </div>
+  </ng-template>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.userprivilage.dao.RoleMapper">
+<resultMap type="com.bjdfzh.userprivilage.entity.Role" id="RoleMap">
+<id column="id" property="id"/>
+<result column="name" property="name" />
+<result column="organizationId" property="organizationId" /> 
+</resultMap>
+
+    <select id="getroles" parameterType="string" resultMap="RoleMap">
+        select  
+				sm.id,  
+				sm.name,
+				sm.organizationId
+        from  
+        t_role sm
+				 
+    </select> 
+    <select id="getrole" parameterType="string" resultMap="RoleMap">
+       select  
+				sm.id,  
+				sm.name,
+				sm.organizationId 
+        from  
+        t_role sm
+        where sm.id=#{id}
+				 
+    </select> 
+    <select id="getrolebyorg" parameterType="string" resultMap="RoleMap">
+       select  
+				sm.id,  
+				sm.name,
+				sm.organizationId 
+        from  
+        t_role sm
+        where sm.organizationId=#{orgId}
+				 
+    </select> 
+    <insert id="addrole" parameterType="com.bjdfzh.userprivilage.entity.Role">
+     insert into t_role(id,name,organizationId)values
+     (
+       #{id},#{name},#{organizationId}
+     )
+    </insert>
+    <update id="updaterole" parameterType="com.bjdfzh.userprivilage.entity.Role">
+    update t_role
+    set name=#{name},organizationId=#{organizationId}
+    where id=#{id}
+    </update>
+    <delete id="deleterole" parameterType="string">
+    delete from t_role where id=#{id}
+    </delete>
+    <delete id="deleteroleaction" parameterType="string">
+    delete from t_role_action where roleid=#{id}
+    </delete>
+     <delete id="deleteroleuser" parameterType="string">
+    delete from t_user_role where roleid=#{id}
+    </delete>
+</mapper>

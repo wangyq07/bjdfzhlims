@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.userprivilage.dao.UserMapper">
+<resultMap type="com.bjdfzh.userprivilage.entity.User" id="UserMap">
+<id column="uid" property="id"/>
+<result column="account" property="account" />
+<result column="password" property="password" />
+<result column="email" property="email" />
+<result column="phone" property="phone" />
+<result column="uname" property="name" /> 
+</resultMap>
+
+    <select id="getUserById" parameterType="string" resultMap="UserMap">
+        select su.id uid,
+				su.account,
+				su.password,
+				su.email,
+				su.phone,
+				su.name uname 
+        from t_user su 
+	    where   su.id=#{id} 
+    </select> 
+    <select id="getallUser" parameterType="string" resultMap="UserMap">
+        select su.id uid,
+				su.account,
+				su.password,
+				su.email,
+				su.phone,
+				su.name uname 
+        from t_user su  
+    </select> 
+    <select id="getuserbyorgnization" parameterType="string" resultMap="UserMap">
+        select su.id uid,
+				su.account,
+				su.password,
+				su.email,
+				su.phone,
+				su.name uname 
+        from t_user su,
+				t_user_organization suo  
+				where   suo.userId=su.id  
+					  and suo.organizationId=#{orgId}
+    </select> 
+    <insert id="addUser" parameterType="com.bjdfzh.userprivilage.entity.User" >
+     insert into t_user(id,account,password,email,phone,name)values(#{id},#{account},#{password},#{email},#{phone},#{name})
+     </insert>
+     <update id="update" parameterType="com.bjdfzh.userprivilage.entity.User">
+      update t_user
+       set  account=#{account},
+		    password=#{password},
+			email=#{email},
+			phone=#{phone},
+			name=#{name}
+	    where id=#{id}
+     </update>
+     <delete id="detete" parameterType="string">
+     delete from t_user where id=#{id}
+     </delete>
+</mapper>

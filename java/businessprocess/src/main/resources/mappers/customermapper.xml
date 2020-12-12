@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.businessprocess.dao.CustomerMapper">
+<resultMap type="com.bjdfzh.businessprocess.entity.Customer" id="CustomerMap">
+<id column="id" property="id"/>
+<result column="customername" property="customername" />
+<result column="customeraddress" property="customeraddress" /> 
+<result column="contacter" property="contacter" />
+<result column="phone" property="phone" />
+<result column="fax" property="fax" />
+<result column="postcode" property="postcode" />
+<result column="email" property="email" />
+<result column="remark" property="remark" />
+<result column="area" property="area" />
+<result column="userid" property="userid" />
+ <association property="customertype" 
+   javaType="com.bjdfzh.businessprocess.entity.CustomerType">
+   <id column="customertypeid" property="id"/> 
+   <result column="customertype" property="customertype"/>
+ </association>
+</resultMap>
+
+    <select id="getcustomers" parameterType="string" resultMap="CustomerMap">
+       select
+		tc.id
+		,userid
+		,customername
+		,customeraddress
+		,customertypeid
+		,customertype
+		,contacter
+		,phone
+		,fax
+		,postcode
+		,email
+		,remark
+		,area
+		 from t_customer tc
+		 inner join t_customer_type ty
+		 on ty.id=tc.customertypeid
+		 where userid=#{userid}
+    </select> 
+    <select id="getcustomer" parameterType="string" resultMap="CustomerMap">
+       select
+		tc.id
+		,customername
+		,customeraddress
+		,customertypeid
+		,customertype
+		,contacter
+		,phone
+		,fax
+		,postcode
+		,email
+		,remark
+		,area
+		 from t_customer tc
+		 inner join t_customer_type ty
+		 on ty.id=tc.customertypeid
+		 where tc.id=#{id}
+    </select> 
+    <update id="updatecustomer" parameterType="com.bjdfzh.businessprocess.entity.Customer">
+	    update t_customer
+	        set
+	        customername=#{customername}
+			,customeraddress=#{customeraddress}
+			,customertypeid=#{customertype.id}
+			,contacter=#{contacter}
+			,phone=#{phone}
+			,fax=#{fax}
+			,postcode=#{postcode}
+			,email=#{email}
+			,remark=#{remark}
+			,area=#{area}
+			where id=#{id}
+    </update>
+      <insert id="addCustomer" parameterType="com.bjdfzh.businessprocess.entity.Customer" useGeneratedKeys="true" keyProperty="id">
+
+     insert into t_customer(
+        customername
+		,customeraddress
+		,customertypeid 
+		,contacter
+		,phone
+		,fax
+		,postcode
+		,email
+		,remark
+		,area
+		,userid
+		)values(
+		#{customername}
+		,#{customeraddress}
+		,#{customertype.id}
+		,#{contacter}
+		,#{phone}
+		,#{fax}
+		,#{postcode}
+		,#{email}
+		,#{remark}
+		,#{area}
+		,#{userid}
+		)
+     </insert>
+     <delete id="deletecustomer" parameterType="string">
+     delete from t_customer where id=#{id}
+     </delete>
+</mapper>

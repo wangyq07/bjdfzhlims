@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.businessprocess.dao.ContactMapper">
+<resultMap type="com.bjdfzh.businessprocess.entity.Contact" id="ContactMap">  
+<id column="contactnumber" property="id" />  
+<result column="userid" property="userid"/>
+<result column="signdate" property="signdate"  />
+<result column="isjudgement" property="isjudgement" />
+<result column="externfee" property="externfee" />
+<result column="collectionfee" property="collectionfee" />
+<result column="businessfee" property="businessfee" />
+<result column="totalfee" property="totalfee"/>
+<result column="discount" property="discount" />
+<result column="projectmaxcount" property="projectmaxcount"/>
+<result column="testfee" property="testfee" />
+<result column="servicetype" property="ugency"/>
+<result column="standardfee" property="standardfee" />
+ <association javaType="com.bjdfzh.userprivilage.entity.CommonType" property="samplesource">
+ <id column="samplesouceid" property="id"/> 
+ <result column="samplesource" property="label" />
+ <result column="sourcecode" property="code" />
+ </association>
+ <association javaType="com.bjdfzh.userprivilage.entity.CommonType" property="service">
+ <id column="serviceid" property="id"/> 
+ <result column="servicetype" property="label" />
+ </association>
+ <collection property="seal" ofType="com.bjdfzh.userprivilage.entity.CommonType">
+ <id column="sealid" property="id"  />
+ <result column="sealname" property="label" />
+ </collection>
+  <collection property="contactcustomers" ofType="com.bjdfzh.businessprocess.entity.ContactCustomer">
+ <id column="cuid" property="id" />
+ <result column="contactnumber" property="contactid"/>
+ <result column="customerid" property="customerid" />
+ <result column="customername" property="customername" />
+ <result column="area" property="area" /> 
+ <result column="customertype" property="customertype" />
+ </collection>  
+</resultMap> 
+    <select id="getcontactbycustomer"  resultMap="ContactMap">
+       select 
+    contactnumber  
+	 ,DATE_FORMAT(signdate, '%Y-%c-%d' ) signdate
+	 ,userid
+	  ,tcu.id cuid
+	 ,tcu.customerid
+	 ,tcu.area
+	 ,tcu.customertype
+	 ,tcu.customername
+	 ,tinfo.serviceid
+	 ,tservice.servicetype
+	 ,tinfo.samplesouceid
+	 ,tsour.samplesource
+	 ,tsour.sourcecode
+	 ,tcs.sealid
+	 ,tqs.sealname
+	 ,tinfo.isjudgement
+	 ,tinfo.businessfee
+	 ,tinfo.collectionfee
+	 ,tinfo.externfee
+	 ,ifnull(tinfo.businessfee,0)+ifnull(tinfo.collectionfee,0)
+	  +ifnull(tp.reportfee,0)+ifnull(tp.testfee,0)+ifnull(tinfo.externfee,0) totalfee
+		,tp.testfee
+		,ifnull(tinfo.standardfee,tp.standardfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		                when 3 then 1.5 end) standardfee
+		,round(tp.testfee/nullif(ifnull(tinfo.standardfee,tp.standardfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		                when 3 then 1.5 end),0),2) discount
+	 from t_contact t
+	 inner join 
+	 (
+	   select
+	    t.id,t.contactid
+         ,t.customerid
+		 ,t.customertype
+		 ,tcu.area
+		 ,tcu.customername
+	   from t_contact_customer t
+		 inner join t_customer tcu
+		 on tcu.id=t.customerid
+		  where t.customerid=#{customerid}
+	 ) tcu
+	 on tcu.contactid=t.contactnumber
+	 left join t_contact_info tinfo
+	 on t.contactnumber=tinfo.contactid
+	 left join t_contact_seal tcs
+	 on tcs.contactid=t.contactnumber
+	 left join t_qualification_seal tqs
+	 on tqs.id=tcs.sealid
+	 left join t_sample_source tsour
+	 on tsour.id=tinfo.samplesouceid 
+	 left join t_service_type tservice
+	 on tservice.id=tinfo.serviceid 
+	 left join 
+	 (
+	    select 
+			t.contactid
+			,sum((t.reportcount-2)*50) reportfee
+			,sum(ts.price) testfee
+			,sum(tp.realprice) standardfee 
+			from t_business_project t
+			left join t_sample ts
+			on ts.projectid=t.projectid
+			left join 
+			(
+			select 
+		    tp.sampleid,sum(tp.realprice) realprice
+		   from 
+			t_test_project tp
+			group by tp.sampleid
+			)tp
+			on tp.sampleid=ts.sampleid
+			group by t.contactid
+	 ) tp
+	 on tp.contactid=t.contactnumber
+    </select>
+    <select id="getcontactbyid" parameterType="string" resultMap="ContactMap">
+    select 
+    contactnumber  
+	 ,DATE_FORMAT(signdate, '%Y-%c-%d' ) signdate
+	 ,userid
+	  ,tcu.id cuid
+	 ,tcu.customerid
+	 ,tcu.area
+	 ,tcu.customertype
+	 ,tcu.customername
+	 ,tinfo.serviceid
+	 ,tservice.servicetype
+	 ,tinfo.samplesouceid
+	 ,tsour.samplesource
+	 ,tsour.sourcecode
+	 ,tcs.sealid
+	 ,tqs.sealname
+	 ,tinfo.isjudgement
+	 ,tinfo.businessfee
+	 ,tinfo.collectionfee
+	 ,tinfo.externfee
+	 ,ifnull(tinfo.businessfee,0)+ifnull(tinfo.collectionfee,0)
+	  +ifnull(tp.reportfee,0)+ifnull(tp.testfee,0)+ifnull(tinfo.externfee,0) totalfee
+		,tp.testfee
+		,ifnull(tinfo.standardfee,tp.standardfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		                when 3 then 1.5 end) standardfee
+		,round(tp.testfee/nullif(ifnull(tinfo.standardfee,tp.standardfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		                when 3 then 1.5 end),0),2) discount
+	 from t_contact t
+	 inner join 
+	 (
+	   select
+	    t.id,t.contactid
+         ,t.customerid
+		 ,t.customertype
+		 ,tcu.area
+		 ,tcu.customername
+	   from t_contact_customer t
+		 inner join t_customer tcu
+		 on tcu.id=t.customerid 
+	 ) tcu
+	 on tcu.contactid=t.contactnumber
+	 left join t_contact_info tinfo
+	 on t.contactnumber=tinfo.contactid
+	 left join t_contact_seal tcs
+	 on tcs.contactid=t.contactnumber
+	 left join t_qualification_seal tqs
+	 on tqs.id=tcs.sealid
+	 left join t_sample_source tsour
+	 on tsour.id=tinfo.samplesouceid 
+	 left join t_service_type tservice
+	 on tservice.id=tinfo.serviceid 
+	 left join 
+	 (
+	    select 
+			t.contactid
+			,sum((t.reportcount-2)*50) reportfee
+			,sum(ts.price) testfee
+			,sum(tp.realprice) standardfee 
+			from t_business_project t
+			left join t_sample ts
+			on ts.projectid=t.projectid
+			left join 
+			(
+			select 
+		    tp.sampleid,sum(tp.realprice) realprice
+		   from 
+			t_test_project tp
+			group by tp.sampleid
+			)tp
+			on tp.sampleid=ts.sampleid
+			group by t.contactid
+	 ) tp
+	 on tp.contactid=t.contactnumber
+	 where contactnumber=#{id}
+    </select>  
+    <insert id="addcontact" parameterType="com.bjdfzh.businessprocess.entity.Contact" >
+     insert into t_contact(
+           contactnumber 
+           ,userid
+		 ,signdate
+		  )values(
+		#{id} 
+		,#{userid}
+		,#{signdate}
+		)
+     </insert> 
+     <insert id="addtempcustomer" parameterType="com.bjdfzh.businessprocess.entity.Contact">
+      insert into t_contact_customer(id,contactid,customerid)values(UUID(),#{id} ,#{customerid})  
+     </insert>
+     <insert id="addcustomers" parameterType="java.util.ArrayList">
+        insert into t_contact_customer
+        ( 
+         id,contactid,customerid,customertype
+       )values
+       <foreach collection="list" index="index" separator="," item="item">
+           (
+		     UUID()
+			,#{item.contactid}
+			,#{item.customerid}
+			,#{item.customertype} 
+			) 
+         </foreach>
+    </insert>
+    <insert id="addseals" parameterType="java.util.ArrayList">
+        insert into t_contact_seal
+        ( 
+         id,contactid,sealid
+       )values
+       <foreach collection="list" index="index" separator="," item="item">
+           (
+		     UUID()
+			,#{item.contactid} 
+			,#{item.sealid} 
+			) 
+         </foreach>
+    </insert>
+    <update id="updateprpjectnumbers" parameterType="list">
+            update t_business_project
+            <trim prefix="set" suffixOverrides=",">
+             <trim prefix="projectnumber =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when projectid=#{i.id} then #{i.projectnumber}
+                         </if>
+                 </foreach>
+              </trim>
+             <trim prefix=" projectstatus =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when projectid=#{i.id} then #{i.projectstatus}
+                         </if>
+                 </foreach>
+              </trim> 
+             </trim>
+            where
+            <foreach collection="list" separator="or" item="i" index="index" >
+              projectid=#{i.id}
+          </foreach>
+</update>
+     <update id="updatecontact" parameterType="com.bjdfzh.businessprocess.entity.Contact">
+		 update t_contact set 
+		 signdate=#{signdate} 
+		where contactnumber=#{id}
+     </update>
+     <update id="updatecontactstandardfee" parameterType="com.bjdfzh.businessprocess.entity.Contact">
+		 update t_contact_info set 
+		 standardfee=#{standardfee} 
+		where contactid=#{id}
+     </update>
+     <delete id="deletecontact"  parameterType="string">
+     delete from t_contact where contactnumber=#{id}
+     </delete>
+     <delete id="deletecontactcustomer" parameterType="string">
+      delete  from t_contact_customer t where 
+		   t.contactid=#{id} and t.customertype is not null
+     </delete>
+     <delete id="deletecontactseal" parameterType="string">
+      delete  from t_contact_seal t where 
+		   t.contactid=#{id} 
+     </delete>
+       <delete id="deletecontactinfo" parameterType="string">
+           delete  from t_contact_info t where 
+		   t.contactid=#{id}  
+     </delete>
+     <insert id="addcontactinfo" parameterType="com.bjdfzh.businessprocess.entity.Contact">
+      insert into t_contact_info(
+        contactid
+		,businessfee
+		,collectionfee
+		,serviceid
+		,samplesouceid
+		,isjudgement
+		,judgementstandard
+		,excutegrade
+		,externfee 
+        )values
+        (
+          #{id}
+		, #{businessfee}
+		, #{collectionfee}
+		, #{service.id}
+		, #{samplesource.id}
+		, #{isjudgement}
+		, #{judgementstandard}
+		, #{excutegrade}
+		, #{externfee} 
+        )
+     </insert>
+     <delete id="deletecontacttestproject" parameterType="string">
+       delete from t_test_project t where
+		exists
+		(
+		  select 1 from
+			(
+		  select sampleid from t_sample t3
+			where exists
+			(
+		  select projectid from
+			(
+			  select projectid from t_business_project t3
+			  where t3.contactid=#{id} 
+			)t2 
+			where t2.projectid
+			=t3.projectid
+			)
+			) t4
+			where t4.sampleid=t.sampleid
+		)
+     </delete>
+     <delete id="deletesamplebycontact" parameterType="string">
+       delete from t_sample t where
+				exists
+				(
+				  select 1 from
+					(
+					  select projectid from t_business_project t3
+						where t3.contactid=#{id}
+					)t2 
+					where t2.projectid
+					=t.projectid
+				) 
+     </delete>
+     <delete id="deletecontactproject" parameterType="string">
+     delete from t_business_project tp
+				where tp.contactid=#{id}
+     </delete>
+     
+</mapper>

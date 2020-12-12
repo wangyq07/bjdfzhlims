@@ -1,0 +1,25 @@
+ <x-row>
+     <x-col span=5>
+     <x-input label="最大值" direction="row" [(ngModel)]="limitmax"></x-input></x-col>
+     <x-col span=5>
+     <x-input label="最小值" direction="row" [(ngModel)]="limitmin"></x-input></x-col>
+ </x-row>
+ <x-row>
+ <x-table  [columns]="columns"
+ #tablecom
+ [data]="data"
+ [(index)]="index"
+ [(size)]="size"
+ [total]="total" 
+ (indexChange)="indexChange($event)"
+ (sortChange)="sortChange($event)"
+ [virtualScroll]="true"  
+ (activatedRowChange)="activatedRow($event)"
+ [adaptionHeight]="224"
+ loading
+ > 
+ </x-table>
+</x-row>
+
+
+ 

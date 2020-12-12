@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.flow.dao.FlowNodeMapper">
+<resultMap type="com.bjdfzh.flow.entity.FlowNode" id="FlowNodeMap">
+<id column="tasknodeid" property="id"/>
+<result column="tasknodename" property="label" />
+<result column="router" property="router" />
+<result column="remark" property="remark" />
+ <association property="role" javaType="com.bjdfzh.flow.entity.FlowRole">
+ <id column="id" property="id" />
+ <result column="roleid" property="roleid" />
+ <result column="rolename" property="label" />
+ <result column="tasknodeid" property="tasknodeid" />
+ </association>
+</resultMap>
+
+    <select id="getFlowNodes" parameterType="string" resultMap="FlowNodeMap">
+        select
+			t.tasknodeid
+			,t.tasknodename
+			,t.router
+			,t.remark
+			,ttr.id
+			,ttr.roleid
+			 ,tr.name rolename 
+			from t_task_node t
+			left join t_task_role ttr
+			on t.tasknodeid=ttr.tasknodeid
+			 left join t_role tr
+			on tr.id=ttr.roleid  
+    </select> 
+    <select id="getFlowNodeById" parameterType="string" resultMap="FlowNodeMap">
+       select
+			t.tasknodeid
+			,t.tasknodename
+			,t.router
+			,t.remark
+			,ttr.id
+			,ttr.roleid
+			 ,tr.name rolename 
+			from t_task_node t
+			left join t_task_role ttr
+			on t.tasknodeid=ttr.tasknodeid
+			 left join t_role tr
+			on tr.id=ttr.roleid 
+	    where   t.tasknodeid=#{id} 
+    </select> 
+    <insert id="addflownode" parameterType="com.bjdfzh.flow.entity.FlowNode">
+     insert into t_task_node(tasknodeid,tasknodename,router)values(#{id},#{label},#{router})
+    </insert>
+    <insert id="addflowrole" parameterType="com.bjdfzh.flow.entity.FlowNode">
+     insert into t_task_role(id,tasknodeid,roleid)values(UUID(),#{id},#{role.roleid})
+    </insert>
+    <update id="updateflownode" parameterType="com.bjdfzh.flow.entity.FlowNode">
+    update t_task_node set tasknodename=#{label},router=#{router} where tasknodeid=#{id}
+    </update>
+    <delete id="deleteflownode" parameterType="string">
+    delete from t_task_node where tasknodeid=#{id}
+    </delete>
+    <delete id="deleteflowrole" parameterType="string">
+    delete from t_task_role where tasknodeid=#{id}
+    </delete>
+</mapper>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.businessprocess.dao.QualificationCompanyMapper">
+<resultMap type="com.bjdfzh.businessprocess.entity.QualificationCompany" id="QualificationCompanyMap"> 
+<id column="id" property="id"/>
+<result column="label" property="label" />  
+</resultMap> 
+ <select id="getqualificationcompanys" parameterType="integer" resultMap="QualificationCompanyMap">
+    select id,companyname label from t_qualification_company where isexternal=1 
+ </select> 
+ <select id="getallqualificationcompanys" parameterType="integer" resultMap="QualificationCompanyMap">
+    select id,companyname label from t_qualification_company 
+ </select>  
+</mapper>

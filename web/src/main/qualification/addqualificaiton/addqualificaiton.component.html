@@ -1,0 +1,31 @@
+<x-row>
+    <x-col span=20>
+      <x-select [data]="firstseldata" [(ngModel)]="firstsel" label="资质"></x-select>
+    </x-col>
+  </x-row>
+  <x-row>
+    <x-col span=20>
+  <x-select [data]="categorydata" [(ngModel)]="categorysel" label="类别"></x-select>
+    </x-col>
+  </x-row>
+  <x-row>
+    <x-col span=20>
+        <x-input label="项目名称" [(ngModel)]="projectname" required="true"></x-input>
+    </x-col>
+  </x-row>
+  <x-row>
+    <x-col span=20>
+  <x-input label="方法名称" [(ngModel)]="methodname"  required="true"></x-input>
+    </x-col>
+  </x-row>
+  <x-row>
+    <x-col span=15>
+      <x-input label="报价" [(ngModel)]="price" required="true"></x-input>
+    </x-col>
+  </x-row>
+  <x-row justify="center">
+      <x-col span=20>
+      <x-button [disabled]="disabled" icon="fto-save" type="primary" plain (click)="!disabled&&savedata()">保存</x-button>
+      </x-col>
+  </x-row>
+  

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.userprivilage.dao.MenuMapper">
+<resultMap type="com.bjdfzh.userprivilage.entity.Menu" id="MenuMap">
+<id column="mid" property="id"/>
+<result column="micon" property="icon" />
+<result column="label" property="label" />
+<result column="spid" property="pid" />
+<result column="spath" property="path" />
+<result column="srouter" property="router" />
+<result column="msort" property="sort" />
+</resultMap>
+
+    <select id="getmenus" parameterType="string" resultMap="MenuMap">
+        select  
+				sm.id mid,
+				sm.icon micon,
+				sm.label label,
+				sm.parentId spid,
+				sm.path spath,
+				sm.router srouter,
+				sm.sort msort
+        from  
+        t_menu sm
+				 
+    </select> 
+    <select id="getmenu" parameterType="string" resultMap="MenuMap">
+        select  
+				sm.id mid,
+				sm.icon micon,
+				sm.label label,
+				sm.parentId spid,
+				sm.path spath,
+				sm.router srouter,
+				sm.sort msort
+        from  
+        t_menu sm
+        where sm.id=#{id}
+				 
+    </select> 
+    <update id="updatemenu" parameterType="com.bjdfzh.userprivilage.entity.Menu">
+     update t_menu 
+      set  label=#{label},
+        router=#{router},
+        icon=#{icon},
+        path=#{path},
+        sort=#{sort}
+        where id=#{id} 
+    </update>
+    <delete id="deletemenu" parameterType="string">
+       delete from t_menu where id=#{id}
+    </delete>
+    <insert id="addmenu" parameterType="com.bjdfzh.userprivilage.entity.Menu">
+     insert into t_menu(id,label,router,icon,path,sort,parentId)values
+     (#{id},#{label},#{router},#{icon},#{path},#{sort},#{pid})
+    </insert>
+</mapper>

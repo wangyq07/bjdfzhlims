@@ -1,0 +1,12 @@
+server:
+  port:
+    8001
+spring:
+  devtools:
+    restart:
+      enable:
+         true
+      additional-paths:
+         src/main/java 
+   
+  

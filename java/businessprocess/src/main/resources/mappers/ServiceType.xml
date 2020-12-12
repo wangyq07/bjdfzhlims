@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.businessprocess.dao.CommonTypeMapper">
+<resultMap type="com.bjdfzh.businessprocess.entity.ServiceType" id="ServiceTypeMap"> 
+<id column="id" property="id"/>
+<result column="servicetype" property="label" />
+<result column ="ugencytime"  property="discount" />
+<result column="remark" property="remark" />
+</resultMap>   
+ <select id="getservicetype" resultMap="ServiceTypeMap">
+ select id,servicetype,ugencytime,remark from t_service_type
+ </select>
+</mapper>

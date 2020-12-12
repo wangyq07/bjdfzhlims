@@ -1,0 +1,93 @@
+<div style="overflow: auto;"> 
+<x-row>
+    <x-button icon="ado-check" type="primary" plain>提交</x-button>
+</x-row>
+<x-row> 
+   
+ <table boder=1>
+    <thead>
+      <td style="text-align: center;">项目名称</td>
+      <td style="text-align: center;">领域</td>
+      <td style="text-align: center;">样品名称</td>
+      <td style="text-align: center;">样品状态</td>
+      <td style="text-align: center;">储存状态</td>
+      <td style="text-align: center;">样品类别</td>
+      <td style="text-align: center;">规格</td>
+      <td style="text-align: center;">商标</td>
+      <td style="text-align: center;">保存条件</td>
+      <td style="text-align: center;">产品执行标准</td>
+      <td style="text-align: center;">样品包装及性状</td>
+      <td style="text-align: center;">样品等级</td>
+      <td style="text-align: center;">样品数量</td>
+    </thead>
+    <tbody style="overflow:visible;">
+      <tr *ngFor="let project of projects">
+        <td style="text-align: center;">
+         {{project.projectnumber}}
+        </td>
+        <td style="text-align: center;">
+            {{project.domain?.label}}
+           </td>
+           <td style="text-align: center;">
+               <ng-container *ngFor="let sample of project.samples;">
+                  {{sample.samplename}}<br>
+               </ng-container>
+           </td>
+           <td style="text-align: center;">
+            <ng-container *ngFor="let sample of project.samples;">
+               {{sample.samplename}}<br>
+            </ng-container>
+        </td>
+        <td style="text-align: center;">
+            <ng-container *ngFor="let sample of project.samples;">
+               {{sample.samplename}}<br>
+            </ng-container>
+        </td>
+        <td style="text-align: center;">
+            <ng-container *ngFor="let sample of project.samples;">
+               {{sample.samplename}}<br>
+            </ng-container>
+        </td>
+        <td style="text-align: center;">
+            <ng-container *ngFor="let sample of project.samples;">
+               {{sample.samplespec}}<br>
+            </ng-container>
+        </td>
+        <td style="text-align: center;">
+            <ng-container *ngFor="let sample of project.samples;">
+               {{sample.samplename}}<br>
+            </ng-container>
+        </td>
+        <td style="text-align: center;">
+         <ng-container *ngFor="let sample of project.samples;">
+            {{sample.samplename}}<br>
+         </ng-container>
+     </td>
+     <td style="text-align: center;">
+         <ng-container *ngFor="let sample of project.samples;">
+            {{sample.samplename}}<br>
+         </ng-container>
+     </td>
+     <td style="text-align: center;">
+         <ng-container *ngFor="let sample of project.samples;">
+            {{sample.samplename}}<br>
+         </ng-container>
+     </td>
+     <td style="text-align: center;">
+         <ng-container *ngFor="let sample of project.samples;">
+            {{sample.samplename}}<br>
+         </ng-container>
+     </td>
+     <td style="text-align: center;">
+        <ng-container *ngFor="let sample of project.samples;">
+           {{sample.samplequality}}<br>
+        </ng-container>
+    </td>
+     
+  
+      </tr>
+    </tbody>
+ </table>
+
+</x-row>
+</div>

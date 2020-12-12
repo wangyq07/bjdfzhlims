@@ -1,0 +1,36 @@
+ 
+<x-row>
+    <x-col span="16">
+        <div class="au-panel au-content" au-adaption [outerHeight]="0"> 
+     <x-row>
+         <x-col style="text-align: center;font-weight: bolder;font-size: 12pt;">客户信息</x-col>
+     </x-row>
+     <x-row>
+         <app-customer [auth]="auth"   #customerlist (ChangeCustomer)="changeCustomer($event)"></app-customer>
+     </x-row> 
+      <x-row >
+        <x-col style="text-align: center;font-weight: bolder;font-size: 12pt;">
+            客户合同列表
+        </x-col>
+    </x-row>
+    <x-row>
+        <app-contact [auth]="auth"   #contactlist (contactChange)="contactChange($event)" ></app-contact>
+    </x-row> 
+    </div> 
+    </x-col>
+    <x-col span="8">
+        <div class="au-panel au-content" au-adaption [outerHeight]="0">  
+        <x-row>
+        <x-col style="text-align: center;font-weight: bolder;font-size: 12pt;">
+                委托单基本信息
+        </x-col>
+        </x-row> 
+        <x-row>
+            <app-businessproject [auth]="auth" (ProjectsChange)="ProjectsChange($event)"  #businessprojectlist></app-businessproject>
+        </x-row> 
+            </div> 
+            </x-col>
+</x-row>    
+ 
+
+   

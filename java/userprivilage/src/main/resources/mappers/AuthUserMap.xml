@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.userprivilage.dao.AuthUserMapper">
+<resultMap type="com.bjdfzh.userprivilage.entity.AuthUser" id="AuthUserMap">
+<id column="uid" property="id"/>
+<result column="account" property="account" />
+<result column="password" property="password" />
+<result column="email" property="email" />
+<result column="phone" property="phone" />
+<result column="uname" property="name" />
+<collection property="actions" ofType="com.bjdfzh.userprivilage.entity.Action">
+<id column="aid" property="id"/>
+<result column="scode" property="code" />
+<result column="icon" property="icon" />
+<result column="menuId" property="menuId" />
+<result column="aname" property="name" />
+<result column="asort" property="sort" />
+</collection> 
+<collection property="menus" ofType="com.bjdfzh.userprivilage.entity.Menu">
+<id column="mid" property="id"/>
+<result column="micon" property="icon" />
+<result column="label" property="label" />
+<result column="spid" property="pid" />
+<result column="spath" property="path" />
+<result column="srouter" property="router" />
+<result column="msort" property="sort" />
+</collection>   
+<collection property="organizations" ofType="com.bjdfzh.userprivilage.entity.Organization">
+<id column="oid" property="id"/>
+<result column="oicon" property="icon" />
+<result column="olabel" property="label" />
+<result column="opid" property="pid" />
+<result column="opath" property="path" />
+<result column="otype" property="type" />
+<result column="osort" property="sort" />
+<result column="checkprice" property="checkprice"/>
+</collection> 
+<collection property="roles" ofType="com.bjdfzh.userprivilage.entity.Role">
+<id column="rid" property="id"/>
+<result column="rname" property="name" />
+<result column="sorgid" property="organizationId" /> 
+</collection> 
+</resultMap>
+<select id="getauthbyid" parameterType="string" resultMap="AuthUserMap">
+        select su.id uid,
+				su.account,
+				su.password,
+				su.email,
+				su.phone,
+				su.name uname,
+				null aid,
+				null scode,
+				 null icon,
+				 null menuId,
+				null aname,
+				 null asort,
+				null mid,
+				null micon,
+				null label,
+				null spid,
+				null spath,
+				null srouter,
+				null msort,
+				so.id oid,
+				so.icon oicon,
+				so.label olabel,
+				so.parentId opid,
+				so.path opath,
+				so.sort osort,
+				so.type otype,
+				so.checkprice,
+				sr.id rid,
+				sr.name rname,
+				sr.organizationId sorgid
+        from t_user su, 
+				t_user_role sur, 
+				t_user_organization suo,
+				t_organization so,
+				t_role sr 
+				where su.id=sur.userId  
+					 and suo.userId=su.id and suo.organizationId=so.id
+					 and sur.roleId=sr.id
+         and (su.id=#{id} or su.account=#{id}) 
+    </select>
+    <select id="getauth" parameterType="string" resultMap="AuthUserMap">
+        select su.id uid,
+				su.account,
+				su.password,
+				su.email,
+				su.phone,
+				su.name uname,
+				sa.id aid,
+				sa.code scode,
+				sa.icon,
+				sa.menuId,
+				sa.name aname,
+				sa.sort asort,
+				sm.id mid,
+				sm.icon micon,
+				sm.label label,
+				sm.parentId spid,
+				sm.path spath,
+				sm.router srouter,
+				sm.sort msort,
+				so.id oid,
+				so.icon oicon,
+				so.label olabel,
+				so.parentId opid,
+				so.path opath,
+				so.sort osort,
+				so.type otype,
+				so.checkprice,
+				 sur.roleId rid,
+				tr.name rname,
+				tr.organizationId sorgid
+        from t_user su,
+				t_action sa,
+				t_role_action sra,
+				t_user_role sur,
+        t_menu sm,
+				t_user_organization suo,
+				t_organization so, 
+				t_role tr
+				where su.id=sur.userId and sur.roleId=sra.roleId
+				   and sra.actionId=sa.id and sa.menuId=sm.id
+					 and suo.userId=su.id and suo.organizationId=so.id 
+					 and tr.id=sra.roleId 
+         and su.account=#{account} 
+    </select> 
+    <select id="getallUserOrg" parameterType="string" resultMap="AuthUserMap">
+        select su.id uid,
+				su.account,
+				su.password,
+				su.email,
+				su.phone,
+				su.name uname,
+				null aid,
+				null scode,
+				 null icon,
+				 null menuId,
+				null aname,
+				 null asort,
+				null mid,
+				null micon,
+				null label,
+				null spid,
+				null spath,
+				null srouter,
+				null msort,
+				so.id oid,
+				so.icon oicon,
+				so.label olabel,
+				so.parentId opid,
+				so.path opath,
+				so.sort osort,
+				so.type otype,
+				so.checkprice,
+				sr.id rid,
+				sr.name rname,
+				sr.organizationId sorgid
+        from t_user su, 
+				t_user_role sur, 
+				t_user_organization suo,
+				t_organization so,
+				t_role sr 
+				where su.id=sur.userId  
+					 and suo.userId=su.id and suo.organizationId=so.id
+					 and sur.roleId=sr.id
+    </select> 
+    <select id="getuserbyorgnization" parameterType="string" resultMap="AuthUserMap">
+        select su.id uid,
+				su.account,
+				su.password,
+				su.email,
+				su.phone,
+				su.name uname,
+				null aid,
+				null scode,
+				 null icon,
+				 null menuId,
+				null aname,
+				 null asort,
+				null mid,
+				null micon,
+				null label,
+				null spid,
+				null spath,
+				null srouter,
+				null msort,
+				so.id oid,
+				so.icon oicon,
+				so.label olabel,
+				so.parentId opid,
+				so.path opath,
+				so.sort osort,
+				so.type otype,
+				so.checkprice,
+				sr.id rid, 
+				sr.name rname,
+				sr.organizationId sorgid
+        from t_user su, 
+				t_user_role sur, 
+				t_user_organization suo,
+				t_organization so,
+				t_role sr 
+				where su.id=sur.userId  
+					 and suo.userId=su.id and suo.organizationId=so.id
+					 and sur.roleId=sr.id
+					  and suo.organizationId=#{orgId}
+    </select> 
+    <insert id="addUserOrg" parameterType="java.util.ArrayList">
+     insert t_user_organization(userId,organizationId)values
+     <foreach collection="list" index="index" separator="," item="item">
+            (#{item.left},#{item.right})
+     </foreach>
+    </insert>
+    <insert id="addUserRole" parameterType="java.util.ArrayList">
+     insert t_user_role(userId,roleId)values
+     <foreach collection="list" index="index" separator="," item="item">
+            (#{item.left},#{item.right})
+     </foreach>
+    </insert>
+    <delete id="deleteUser" parameterType="string">
+    delete from t_user where userid=#{id}
+    </delete>
+    <delete id="deleteUserOrg" parameterType="string">
+      delete from t_user_organization where userid=#{leftid}
+    </delete>
+    <delete id="deleteUserRole" parameterType="string">
+      delete from t_user_role where userid=#{leftid}
+    </delete>
+</mapper>

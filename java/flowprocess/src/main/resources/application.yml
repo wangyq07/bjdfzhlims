@@ -1,0 +1,79 @@
+server:
+  port:
+    9001
+spring:
+   cache:
+        #ehcache配置文件路径
+        ehcache:
+          config: classpath:/ehcache/ehcache.cfg.xml
+        #指定缓存类型，可加可不加
+        #type: ehcache
+   devtools:
+    restart:
+      enable:
+         true
+      additional-paths:
+         src/main/java 
+   datasource:
+    driver-class-name:
+      com.mysql.cj.jdbc.Driver
+    url:
+       jdbc:mysql://127.0.0.1:3306/limsdb?useUnicode=true&characterEncoding=utf8&nullCatalogMeansCurrent=true&useSSL=false&serverTimezone=GMT%2B8
+    username:
+      root
+    password:
+      wyq---
+   thymeleaf:
+    mode: HTML
+    encoding: utf-8
+    # 禁用缓存
+    cache: false
+    application:
+    # 注册应用名
+    name: actdemo
+    mvc:
+    # 静态资源路径
+    static-path-pattern: /static/**
+  # 参考配置https://www.cnblogs.com/liaojie970/p/8857710.html
+   activiti:
+    #关闭认证
+    #security:
+      #basic:
+      #enabled: false
+    # 自动建表
+    database-schema: ACTIVITI
+    database-schema-update: true
+    history-level: full
+    db-history-used: true 
+    async-executor-activate: true
+     #自动检查、部署流程定义文件 
+    check-process-definitions: false
+    # asyncExecutorActivate是指activiti在流程引擎启动就激活AsyncExecutor,异步：true-开启（默认）、false-关闭
+    
+    #流程定义文件存放目录,要具体到某个目录
+    #process-definition-location-prefix: classpath:/processes
+        #process-definition-location-suffixes: #流程文件格式
+        #  - **.bpmn20.xml
+        #  - **.bpmn
+mybatis:
+   type-aliases-package:
+      com.bjdfzh.businessprocess.entity
+   mapperLocations:
+      classpath:mappers/*.xml
+   config-location:
+     classpath:mybatisconfig.xml 
+remoteurls:
+  #更新项目号连接
+  modifyprojectno:
+     http://127.0.0.1:3001/contactprojects/updateprojectnumer
+  #websocket服务地址
+  websocket:
+     http://127.0.0.1:8001/stompwebsocket
+  #websocket消息发送地址
+  socketsend:
+     /app/queue
+  #wesocket订阅地址，这里需要传参数发地址
+  socketsubscrible:
+    /user/%s/message
+     
+  

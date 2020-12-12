@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.flow.dao.RoleAuditSettingMapper">
+<resultMap type="com.bjdfzh.flow.entity.RoleAuditSetting" id="RoleAuditSettingMap">
+<id column="id" property="id"/>
+<result column="label" property="label" />
+<result column="pid" property="pid" /> 
+<result column="auditjson" property="auditjson" />
+<association property="role" javaType="com.bjdfzh.userprivilage.entity.Role">
+ <id column="roleid" property="id" />
+ <result column="label" property="name"/>
+</association>
+</resultMap>  
+ <select id="getroleauditsetting" parameterType="string" resultMap="RoleAuditSettingMap">
+		         SELECT 
+				trd.roleid id
+				,tr.name label   
+				,null pid
+				,trd.roleid
+				,trd.auditjson
+				FROM  t_role_audit trd
+				inner join t_role tr
+				on tr.id=trd.roleid  
+    </select>  
+     <select id="getroleauditsettingbyid" parameterType="string" resultMap="RoleAuditSettingMap">
+		        SELECT 
+				trd.roleid id
+				,tr.name label 
+				,null pid
+				,trd.roleid
+				,trd.auditjson
+				FROM  t_role_audit trd
+				inner join t_role tr
+				on tr.id=trd.roleid 
+				where trd.roleid=#{roleid} 
+    </select>
+    <insert id="addroleauditsetting" parameterType="com.bjdfzh.flow.entity.RoleAuditSetting">
+     insert into t_role_audit(roleid 
+							,auditjson  
+							)values
+							(#{role.id} 
+							,#{auditjson} 
+							)
+    </insert>
+     <update id="updateroleauditsetting" parameterType="com.bjdfzh.flow.entity.RoleDiscount">
+      update t_role_audit
+      set auditjson=#{auditjson}
+      where roleid=#{role.id}
+      </update>
+    <delete id="deleteroleauditsetting" parameterType="string">
+    delete from t_role_audit  where roleid=#{roleid}  
+    </delete> 
+</mapper>

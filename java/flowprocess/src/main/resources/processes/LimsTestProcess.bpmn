@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace=" ">
+  <process id="LimsTestProcess" name="检测公司流程" isExecutable="true">
+    <startEvent id="start" name="开始"></startEvent>
+    <userTask id="task_submitcontact" name="提交合同"></userTask>
+    <sequenceFlow id="flow_start" sourceRef="start" targetRef="task_submitcontact"></sequenceFlow>
+    <userTask id="task_customerserviceaudit" name="客服审核">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.bjdfzh.flow.entity.TaskNodeEventListener"></activiti:taskListener>
+        <activiti:taskListener event="complete" class="com.bjdfzh.flow.entity.TaskNodeEventListener"></activiti:taskListener>
+      </extensionElements>
+    </userTask>
+    <userTask id="task_samplemantain" name="样品数据完善"></userTask>
+    <userTask id="task_marketaudit" name="市场总监审核"></userTask>
+    <userTask id="task_ctoaudit" name="技术总监审核"></userTask>
+    <sequenceFlow id="flow_submitcontact" sourceRef="task_submitcontact" targetRef="task_customerserviceaudit"></sequenceFlow>
+    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow_customerserviceaudit" sourceRef="task_customerserviceaudit" targetRef="exclusivegateway1"></sequenceFlow>
+    <sequenceFlow id="flow_special" name="特殊流程" sourceRef="exclusivegateway1" targetRef="task_marketaudit">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{qupricediscount<=limitdiscount}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow_general" name="一般流程" sourceRef="exclusivegateway1" targetRef="task_samplemantain">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{qupricediscount>limitdiscount}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow_marketunallow" name="不同意" sourceRef="exclusivegateway2" targetRef="endevent1">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{marketaudit==0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow_marketaudit" sourceRef="task_marketaudit" targetRef="exclusivegateway2"></sequenceFlow>
+    <sequenceFlow id="flow_marketauditallow" name="同意" sourceRef="exclusivegateway2" targetRef="task_ctoaudit">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{marketaudit==1}]]></conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="exclusivegateway4" name="Exclusive Gateway"></exclusiveGateway>
+    <sequenceFlow id="flow_samplemantain" sourceRef="task_samplemantain" targetRef="exclusivegateway4"></sequenceFlow>
+    <userTask id="task_dispatch" name="任务下达"></userTask>
+    <sequenceFlow id="flow_samplereceive" name="送样" sourceRef="exclusivegateway4" targetRef="task_dispatch"></sequenceFlow>
+    <userTask id="task_collection" name="采样任务"></userTask>
+    <sequenceFlow id="flow_collecitonsample" name="采样" sourceRef="exclusivegateway4" targetRef="task_collection"></sequenceFlow>
+    <sequenceFlow id="flow_collection" sourceRef="task_collection" targetRef="task_dispatch"></sequenceFlow>
+    <sequenceFlow id="flow38" name="不符合采样条件" sourceRef="task_collection" targetRef="task_submitcontact"></sequenceFlow>
+    <endEvent id="end" name="结束"></endEvent>
+    <sequenceFlow id="flow_taskdispatch" sourceRef="task_dispatch" targetRef="end"></sequenceFlow>
+    <sequenceFlow id="flow39" sourceRef="task_ctoaudit" targetRef="task_samplemantain"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_LimsTestProcess">
+    <bpmndi:BPMNPlane bpmnElement="LimsTestProcess" id="BPMNPlane_LimsTestProcess">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="35.0" width="35.0" x="10.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="task_submitcontact" id="BPMNShape_task_submitcontact">
+        <omgdc:Bounds height="55.0" width="105.0" x="80.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="task_customerserviceaudit" id="BPMNShape_task_customerserviceaudit">
+        <omgdc:Bounds height="55.0" width="105.0" x="270.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="task_samplemantain" id="BPMNShape_task_samplemantain">
+        <omgdc:Bounds height="55.0" width="105.0" x="886.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="task_marketaudit" id="BPMNShape_task_marketaudit">
+        <omgdc:Bounds height="55.0" width="105.0" x="418.0" y="326.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="task_ctoaudit" id="BPMNShape_task_ctoaudit">
+        <omgdc:Bounds height="55.0" width="105.0" x="740.0" y="326.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
+        <omgdc:Bounds height="40.0" width="40.0" x="450.0" y="157.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="BPMNShape_exclusivegateway2">
+        <omgdc:Bounds height="40.0" width="40.0" x="600.0" y="333.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="603.0" y="460.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway4" id="BPMNShape_exclusivegateway4">
+        <omgdc:Bounds height="40.0" width="40.0" x="1060.0" y="157.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="task_dispatch" id="BPMNShape_task_dispatch">
+        <omgdc:Bounds height="55.0" width="105.0" x="1220.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="task_collection" id="BPMNShape_task_collection">
+        <omgdc:Bounds height="55.0" width="105.0" x="1118.0" y="298.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+        <omgdc:Bounds height="35.0" width="35.0" x="1400.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow_start" id="BPMNEdge_flow_start">
+        <omgdi:waypoint x="45.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="80.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow_submitcontact" id="BPMNEdge_flow_submitcontact">
+        <omgdi:waypoint x="185.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="270.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow_customerserviceaudit" id="BPMNEdge_flow_customerserviceaudit">
+        <omgdi:waypoint x="375.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="450.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow_special" id="BPMNEdge_flow_special">
+        <omgdi:waypoint x="470.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="470.0" y="326.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="12.0" width="44.0" x="470.0" y="239.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow_general" id="BPMNEdge_flow_general">
+        <omgdi:waypoint x="490.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="886.0" y="177.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="12.0" width="44.0" x="618.0" y="177.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow_marketunallow" id="BPMNEdge_flow_marketunallow">
+        <omgdi:waypoint x="620.0" y="373.0"></omgdi:waypoint>
+        <omgdi:waypoint x="620.0" y="460.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="12.0" width="100.0" x="619.0" y="409.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow_marketaudit" id="BPMNEdge_flow_marketaudit">
+        <omgdi:waypoint x="523.0" y="353.0"></omgdi:waypoint>
+        <omgdi:waypoint x="600.0" y="353.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow_marketauditallow" id="BPMNEdge_flow_marketauditallow">
+        <omgdi:waypoint x="640.0" y="353.0"></omgdi:waypoint>
+        <omgdi:waypoint x="740.0" y="353.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="12.0" width="100.0" x="659.0" y="353.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow_samplemantain" id="BPMNEdge_flow_samplemantain">
+        <omgdi:waypoint x="991.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1060.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow_samplereceive" id="BPMNEdge_flow_samplereceive">
+        <omgdi:waypoint x="1100.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1220.0" y="177.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="12.0" width="100.0" x="1120.0" y="177.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow_collecitonsample" id="BPMNEdge_flow_collecitonsample">
+        <omgdi:waypoint x="1080.0" y="197.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1170.0" y="298.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="12.0" width="22.0" x="1106.0" y="220.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow_collection" id="BPMNEdge_flow_collection">
+        <omgdi:waypoint x="1170.0" y="298.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1272.0" y="205.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow38" id="BPMNEdge_flow38">
+        <omgdi:waypoint x="1170.0" y="353.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1168.0" y="576.0"></omgdi:waypoint>
+        <omgdi:waypoint x="132.0" y="576.0"></omgdi:waypoint>
+        <omgdi:waypoint x="132.0" y="205.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="12.0" width="77.0" x="524.0" y="560.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow_taskdispatch" id="BPMNEdge_flow_taskdispatch">
+        <omgdi:waypoint x="1325.0" y="177.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1400.0" y="177.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow39" id="BPMNEdge_flow39">
+        <omgdi:waypoint x="845.0" y="353.0"></omgdi:waypoint>
+        <omgdi:waypoint x="938.0" y="353.0"></omgdi:waypoint>
+        <omgdi:waypoint x="938.0" y="205.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

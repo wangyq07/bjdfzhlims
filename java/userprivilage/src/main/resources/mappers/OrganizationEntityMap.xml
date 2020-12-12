@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.userprivilage.dao.OrganizationMapper">
+    <select id="getone" parameterType="string" resultType="com.bjdfzh.userprivilage.entity.Organization">
+        select id,
+        label,
+        type,
+        icon,
+        parentId pid,
+        path,
+        sort,
+        checkprice
+        from t_organization 
+        where id=#{id} 
+    </select>
+    <select id="getall"  resultType="com.bjdfzh.userprivilage.entity.Organization">
+        select id,
+        label,
+        type,
+        icon,
+        parentId pid,
+        path,
+        sort,
+        checkprice
+        from t_organization  
+    </select>
+    <update id="update"  parameterType="com.bjdfzh.userprivilage.entity.Organization">
+         update t_organization 
+      set  label=#{label},
+        type=#{type},
+        icon=#{icon},
+        path=#{path},
+        sort=#{sort},
+        checkprice=#{checkprice}
+        where id=#{id} 
+    </update>
+    <insert id="addorg"  parameterType="com.bjdfzh.userprivilage.entity.Organization">
+        insert into t_organization(
+        id,
+       label  ,
+        type ,
+        icon ,
+        path ,
+        sort,
+        parentId
+        ,checkprice
+        )values(
+         #{id},
+         #{label},
+        #{type},
+        #{icon},
+        #{path},
+        #{sort},
+        #{pid}
+        ,#{checkprice}
+        )
+    
+    </insert>
+     <update id="updaterole"  parameterType="string">
+         update t_role 
+        set   organizationId=''
+        where organizationId=#{id} 
+    </update>
+    <delete id="deleteorguser" parameterType="string">
+      delete from t_user_organization where organizationId=#{id}
+    </delete>
+    <delete id="deleteorg" parameterType="string">
+      delete from t_organization where id=#{id}
+    </delete>
+</mapper>
