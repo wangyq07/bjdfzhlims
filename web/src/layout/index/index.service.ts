@@ -100,7 +100,7 @@ export class IndexService {
       content: data.msg,
       type: 'warning',
       callback: (action: XMessageBoxAction) => {
-        action === 'confirm' &&this.router.navigate(["index/waittask"]);
+        action === 'confirm' &&this.router.navigate(["index/waittask",{refresh:true}]);
   }
   });
 }

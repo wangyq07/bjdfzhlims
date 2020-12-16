@@ -23,5 +23,9 @@ export const environment = {
       api: 'http://127.0.0.1:9001/',
       servicetype:'flowprocess'
     },
+    {
+      api: 'http://127.0.0.1:3003/',
+      servicetype:'collectionreceive'
+    }
 ]
 };

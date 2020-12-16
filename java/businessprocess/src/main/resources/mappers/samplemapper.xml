@@ -35,23 +35,14 @@
 
     <select id="getsamples" parameterType="string" resultMap="SampleMap">
        select
-		ts.sampleid id
+		ts.sampleid 
 		,ts.projectid
+		,ts.wrapherproperties
 		,samplename
-		,samplenumber
-		,testtypeid
-		,testothertype
-		,samplesourceid
+		,samplenumber 
 		,samplequality
 		,samplespec
-		,samplevolume
-		,storeid
-		,storeother
-		,statusid
-		,statusother
-		,processid
-		,processother
-		,sampleuserid
+		,samplevolume 
 		,sampledate
 		,manufactory
 		,manufactoryaddress
@@ -60,17 +51,30 @@
 		,manufactoryphone
 		,manudate
 		,manuno
-		,remark
+		,ts.remark
 		,expiredday
 		,price
 		,tm.testproject
 		,tm.methodname
-		,externprice 
+		,externprice
+	  ,ts.testtypeid
+	  ,t.testtype
+	  ,ts.testtypeother
+		,ts.storeid,tstore.storetempurature
+		, tstore.storename,ts.storeother
+		 ,ts.processid
+		 ,  tprocess.sampleprocess   processtype
+		 ,ts.processother
+			,ts.statusid 
+			, tsttus.statustype  statustype
+			,ts.statusother
+		  ,ts.executestandard
+			,ts.executegrade
 		 from t_sample ts
 		 left join
 		 (
 		  select
-			t.contactid,t.sampleid,
+			 t.sampleid,
 			GROUP_CONCAT(tc.testproject) testproject,
 			GROUP_CONCAT(tm.methodname) methodname
 			from t_test_project t
@@ -80,31 +84,29 @@
 			on tc.id=tq.testprojectid
 			left join t_test_method tm
 			on tm.id=tq.methodid
-			group by t.contactid,t.sampleid
+			group by  t.sampleid
 		 ) tm
-		 on tm.contactid=ts.contactid
-		 and tm.sampleid=ts.sampleid
+		 on   tm.sampleid=ts.sampleid
+		 left join t_test_type t
+		 on t.id=ts.testtypeid
+		 left join t_sapmple_store_type tstore
+		 on tstore.id=ts.storeid
+		 left join t_sample_process_type tprocess
+		 on tstore.id=ts.processid
+		 left join t_sapmle_status_type tsttus
+		 on tsttus.id=ts.statusid
 		  where ts.contactid=#{id}
     </select> 
     <select id="getsample" parameterType="string" resultMap="SampleMap">
        select
-		ts.sampleid id
+		ts.sampleid 
 		,ts.projectid
+		,ts.wrapherproperties
 		,samplename
-		,samplenumber
-		,testtypeid
-		,testothertype
-		,samplesourceid
+		,samplenumber 
 		,samplequality
 		,samplespec
-		,samplevolume
-		,storeid
-		,storeother
-		,statusid
-		,statusother
-		,processid
-		,processother
-		,sampleuserid
+		,samplevolume 
 		,sampledate
 		,manufactory
 		,manufactoryaddress
@@ -113,16 +115,30 @@
 		,manufactoryphone
 		,manudate
 		,manuno
-		,remark
+		,ts.remark
 		,expiredday
-		,price ,price
+		,price
 		,tm.testproject
 		,tm.methodname
+		,externprice
+	  ,ts.testtypeid
+	  ,t.testtype
+	  ,ts.testtypeother
+		,ts.storeid,tstore.storetempurature
+		, tstore.storename,ts.storeother
+		 ,ts.processid
+		 ,  tprocess.sampleprocess   processtype
+		 ,ts.processother
+			,ts.statusid 
+			, tsttus.statustype  statustype
+			,ts.statusother
+		  ,ts.executestandard
+			,ts.executegrade
 		 from t_sample ts
 		 left join
 		 (
 		  select
-			t.contactid,t.sampleid,
+			 t.sampleid,
 			GROUP_CONCAT(tc.testproject) testproject,
 			GROUP_CONCAT(tm.methodname) methodname
 			from t_test_project t
@@ -132,10 +148,17 @@
 			on tc.id=tq.testprojectid
 			left join t_test_method tm
 			on tm.id=tq.methodid
-			group by t.contactid,t.sampleid
+			group by  t.sampleid
 		 ) tm
-		 on tm.contactid=ts.contactid
-		 and tm.sampleid=ts.sampleid
+		 on   tm.sampleid=ts.sampleid
+		 left join t_test_type t
+		 on t.id=ts.testtypeid
+		 left join t_sapmple_store_type tstore
+		 on tstore.id=ts.storeid
+		 left join t_sample_process_type tprocess
+		 on tstore.id=ts.processid
+		 left join t_sapmle_status_type tsttus
+		 on tsttus.id=ts.statusid
 		  where ts.sampleid=#{id}
     </select> 
       <insert id="addsample" parameterType="com.bjdfzh.businessprocess.entity.Sample" >
@@ -173,11 +196,11 @@
 		,#{samplequality}
 		,#{samplespec}
 		,#{samplevolume}
-		,#{storeid}
+		,#{store.id}
 		,#{storeother}
-		,#{statusid}
+		,#{status.id}
 		,#{statusother}
-		,#{processid}
+		,#{process.id}
 		,#{processother}
 		,#{sampleuserid}
 		,#{sampledate}
@@ -191,7 +214,7 @@
 		,#{remark}
 		,#{expiredday}
 		,#{price}
-		 
+		
 		)
      </insert>
      <update id="updatesample" parameterType="com.bjdfzh.businessprocess.entity.Sample">
@@ -236,8 +259,7 @@
 		,statusid
 		,statusother
 		,processid
-		,processother
-		,sampleuserid
+		,processother 
 		,sampledate
 		,manufactory
 		,manufactoryaddress
@@ -259,13 +281,12 @@
 		,#{item.samplequality}
 		,#{item.samplespec}
 		,#{item.samplevolume}
-		,#{item.storeid}
+		,#{item.store.id}
 		,#{item.storeother}
-		,#{item.statusid}
+		,#{item.status.id}
 		,#{item.statusother}
-		,#{item.processid}
-		,#{item.processother}
-		,#{item.sampleuserid}
+		,#{item.process.id}
+		,#{item.processother} 
 		,#{item.sampledate}
 		,#{item.manufactory}
 		,#{item.manufactoryaddress}
@@ -283,4 +304,111 @@
       <delete id="deletesample"  parameterType="string">
        delete from t_sample where sampleid=#{id}
      </delete>
+     <update id="supplimentupdatesamples" parameterType="list">
+            update t_sample
+            <trim prefix="set" suffixOverrides=",">
+             <trim prefix="statusid =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when sampleid=#{i.id} then #{i.status.id}
+                         </if>
+                         </foreach>
+                         </trim>
+                         <trim prefix="processid =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when sampleid=#{i.id} then #{i.process.id}
+                         </if>
+                         </foreach>
+                         </trim>
+                         <trim prefix="testtypeid =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when sampleid=#{i.id} then #{i.testtype.id}
+                         </if>
+                         </foreach>
+                         </trim>
+                          <trim prefix="storeid =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when sampleid=#{i.id} then #{i.store.id}
+                         </if>
+                         </foreach>
+                         </trim>
+               <trim prefix="statusother =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when sampleid=#{i.id} then #{i.statusother}
+                         </if>
+                         </foreach>
+                         </trim>
+                         <trim prefix="processother =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when sampleid=#{i.id} then #{i.processother}
+                         </if>
+                         </foreach>
+                         </trim>
+                         <trim prefix="testtypeother =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when sampleid=#{i.id} then #{i.testtypeother}
+                         </if>
+                         </foreach>
+                         </trim>
+                          <trim prefix="storeother =case" suffix="end,">
+                         <foreach collection="list" item="i" index="index">
+	                         <if test="i.id!=null">
+	                          when sampleid=#{i.id} then #{i.storeother}
+	                         </if>
+                         </foreach>
+                         </trim>
+                         <trim prefix="brand =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when sampleid=#{i.id} then #{i.brand}
+                         </if>
+                         </foreach>
+                         </trim>
+                         <trim prefix="executestandard =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when sampleid=#{i.id} then #{i.executestandard}
+                         </if>
+                         </foreach>
+                         </trim>
+                         <trim prefix="executegrade =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when sampleid=#{i.id} then #{i.executegrade}
+                         </if>
+                         </foreach>
+                         </trim>
+                          <trim prefix="wrapherproperties =case" suffix="end,">
+                         <foreach collection="list" item="i" index="index">
+	                         <if test="i.id!=null">
+	                          when sampleid=#{i.id} then #{i.wrapherproperties}
+	                         </if>
+                         </foreach>
+                         </trim>
+                         <trim prefix="samplespec =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when sampleid=#{i.id} then #{i.samplespec}
+                         </if>
+                         </foreach>
+                         </trim>
+                          <trim prefix="samplequality =case" suffix="end,">
+                         <foreach collection="list" item="i" index="index">
+	                         <if test="i.id!=null">
+	                          when sampleid=#{i.id} then #{i.samplequality}
+	                         </if>
+                         </foreach>
+                         </trim>
+                         </trim>
+                          where
+			            <foreach collection="list" separator="or" item="i" index="index" >
+			              sampleid=#{i.id}
+			          </foreach> 
+     </update>
 </mapper>

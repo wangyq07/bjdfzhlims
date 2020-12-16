@@ -43,7 +43,7 @@
         <x-row >
          <x-col span=24> 
            
-        <table id="sampledata" style="height: 100%;width: 100%;" border="1">
+        <table id="sampledata" style="height: 100%;width: 100%;" border="10">
           <thead>
             <td  style="  width:10%; text-align: center;">项目</td>
             <td  style=" width:5%; text-align: center;">报告</td>
@@ -56,43 +56,43 @@
             <td  style=" width:5%; text-align: center">次数</td>
           </thead>
           <tr *ngFor="let project of projects">
-            <td   style=" width:10%; text-align: center;">{{project.projectnumber}}</td> 
-            <td style="width:5%;  text-align: center;">{{project.reportcount}}</td>
-            <td style=" width:10%; text-align: center;">{{project.domain.label}}</td>
-            <td     style="width: 10%; text-align: center">
+            <td   style=" width:10%; text-align: center;border:1">{{project.projectnumber}}</td> 
+            <td style="width:5%;  text-align: center;border:1">{{project.reportcount}}</td>
+            <td style=" width:10%; text-align: center;border:1">{{project.domain.label}}</td>
+            <td     style="width: 10%; text-align: center;border:1">
               <ng-container *ngFor="let sample of project.samples;">
               {{sample.samplename}}<br>
               </ng-container>
             </td>  
-             <td  style=" width:10%; text-align: center">
-              <ng-container *ngFor="let sample of project.samples;"> 
-              <ng-container *ngFor="let t of sample.testprojects;">
-              <x-link style="cursor: pointer;" (click)="projectclick(t,sample)">{{t.testproject}}</x-link><br>
+             <td  style=" width:10%; text-align: center;border:1">
+              <ng-container *ngFor="let sample of project.samples"> 
+              <ng-container *ngFor="let t of sample.testprojects">
+              <x-link style="cursor: pointer;color:blue" (click)="projectclick(t,sample)">{{t.testproject}}</x-link><br>
             </ng-container> 
             </ng-container>
             </td>
-            <td  style=" width:35%; text-align: center">
+            <td  style=" width:35%; text-align: center;border:1">
               <ng-container *ngFor="let sample of project.samples;"> 
               <ng-container *ngFor="let f of sample.testprojects;">
               {{f.methodname}}<br>
             </ng-container> 
           </ng-container>
             </td>
-            <td  style=" width:10%; text-align: center">
+            <td  style=" width:10%; text-align: center;border:1">
                 <ng-container *ngFor="let sample of project.samples;"> 
                 <ng-container *ngFor="let q of sample.testprojects;">
                 {{q.limitmin}}-{{q.limitmax}}<br>
               </ng-container> 
             </ng-container>
               </td>
-            <td  style="width:5%;  text-align: center">
+            <td  style="width:5%;  text-align: center;border:1">
               <ng-container *ngFor="let sample of project.samples;"> 
                 <ng-container *ngFor="let d of sample.testprojects;">
               {{d.isextern}}<br>
             </ng-container> 
           </ng-container>
             </td>
-            <td  style=" width:5%; text-align: center">
+            <td  style=" width:5%; text-align: center;border:1">
               <ng-container *ngFor="let sample of project.samples;"> 
                 <ng-container *ngFor="let e of sample.testprojects;">
               {{e.testcount}}<br>

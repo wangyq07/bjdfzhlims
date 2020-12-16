@@ -1,9 +1,15 @@
 package com.bjdfzh.flow.entity;
 
  
+import java.io.Serializable;
+
 import com.bjdfzh.userprivilage.entity.Role;
 
-public class RoleDiscount {
+public class RoleDiscount implements Serializable {
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 String id;
 String pid; 
 String label;

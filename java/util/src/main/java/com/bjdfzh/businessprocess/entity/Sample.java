@@ -2,24 +2,22 @@ package com.bjdfzh.businessprocess.entity;
 
 import java.util.List;
 
+import com.bjdfzh.userprivilage.entity.CommonType;
+
 public class Sample {
 	String id;
 	String projectid;
 	String samplename;
 	String samplenumber;
-	int testtypeid;
-	String testothertype;
-	int samplesourceid;
-	double samplequality;
+	 CommonType testtype;
+	 CommonType status;
+	 CommonType store;
+	 CommonType process;
+	 String executestandard;
+	 String executegrade;
+	String samplequality;
 	String samplespec;
-	double samplevolume;
-	int storeid;
-	String storeother;
-	int statusid;
-	String statusother;
-	int processid;
-	String processother;
-	int sampleuserid;
+	double samplevolume; 
 	String sampledate;
 	String manufactory;
 	String manufactoryaddress;
@@ -35,6 +33,35 @@ public class Sample {
 	int domainid;
 	String testproject;
 	String methodname;
+	 
+	 public String getTesttypeother() {
+		return testtypeother;
+	}
+	public void setTesttypeother(String testtypeother) {
+		this.testtypeother = testtypeother;
+	}
+	public String getProcessother() {
+		return processother;
+	}
+	public void setProcessother(String processother) {
+		this.processother = processother;
+	}
+	public String getStoreother() {
+		return storeother;
+	}
+	public void setStoreother(String storeother) {
+		this.storeother = storeother;
+	}
+	public String getStatusother() {
+		return statusother;
+	}
+	public void setStatusother(String statusother) {
+		this.statusother = statusother;
+	}
+	String testtypeother;
+	String processother;
+	 String storeother;
+	 String statusother;
 	List<ContactTestProject> testprojects;
 	public double getExternprice() {
 		return externprice;
@@ -78,31 +105,7 @@ public class Sample {
 	}
 	public void setSamplenumber(String samplenumber) {
 		this.samplenumber = samplenumber;
-	}
-	public int getTesttypeid() {
-		return testtypeid;
-	}
-	public void setTesttypeid(int testtypeid) {
-		this.testtypeid = testtypeid;
-	}
-	public String getTestothertype() {
-		return testothertype;
-	}
-	public void setTestothertype(String testothertype) {
-		this.testothertype = testothertype;
-	}
-	public int getSamplesourceid() {
-		return samplesourceid;
-	}
-	public void setSamplesourceid(int samplesourceid) {
-		this.samplesourceid = samplesourceid;
-	}
-	public double getSamplequality() {
-		return samplequality;
-	}
-	public void setSamplequality(double samplequality) {
-		this.samplequality = samplequality;
-	}
+	} 
 	public String getSamplespec() {
 		return samplespec;
 	}
@@ -114,48 +117,48 @@ public class Sample {
 	}
 	public void setSamplevolume(double samplevolume) {
 		this.samplevolume = samplevolume;
+	} 
+	public CommonType getTesttype() {
+		return testtype;
 	}
-	public int getStoreid() {
-		return storeid;
+	public void setTesttype(CommonType testtype) {
+		this.testtype = testtype;
 	}
-	public void setStoreid(int storeid) {
-		this.storeid = storeid;
+	public CommonType getStatus() {
+		return status;
 	}
-	public String getStoreother() {
-		return storeother;
+	public void setStatus(CommonType status) {
+		this.status = status;
 	}
-	public void setStoreother(String storeother) {
-		this.storeother = storeother;
+	public CommonType getStore() {
+		return store;
 	}
-	public int getStatusid() {
-		return statusid;
+	public void setStore(CommonType store) {
+		this.store = store;
 	}
-	public void setStatusid(int statusid) {
-		this.statusid = statusid;
+	public CommonType getProcess() {
+		return process;
 	}
-	public String getStatusother() {
-		return statusother;
+	public void setProcess(CommonType process) {
+		this.process = process;
 	}
-	public void setStatusother(String statusother) {
-		this.statusother = statusother;
+	public String getExecutestandard() {
+		return executestandard;
 	}
-	public int getProcessid() {
-		return processid;
+	public void setExecutestandard(String executestandard) {
+		this.executestandard = executestandard;
 	}
-	public void setProcessid(int processid) {
-		this.processid = processid;
+	public String getExecutegrade() {
+		return executegrade;
 	}
-	public String getProcessother() {
-		return processother;
+	public void setExecutegrade(String executegrade) {
+		this.executegrade = executegrade;
 	}
-	public void setProcessother(String processother) {
-		this.processother = processother;
+	public String getSamplequality() {
+		return samplequality;
 	}
-	public int getSampleuserid() {
-		return sampleuserid;
-	}
-	public void setSampleuserid(int sampleuserid) {
-		this.sampleuserid = sampleuserid;
+	public void setSamplequality(String samplequality) {
+		this.samplequality = samplequality;
 	}
 	public String getSampledate() {
 		return sampledate;
@@ -229,12 +232,18 @@ public class Sample {
 	}
 	public void setMethodname(String methodname) {
 		this.methodname = methodname;
-	}
-	
+	} 
 	public List<ContactTestProject> getTestprojects() {
 		return testprojects;
 	}
 	public void setTestprojects(List<ContactTestProject> testprojects) {
 		this.testprojects = testprojects;
 	}/**/
+	String wrapherproperties;
+	public String getWrapherproperties() {
+		return wrapherproperties;
+	}
+	public void setWrapherproperties(String wrapherproperties) {
+		this.wrapherproperties = wrapherproperties;
+	}
 }

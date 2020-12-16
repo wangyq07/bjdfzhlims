@@ -49,9 +49,25 @@ export interface CommonType extends XId
   code?:string;
 }
 @Injectable({ providedIn: 'root' })
-export class StealService extends RepositoryService<CommonType> {
+export class SealService extends RepositoryService<CommonType> {
   constructor(public http: HttpService) {
-    super(http, { controller: { name: 'steals',servicetype:"businessprocess" } });
+    super(http, { controller: { name: 'seals',servicetype:"businessprocess" } });
+  }
+  gettesttype()
+  {
+    return this.http.post(`testtype`,{},this.option.controller?.servicetype);
+  }
+  getsamplestatus()
+  {
+    return this.http.post(`samplestatus`,{},this.option.controller?.servicetype);
+  }
+  getsamplestore()
+  {
+    return this.http.post(`samplestore`,{},this.option.controller?.servicetype);
+  }
+  getsampleprocess()
+  {
+    return this.http.post(`sampleprocess`,{},this.option.controller?.servicetype);
   }
 }
 @Injectable({ providedIn: 'root' })

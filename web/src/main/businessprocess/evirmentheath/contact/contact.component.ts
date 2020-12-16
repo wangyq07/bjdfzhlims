@@ -107,7 +107,7 @@ export class ContactComponent extends PageBase implements OnInit {
         }
       });
       break;
-      case "submit":
+      
         case 'submit':
      var delegatecustomer=  item.contactcustomers.find((x:any)=>x.customertype==1) ;
      if(delegatecustomer !=undefined&&delegatecustomer.area !=undefined)
@@ -232,12 +232,14 @@ export class ContactComponent extends PageBase implements OnInit {
                    }
                    );
                  var projects=x.projects as BusinessProject[];
-                 
+                 var i=1;
                  projects.map(
                    (y)=>
                    {
                      y.contactid=cntact.id+'';
                      y.id=ProjectUtil.JsNewGuid();
+                     y.projectnumber="临时项目"+i;
+                     i=i+1;
                      y.projectstatus=0;
                      y.samples?.map(
                        (z)=>

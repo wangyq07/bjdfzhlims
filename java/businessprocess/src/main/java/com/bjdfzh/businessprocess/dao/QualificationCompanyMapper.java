@@ -2,8 +2,10 @@ package com.bjdfzh.businessprocess.dao;
 
 import java.util.List;
 
-import com.bjdfzh.businessprocess.entity.QualificationCompany;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.bjdfzh.businessprocess.entity.QualificationCompany;
+@Transactional
 public interface QualificationCompanyMapper {
 	List<QualificationCompany> getqualificationcompanys(); 
 	List<QualificationCompany>  getallqualificationcompanys();

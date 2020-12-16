@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -24,6 +25,7 @@ import com.bjdfzh.util.JWTEntity;
 import com.bjdfzh.util.JwtUtil;
 
 @Service
+@Transactional
 public class HandleAuth {
 	 static final String token="8AAFC614-953F-475B-A5D5-B26BF4F0FB58";
 	@Autowired

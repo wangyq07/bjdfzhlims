@@ -41,6 +41,15 @@ export class WaittaskComponent  extends PageBase implements OnInit,AfterViewInit
       this.globalaudit.auditResult.subscribe(
         (x)=>this.HandleAuditResult
       );
+      activatedRoute.params.subscribe(
+        (x)=>
+        {
+          if(x.refreshdata)
+          {
+            this.getData();
+          }
+        }
+      );
     }
     HandleAuditResult(  msg:string)
     {
@@ -84,6 +93,7 @@ getData() {
   this.flowservice.getTaskListByRoleId(this.indexService.auth.user.roles).subscribe((x)=>
   {
     console.log(x);
+    if(x.list !=undefined)
     [this.data, this.total] = [x.list as Task[], x.list.length];
   }
   );

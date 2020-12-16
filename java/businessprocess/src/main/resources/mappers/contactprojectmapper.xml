@@ -20,14 +20,7 @@
 	<result column="samplenumber" property="samplenumber" />  
 	<result column="samplequality" property="samplequality" />
 	<result column="samplespec" property="samplespec" />
-	<result column="samplevolume" property="samplevolume" />
-	<result column="storeid" property="storeid" />
-	<result column="storeother" property="storeother" />
-	<result column="statusid" property="statusid" />
-	<result column="statusother" property="statusother" />
-	<result column="processid" property="processid" />
-	<result column="processother" property="processother" />
-	<result column="sampleuserid" property="sampleuserid" />
+	<result column="samplevolume" property="samplevolume" /> 
 	<result column="sampledate" property="sampledate" />
 	<result column="manufactory" property="manufactory" />
 	<result column="manufactoryaddress" property="manufactoryaddress" />
@@ -42,7 +35,31 @@
 	<result column="externprice" property="externprice" /> 
 	<result column="stestproject" property="testproject" /> 
     <result column="smethodname" property="methodname" />
+    <result column="executestandard" property="executestandard" />
+    <result column="executegrade" property="executegrade" />
+    <result column="wrapherproperties" property="wrapherproperties" />
+    <result column="testtypeother" property="testtypeother" />
+    <result column="processother" property="processother" />
+    <result column="storeother" property="storeother" />
+    <result column="statusother" property="statusother" />
     <result column="domainid" property="domainid"/> 
+      <association    property="store" javaType="com.bjdfzh.userprivilage.entity.CommonType" >
+      <id column="storeid" property="id"/>
+      <result column="storename" property="label"/>
+      <result column="storetempreture" property="code" /> 
+     </association>
+      <association    property="status" javaType="com.bjdfzh.userprivilage.entity.CommonType" >
+      <id column="statusid" property="id"/>
+      <result column="statustype" property="label"/> 
+     </association> 
+     <association    property="process" javaType="com.bjdfzh.userprivilage.entity.CommonType" >
+      <id column="processid" property="id"/>
+      <result column="processtype" property="label"/> 
+     </association>
+	 <association    property="testtype" javaType="com.bjdfzh.userprivilage.entity.CommonType" >
+      <id column="testtypeid" property="id"/>
+      <result column="testtype" property="label"/> 
+     </association> 
     <collection  property="testprojects" ofType="com.bjdfzh.businessprocess.entity.ContactTestProject">  
 	     <id column="tpid" property="id" />  
 		 <result column="sampleid" property="sampleid"/>
@@ -74,14 +91,7 @@
 		,ts.samplenumber 
 		,ts.samplequality
 		,ts.samplespec
-		,ts.samplevolume
-		,ts.storeid
-		,ts.storeother
-		,ts.statusid
-		,ts.statusother
-		,ts.processid
-		,ts.processother
-		,ts.sampleuserid
+		,ts.samplevolume 
 		,ts.sampledate
 		,ts.manufactory
 		,ts.manufactoryaddress
@@ -94,8 +104,14 @@
 		,ts.expiredday
 		,ts.price
 		,ts.externprice
+		,ts.processid,ts.processtype,ts.testtypeother
+		,ts.testtypeid,ts.testtype,ts.processother
+		,ts.storeid,ts.storename,ts.storetempurature,ts.storeother
+		,ts.statusid,ts.statustype,ts.statusother
+		,ts.wrapherproperties
+		,ts.executestandard,ts.executegrade
 		,ts.testproject stestproject
-		,ts.methodname smethodname  
+		,ts.methodname smethodname 
 	  ,tp.id tpid  
 		,tp.qualificationid
 		,tp.outsitecustomerid
@@ -113,18 +129,12 @@
 	  select
 		ts.sampleid 
 		,ts.projectid
+		,ts.wrapherproperties
 		,samplename
 		,samplenumber 
 		,samplequality
 		,samplespec
-		,samplevolume
-		,storeid
-		,storeother
-		,statusid
-		,statusother
-		,processid
-		,processother
-		,sampleuserid
+		,samplevolume 
 		,sampledate
 		,manufactory
 		,manufactoryaddress
@@ -133,12 +143,25 @@
 		,manufactoryphone
 		,manudate
 		,manuno
-		,remark
+		,ts.remark
 		,expiredday
 		,price
 		,tm.testproject
 		,tm.methodname
-		,externprice 
+		,externprice
+	  ,ts.testtypeid
+	  ,t.testtype
+	  ,ts.testtypeother
+		,ts.storeid,tstore.storetempurature
+		, tstore.storename,ts.storeother
+		 ,ts.processid
+		 ,  tprocess.sampleprocess   processtype
+		 ,ts.processother
+			,ts.statusid 
+			, tsttus.statustype  statustype
+			,ts.statusother
+		  ,ts.executestandard
+			,ts.executegrade
 		 from t_sample ts
 		 left join
 		 (
@@ -156,6 +179,14 @@
 			group by  t.sampleid
 		 ) tm
 		 on   tm.sampleid=ts.sampleid
+		 left join t_test_type t
+		 on t.id=ts.testtypeid
+		 left join t_sapmple_store_type tstore
+		 on tstore.id=ts.storeid
+		 left join t_sample_process_type tprocess
+		 on tstore.id=ts.processid
+		 left join t_sapmle_status_type tsttus
+		 on tsttus.id=ts.statusid
 	 ) ts
 	on ts.projectid=t.projectid  
 	left join t_test_project tp
@@ -183,14 +214,7 @@
 		,ts.samplenumber 
 		,ts.samplequality
 		,ts.samplespec
-		,ts.samplevolume
-		,ts.storeid
-		,ts.storeother
-		,ts.statusid
-		,ts.statusother
-		,ts.processid
-		,ts.processother
-		,ts.sampleuserid
+		,ts.samplevolume 
 		,ts.sampledate
 		,ts.manufactory
 		,ts.manufactoryaddress
@@ -203,8 +227,14 @@
 		,ts.expiredday
 		,ts.price
 		,ts.externprice
+		,ts.processid,ts.processtype,ts.testtypeother
+		,ts.testtypeid,ts.testtype,ts.processother
+		,ts.storeid,ts.storename,ts.storetempurature,ts.storeother
+		,ts.statusid,ts.statustype,ts.statusother
+		,ts.wrapherproperties
+		,ts.executestandard,ts.executegrade
 		,ts.testproject stestproject
-		,ts.methodname smethodname  
+		,ts.methodname smethodname 
 	  ,tp.id tpid  
 		,tp.qualificationid
 		,tp.outsitecustomerid
@@ -222,18 +252,12 @@
 	  select
 		ts.sampleid 
 		,ts.projectid
+		,ts.wrapherproperties
 		,samplename
 		,samplenumber 
 		,samplequality
 		,samplespec
-		,samplevolume
-		,storeid
-		,storeother
-		,statusid
-		,statusother
-		,processid
-		,processother
-		,sampleuserid
+		,samplevolume 
 		,sampledate
 		,manufactory
 		,manufactoryaddress
@@ -242,12 +266,25 @@
 		,manufactoryphone
 		,manudate
 		,manuno
-		,remark
+		,ts.remark
 		,expiredday
 		,price
 		,tm.testproject
 		,tm.methodname
-		,externprice 
+		,externprice
+	  ,ts.testtypeid
+	  ,t.testtype
+	  ,ts.testtypeother
+		,ts.storeid,tstore.storetempurature
+		, tstore.storename,ts.storeother
+		 ,ts.processid
+		 ,  tprocess.sampleprocess   processtype
+		 ,ts.processother
+			,ts.statusid 
+			, tsttus.statustype  statustype
+			,ts.statusother
+		  ,ts.executestandard
+			,ts.executegrade
 		 from t_sample ts
 		 left join
 		 (
@@ -265,6 +302,14 @@
 			group by  t.sampleid
 		 ) tm
 		 on   tm.sampleid=ts.sampleid
+		 left join t_test_type t
+		 on t.id=ts.testtypeid
+		 left join t_sapmple_store_type tstore
+		 on tstore.id=ts.storeid
+		 left join t_sample_process_type tprocess
+		 on tstore.id=ts.processid
+		 left join t_sapmle_status_type tsttus
+		 on tsttus.id=ts.statusid
 	 ) ts
 	on ts.projectid=t.projectid  
 	left join t_test_project tp

@@ -2,8 +2,10 @@ package com.bjdfzh.flow.dao;
 
 import java.util.List;
 
-import com.bjdfzh.flow.entity.RoleDiscount;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.bjdfzh.flow.entity.RoleDiscount;
+@Transactional
 public interface RoleDiscountMapper {
 List<RoleDiscount>	getrolediscount();
 RoleDiscount getrolediscountbyid(String domainid,String roleid);

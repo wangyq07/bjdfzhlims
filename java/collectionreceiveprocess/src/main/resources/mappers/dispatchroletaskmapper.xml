@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.collectionreceiveprocess.dao.DispatchRoleTaskMapper">
+<resultMap type="com.bjdfzh.collectionreceiveprocess.entity.RoleTestProject" id="RoleTestProjectMap">
+<id column="id" property="id"/>
+<result column="label" property="label" />
+<result column="pid" property="pid" />
+<collection property="taskdispatchs" ofType="com.bjdfzh.collectionreceiveprocess.entity.DispatchRoleTask">
+<id column="taskid" property="id" />
+<result column="roleid" property="roleid" />
+<result column="testid" property="testid" />
+<result column="sampleid" property="sampleid" />
+<result column="receivequality" property="receivequality" />
+<result column="screendiameter" property="screendiameter" />
+</collection> 
+</resultMap>  
+ <select id="getroletaskdispatch" parameterType="string" resultMap="RoleTestProjectMap">
+		        select
+				 tr.id
+				 ,tr.pid
+				 ,tr.label
+				 ,tsd.id taskid
+				 ,tsd.roleid 
+				 ,tp.id testid
+				 ,tp.sampleid
+				 ,tsd.receivequality 
+				 ,tsd.screendiameter
+				 from
+				 (
+				 select t.id,null pid,t.name label  from t_role  t
+				 where exists
+				 (
+				 select 1
+				 from
+				 (
+				 SELECT id 
+				 FROM t_organization t where t.parentId= 'fe77519d-4467-214e-647b-e0089e45306d' 
+				 ) t1
+				 where t1.id=t.organizationId
+				 )
+				 ) tr
+				 left join t_sample_dispatch tsd
+				 on tsd.roleid=tr.id
+				 left join
+				 (
+				 select
+				 tp.id,tp.sampleid
+				 from
+				 t_test_project tp 
+				 where exists
+				 (
+				   select 1 from
+					 (
+					   select  sampleid from t_sample ts
+						 where exists 
+						 (
+						    select 1 from 
+								(
+								select projectid from
+								t_business_project
+								where contactid=#{contactid}
+								) tpro
+								where tpro.projectid=ts.projectid 
+						 )
+					 ) ts
+					 where ts.sampleid=tp.sampleid
+				 )
+				 ) tp
+				 on tp.id=tsd.testprojectid  
+    </select>  
+    <insert id="addtaskdispatchs" parameterType="java.util.ArrayList">
+     insert into t_sample_dispatch(
+                                    id
+									,testprojectid
+									,roleid
+									,receivequality
+									,screendiameter
+									,remark 
+									)values 
+	  <foreach collection="list" index="index" separator="," item="item">
+            (
+		     UUID()
+			,#{item.testid}
+			,#{item.roleid}
+			,#{item.receivequality}
+			,#{item.screendiameter}
+			,#{item.remark}
+			) 
+         </foreach>
+    </insert> 
+    <delete id="deletedispatchtask" parameterType="string">
+    delete from t_sample_dispatch t 
+		 where exists
+		    (
+				    select 1 from
+						 (
+						 select
+						 tp.id,tp.sampleid
+						 from
+						 t_test_project tp 
+						 where exists
+						 (
+						   select 1 from
+							 (
+							   select  sampleid from t_sample ts
+								 where exists 
+								 (
+								    select 1 from 
+										(
+										select projectid from
+										t_business_project 
+										where contactid=#{contactid}
+										) tpro
+										where tpro.projectid=ts.projectid 
+								 )
+							 ) ts
+							 where ts.sampleid=tp.sampleid
+						 )
+						 ) tp
+						where tp.id=t.testprojectid
+					)	   
+    </delete> 
+</mapper>

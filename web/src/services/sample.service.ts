@@ -2,10 +2,15 @@ import { Injectable } from '@angular/core';
 import { Id, RepositoryService } from 'src/services/repository.service';
 import { HttpService } from 'src/services/http.service';  
 import { ContactTestProject } from './ContactService';
+import { CommonType } from 'src/main/businessprocess/evirmentheath/businessproject/businessproject.service';
 @Injectable({ providedIn: 'root' })
 export class SampleService extends RepositoryService<Sample> {
   constructor(public http: HttpService) {
   super(http, { controller: { name: 'samples',servicetype:'businessprocess' } });
+  }
+  supplimentupdatesamples(samples:any[])
+  {
+    return this.http.post(`${this.option.controller?.name}/supplimentupdatesamples`,{sampledatas:samples},this.option.controller?.servicetype);
   }
 }  
 export interface Sample extends Id {  
@@ -14,14 +19,7 @@ projectid?:string;
 samplenumber?:string; 
 samplequality?:string;
 samplespec?:string;
-samplevolume?:string;
-storeid?:string;
-storeother?:string;
-statusid?:string;
-statusother?:string;
-processid?:string;
-processother?:string;
-sampleuserid?:string;
+samplevolume?:string; 
 sampledate?:string;
 manufactory?:string;
 manufactoryaddress?:string;
@@ -37,5 +35,16 @@ methodname?:string;
 testproject?:string;
 externprice?:string|number;
 testprojects?:ContactTestProject[];
-domainid?:number
+domainid?:number;
+ testtype?:CommonType;
+ status?:CommonType;
+ store?:CommonType;
+ process?:CommonType;
+ executestandard?:string;
+ executegrade?:string;
+ wrapherproperties?:string;
+testtypeother?:string;
+ processother?:string;
+storeother?:string;
+statusother?:string;
 }

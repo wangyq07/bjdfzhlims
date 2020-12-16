@@ -52,8 +52,7 @@ public class ContactProjectController {
 		{
 			cprojectservice.deletecontacttestbyproject(Params);
 			cprojectservice.deletesamplebyproject(Params);
-			cprojectservice.deleteproject(Params);
-			 
+			cprojectservice.deleteproject(Params); 
 		}
 		return new JSONObject();
     }
@@ -101,8 +100,7 @@ public class ContactProjectController {
 				setsamples(project,samples,testprojects);
 			}
 			sampleservice.addsamples(samples);
-			ctestprojectservice.addcontactprojects(testprojects);
-			
+			ctestprojectservice.addcontactprojects(testprojects); 
 		 }
 		else if(contacts !=null&&request.getMethod().contentEquals("PUT"))
 		{

@@ -86,4 +86,29 @@ public class SampleController {
 			}
 		    return Params; 
   }
+	@RequestMapping(value ="samples/supplimentupdatesamples",method = {RequestMethod.POST,RequestMethod.PUT},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	JSONObject supplimentupdatesamples(
+			@RequestBody JSONObject Params
+		    ,@RequestHeader(name="Authorization") String headers,
+		    HttpServletRequest request
+			) throws Exception {  
+				  
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		}
+		JSONObject jo=new JSONObject();
+		try
+		{
+		List<Sample> samples=	Params.getJSONArray("sampledatas").toJavaList(Sample.class);
+		sampleservice.supplimentupdatesamples(samples);
+		}
+		catch(Exception ex)
+		{
+			jo.put("msg", ex.getMessage());
+			jo.put("stack", ex.getStackTrace());
+		}
+		return jo;
+	}
 }

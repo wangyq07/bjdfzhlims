@@ -2,9 +2,11 @@ package com.bjdfzh.userprivilage.dao;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.bjdfzh.userprivilage.entity.Action;
 import com.bjdfzh.userprivilage.entity.RelationId;
-
+@Transactional
 public interface ActionMapper {
 	  List<Action> getactions();
 	  Action getaction(String id);

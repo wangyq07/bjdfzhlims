@@ -68,6 +68,7 @@ getData() {
    
   this.flowservice.getTaskListByUserId(this.indexService.auth.user.id+'').subscribe((x)=>
   { 
+    if(x.list !=undefined)
     [this.data, this.total] = [x.list as Task[], x.list.length];
   }
   );

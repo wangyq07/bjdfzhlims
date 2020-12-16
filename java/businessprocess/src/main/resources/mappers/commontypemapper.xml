@@ -9,10 +9,22 @@
   <select id="getdomains" parameterType="integer" resultMap="CommonTypeMap">
     select id,label from t_sample_domain
  </select> 
- <select id="getsteals" parameterType="integer" resultMap="CommonTypeMap">
+ <select id="getseals" parameterType="integer" resultMap="CommonTypeMap">
     select id,sealname label from t_qualification_seal
  </select>
  <select id="getreceivesampleform" resultMap="CommonTypeMap">
  select id,samplesource label,sourcecode code from t_sample_source
+ </select> 
+  <select id="getsamplestatus" resultMap="CommonTypeMap">
+select id,t.statustype label  from t_sapmle_status_type t
+ </select> 
+ <select id="getsamplestore" resultMap="CommonTypeMap">
+ select id,t.storename label,t.storetempurature code from t_sapmple_store_type t
+ </select> 
+ <select id="getsampleprocess" resultMap="CommonTypeMap">
+ select  id,sampleprocess label  from t_sample_process_type
+ </select> 
+ <select id="getsampletesttype" resultMap="CommonTypeMap">
+ select id,testtype label from t_test_type
  </select> 
 </mapper>

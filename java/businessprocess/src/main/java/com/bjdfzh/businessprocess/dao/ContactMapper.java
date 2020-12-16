@@ -2,13 +2,15 @@ package com.bjdfzh.businessprocess.dao;
 
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSONArray;
 import com.bjdfzh.businessprocess.entity.Contact;
 import com.bjdfzh.businessprocess.entity.ContactCustomer;
 import com.bjdfzh.businessprocess.entity.ContactProject;
 import com.bjdfzh.businessprocess.entity.ContactProjectCount;
 import com.bjdfzh.businessprocess.entity.ContactSeal;
-
+@Transactional
 public interface ContactMapper {
 List<Contact> getcontactbycustomer(int customerid,String userid);
 JSONArray getcontactjsonobject(int customerid);

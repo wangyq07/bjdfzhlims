@@ -2,8 +2,10 @@ package com.bjdfzh.businessprocess.dao;
 
 import java.util.List;
 
-import com.bjdfzh.businessprocess.entity.Customer;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.bjdfzh.businessprocess.entity.Customer;
+@Transactional
 public interface CustomerMapper {
 List<Customer>	getcustomers(String userid);
 Customer getcustomer(String id);

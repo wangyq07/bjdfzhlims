@@ -120,9 +120,9 @@ public class QualificationController {
    
 		 
 	}
-	@RequestMapping(value ="steals/20/1",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@RequestMapping(value ="seals/20/1",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public String getSteals (
+	public String getSeals (
 			@RequestBody String Params
 		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
 				  
@@ -130,7 +130,67 @@ public class QualificationController {
 		{
 			throw new Exception("认证已经过期，请登录");
 		} 
-		 List<CommonType> quals=commonservice.getsteals();
+		 List<CommonType> quals=commonservice.getseals();
+	    return   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", JSONObject.toJSONString(quals),quals.size(),Params);
+   
+		 
+	}
+	@RequestMapping(value ="samplestatus",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String getStatus (
+			@RequestBody String Params
+		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
+				  
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		} 
+		 List<CommonType> quals=commonservice.getsamplestatus();
+	    return   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", JSONObject.toJSONString(quals),quals.size(),Params);
+   
+		 
+	}
+	@RequestMapping(value ="sampleprocess",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String getProcess (
+			@RequestBody String Params
+		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
+				  
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		} 
+		 List<CommonType> quals=commonservice.getsampleprocess();
+	    return   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", JSONObject.toJSONString(quals),quals.size(),Params);
+   
+		 
+	}
+	@RequestMapping(value ="samplestore",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String getStore (
+			@RequestBody String Params
+		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
+				  
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		} 
+		 List<CommonType> quals=commonservice.getsamplestore();
+	    return   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", JSONObject.toJSONString(quals),quals.size(),Params);
+   
+		 
+	}
+	@RequestMapping(value ="testtype",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String getTestType (
+			@RequestBody String Params
+		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
+				  
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		} 
+		 List<CommonType> quals=commonservice.getsampletesttype();
 	    return   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", JSONObject.toJSONString(quals),quals.size(),Params);
    
 		 

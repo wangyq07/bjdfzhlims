@@ -114,5 +114,6 @@
   	<module>businessprocess</module>
   	<module>flowprocess</module>  
   	<module>flownotify</module>
+  	<module>collectionreceiveprocess</module>
   </modules>
 </project>

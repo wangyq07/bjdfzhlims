@@ -2,8 +2,10 @@ package com.bjdfzh.userprivilage.dao;
 
 import java.util.List;
 
-import com.bjdfzh.userprivilage.entity.Role;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.bjdfzh.userprivilage.entity.Role;
+@Transactional
 public interface RoleMapper {
 	 List<Role> getroles();
 	 Role getrole(String id);

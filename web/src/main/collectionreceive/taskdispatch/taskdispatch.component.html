@@ -1,1 +1,89 @@
-<p>taskdispatch works!</p>
+<div style="overflow: auto;"> 
+    <x-row style="height: 15px;"></x-row>
+ <x-row>
+     <x-button icon="ado-check" type="primary" plain (click)="submit()">提交</x-button>
+ </x-row>
+ <x-row style="height: 20px;"></x-row>
+         <x-row>
+           <x-col span=12>委托客户:{{delegatecustomer}}</x-col><x-col span=6>付款客户:{{paycustomer}}</x-col><x-col span=6>受检客户:{{testcustomer}}</x-col>
+         </x-row>
+         <x-row style="height: 20px;"></x-row>
+         <x-row>
+         <x-col span=4>样品来源:{{samplesource}}</x-col>
+         <x-col span=4>是否判定:{{ispanding}}</x-col>
+         <x-col span=4>资质盖章:{{seal}}</x-col>
+         <x-col span=4>服务类型:{{servicetype}}</x-col>
+         </x-row> 
+ <x-row style="height: 30px;"></x-row>
+ <x-row>
+     <x-col span=3>
+        <div style="overflow:scroll;height: 680px;"> 
+    <h4>工作组</h4>
+    <x-tree
+      #treeCom
+      au-adaption 
+      [data]="treeData" 
+      [nodeHeight]="1.875"
+      (activatedChange)="action($event)"
+    >
+    </x-tree>
+   </div>
+</x-col>
+<x-col span=5> 
+        <h4>项目</h4>
+        <div style="overflow:scroll;height: 630px;"> 
+        <x-tree
+          #projecttreeCom
+          checkbox
+          au-adaption 
+          [data]="taskTreeData"
+          expandedLevel="0"
+          [nodeHeight]="1.875"
+          (activatedChange)="projectaction($event)"
+          (checkboxChange)="checkaction($event)"
+        >
+        </x-tree> 
+        </div>
+</x-col>
+<x-col span=14  >
+    <div [style.display]="projecthidden">
+        <x-row> <h4>项目</h4></x-row>
+       <x-row><x-col span=5>编号:{{currentProject.projectnumber}}</x-col> 
+        <x-col span=5>领域:{{currentProject.domain?.label}}</x-col>
+    </x-row>
+    <x-row>
+        <x-col span=5>报告:{{currentProject.reportcount}}</x-col>  
+    </x-row>
+    </div>
+ 
+</x-col>
+<x-col span=14 >
+    <div [style.display]="samplehidden"> 
+       <x-row><h4>样品</h4></x-row> 
+        <x-row> 
+            <x-col span=5>监测类型:{{currentSample.testtype?.label}}</x-col>
+            <x-col span=5>样品状态:{{currentSample.status?.label}}</x-col>
+            <x-col span=5>保存状态:{{currentSample.store?.label}}</x-col>
+            <x-col span=5>处理方式:{{currentSample.process?.label}}</x-col>  
+        </x-row>
+        <x-row> 
+            <x-col span=5>执行标准:{{currentSample.executestandard}}</x-col>
+            <x-col span=5>样品等级:{{currentSample.executegrade}}</x-col>
+            <x-col span=5>样品数量:{{currentSample.samplequality}}</x-col>
+            <x-col span=5>样品包装:{{currentSample.wrapherproperties}}</x-col>  
+        </x-row>
+    </div>
+</x-col>
+<x-col span=14 >
+    <div [style.display]="testprojecthidden">
+        <x-row><h4>监测项目</h4></x-row>
+        <x-row> 
+            <x-col span=5>检测项目:{{currentTestProject.testproject}}</x-col>
+            <x-col span=15>检测标准:{{currentTestProject.methodname}}</x-col> 
+        </x-row>
+        <x-row>
+            <x-col span=4>检测限值:{{currentTestProject.limitmin}}-{{currentTestProject.limitmax}}</x-col>
+        </x-row>
+    </div>
+</x-col>
+</x-row>

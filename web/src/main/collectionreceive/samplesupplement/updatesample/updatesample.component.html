@@ -1,0 +1,56 @@
+<x-row style="height:20px"></x-row>
+ <x-row>
+   <x-col span=8>
+       <x-select [data]="testtype" [(ngModel)]="testtypeid" label="监测类型" direction="row"></x-select>
+   </x-col>
+   <x-col span=4>
+     <x-input label="其它" direction="row" [disabled]="sampletesttypedisabled" [(ngModel)]="curentsample.testtypeother" ></x-input>
+</x-col>  
+   <x-col span=8>
+    <x-select [data]="status" [(ngModel)]="statusid" label="样品状态" direction="row"></x-select>
+   </x-col> 
+   <x-col span=4>
+    <x-input label="其它" direction="row" [disabled]="samplestatusdisabled" [(ngModel)]="curentsample.statusother" ></x-input>
+</x-col>
+ </x-row>
+ <x-row style="height:30px"></x-row>
+ <x-row>
+    <x-col span=8>
+        <x-select [data]="process" [(ngModel)]="processid" label="样品处理" direction="row"></x-select>
+    </x-col>
+    <x-col span=4>
+      <x-input label="其它" direction="row" [disabled]="sampleprocessdisabled" [(ngModel)]="curentsample.processother" ></x-input>
+ </x-col>  
+    <x-col span=8>
+     <x-select [data]="store" [(ngModel)]="storeid" label="保存条件" direction="row"></x-select>
+    </x-col> 
+    <x-col span=4>
+     <x-input label="其它" direction="row" [disabled]="samplestoredisabled" [(ngModel)]="curentsample.storeother" ></x-input>
+ </x-col>
+  </x-row>
+  <x-row style="height:30px"></x-row>
+  <x-row> 
+    <x-col span=8>
+        <x-input label="规格" direction="row"   [(ngModel)]=" curentsample.samplespec" ></x-input>
+   </x-col> 
+  
+   <x-col span=8>
+    <x-input label="样品数量" direction="row"   [(ngModel)]=" curentsample.samplequality" ></x-input>
+ </x-col>  
+ <x-col span=8>
+    <x-input label="产品执行标准" direction="row"   [(ngModel)]=" curentsample.executestandard" ></x-input>
+ </x-col>  
+  </x-row>
+  <x-row style="height:30px"></x-row>
+  <x-row> 
+    <x-col span=8>
+     <x-input label="商标" direction="row"  [(ngModel)]="curentsample.brand" ></x-input>
+ </x-col>
+ <x-col span=8>
+    <x-input label="样品等级" direction="row"   [(ngModel)]=" curentsample.executegrade" ></x-input>
+ </x-col>  
+ <x-col span=8>
+    <x-input label="样品包装及性状" direction="row"  [(ngModel)]="curentsample.wrapherproperties" ></x-input>
+</x-col>
+  </x-row>
+  

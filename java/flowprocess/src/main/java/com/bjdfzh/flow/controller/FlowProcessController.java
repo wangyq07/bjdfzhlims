@@ -181,6 +181,8 @@ public class FlowProcessController {
 	public JSONArray getAllProcess(@RequestParam(required=false)String Params)
 	{  
 		  JSONArray ja=new JSONArray(); 
+		  try
+		  {
 	     Supplier<Stream<ProcessDefinition>> depids=()-> repositoryService.createProcessDefinitionQuery().list().stream() ;
 	     List<Integer> versions=  depids.get().map(ProcessDefinition::getVersion).distinct().collect(Collectors.toList());
 	     List<String> processkeys= depids.get().map(ProcessDefinition::getKey).distinct().collect(Collectors.toList());
@@ -216,7 +218,13 @@ public class FlowProcessController {
 				  }
 				}
 			  }
-		  }  
+		  }
+		  }
+		  catch(Exception e)
+		  {
+			  logger.error("错误信息:{}",e.getMessage());
+			  logger.error("错误:{}",e.getStackTrace());
+		  }
 		 return ja;
 	}
 	
@@ -226,6 +234,9 @@ public class FlowProcessController {
     		 ,@RequestHeader(name="Authorization") String headers 
     		)
     {
+		JSONObject jo=new JSONObject();
+		try
+		{
 	   Task t= taskService.createTaskQuery().taskId(formparm.getString("taskid")).singleResult();
 		if(t !=null)
 		{
@@ -244,9 +255,15 @@ public class FlowProcessController {
 		taskService.setVariablesLocal(formparm.getString("taskid"), jb);
 	    taskService.complete(formparm.getString("taskid"));
 		}
-		JSONObject jo=new JSONObject();
+	
 		jo.put("MSG", "成功");
 		return jo;
+		}
+		catch(Exception e)
+		{
+			jo.put("MSG", e);
+		}
+		return  jo;
     }
 	/**
      * 更新单个流程
@@ -335,6 +352,8 @@ public class FlowProcessController {
 	@ResponseBody
 	public JSONObject toShowTaskbyParams(@RequestBody JSONObject params) { 
 		JSONObject jb=new JSONObject();
+		try
+		{
 		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>(); 
 		List<HistoricTaskInstance> taskList =new ArrayList<HistoricTaskInstance>();
 		String userid=params.getString("userid");
@@ -351,7 +370,6 @@ public class FlowProcessController {
 			if(userid!=null&&userid !="")
 			{
 				taskList=this.getTaskbyUserid(userid, instancetasks.get().collect(Collectors.toList()),iscomplete);
-				//taskList =instancetasks.get().filter(c->c.getTaskLocalVariables().get("userid").equals(userid)).collect(Collectors.toList());
 			}
 			else if(roleids!=null&&roleids.size()>0)
 			{
@@ -437,6 +455,12 @@ public class FlowProcessController {
 		jb.put("list", resultList);
 		jb.put("Msg", "获取成功");
 		jb.put("length", resultList.size());
+		}
+		catch(Exception e)
+		{
+			logger.error("错误信息:{}",e.getMessage());
+			logger.error("错误:{}",e.getStackTrace());
+		}
 		return jb;
 	}
 	

@@ -6,7 +6,7 @@ import { ProjectUtil } from 'src/share/utilclass';
  
 import { CustomerComponent } from '../../customer/customer.component';
 import { SampleComponent } from '../../sample/sample.component';
-import { BusinessProject, CommonType, ContactProjectService, RecieveSampleFormService, ServiceType, ServiceTypesService, StealService } from '../businessproject.service'; 
+import { BusinessProject, CommonType, ContactProjectService, RecieveSampleFormService, SealService, ServiceType, ServiceTypesService } from '../businessproject.service'; 
 import { Contact } from 'src/services/ContactService'; 
 @Component({
   selector: 'app-addbusinessproject',
@@ -16,7 +16,7 @@ import { Contact } from 'src/services/ContactService';
 export class AddbusinessprojectComponent implements OnInit {
 
   constructor(private receiveservice:RecieveSampleFormService 
-    ,private stealService:StealService
+    ,private sealService:SealService
     ,private service:ContactProjectService
     ,private projectservicetype:ServiceTypesService
     ,private domainservice:SampleDomainService
@@ -32,8 +32,8 @@ export class AddbusinessprojectComponent implements OnInit {
       }
     ); 
     
-    this.stealService.getList(1,20,{}).subscribe(
-      (x)=>
+    this.sealService.getList(1,20,{}).subscribe(
+      (x:any)=>
       {
         this.sealdata=x.list as CommonType[];
       }  
@@ -291,7 +291,7 @@ export class AddbusinessprojectComponent implements OnInit {
            {
              project[attr]=(this.currentproject as any)[attr];
            }
-           project.projectstatus=0;
+           //project.projectstatus=0;
            project.samples=[];
            project.id=ProjectUtil.JsNewGuid();
            var sample:any={};
@@ -312,8 +312,9 @@ export class AddbusinessprojectComponent implements OnInit {
     }
     else
     {
+      if(this.currentproject.projectstatus ==0)
       this.currentproject.projectnumber='临时项目'+(this.currentprojectcount+1);  
-      this.currentproject.projectstatus=0; 
+      //this.currentproject.projectstatus=0; 
      tprojects.push(this.currentproject);
     }
   }

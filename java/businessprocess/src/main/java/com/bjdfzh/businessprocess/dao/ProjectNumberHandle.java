@@ -8,6 +8,7 @@ import java.util.concurrent.Semaphore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bjdfzh.businessprocess.entity.Contact;
@@ -15,6 +16,7 @@ import com.bjdfzh.businessprocess.entity.ContactProject;
 import com.bjdfzh.businessprocess.entity.ContactProjectCount;
 import com.bjdfzh.userprivilage.entity.HttpClientUtil;
 @Service
+@Transactional
 public class ProjectNumberHandle {
   @Autowired
   ContactMapper contactService;
