@@ -3,7 +3,7 @@
       width: 100%;
       background: var(--x-background);
       border-collapse: collapse;
-      border: 0.0625rem solid var(--x-border-200);
+      border: 0.1rem solid var(--x-border-200);
       tr > th,
       tr > td {
         border-bottom: 0.0625rem solid var(--x-border-200);
@@ -19,7 +19,7 @@
         &:last-child {
           > th,
           > td {
-            border-width: 1px;
+            border-width: 10px;
           }
         }
         th {

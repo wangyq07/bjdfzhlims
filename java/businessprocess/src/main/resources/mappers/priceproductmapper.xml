@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.businessprocess.dao.PriceProductMapper">
+<resultMap type="com.bjdfzh.businessprocess.entity.PriceProduct" id="PriceProductMap"> 
+<id column="id" property="id" /> 
+<result column="pid" property="pid"  />  
+<result column="pricename" property="label"  />  
+<result column="formular" property="formular" /> 
+<result column="limitprice" property="limitprice"/>
+<result column="perdecreace" property="perdecreace" />
+<result column="mincount" property="mincount" />
+ <collection property="prices" ofType="com.bjdfzh.businessprocess.entity.PriceQualification">
+    <id column="quid" property="id"/>
+	<result column="qualificationid" property="qualificationid" />
+	<result column="id" property="priceid" />
+	<result column="testprojectname" property="testprojectname" />  
+	<result column="methodname" property="methodname" />
+	<result column="standardprice" property="standardprice" />  
+	<result column="exceptionprice" property="exceptionprice" />
+  </collection> 
+</resultMap>
+    <select id="getpriceproduct" parameterType="string" resultMap="PriceProductMap">
+     select
+		 tqfp.id
+		 ,null pid
+		 ,tqfp.mincount
+		 ,tqfp.perdecreace
+		 ,tqfp.pricename
+		 ,tqfp.formular
+		 ,tqfp.limitprice
+		 ,tqfpd.id quid
+		 ,tqfpd.qualificationid 
+		 ,tqfpd.exceptionprice
+		 ,tc.testproject testprojectname
+		 ,tm.methodname
+		 ,tq.price standardprice
+		 from t_qualificationprice tqfp
+		 left join t_qualificationprice_detail tqfpd
+		 on tqfpd.priceid=tqfp.id
+		 left join
+		   ( 
+		   select tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
+			 where tq.companyid=1
+			 ) tq
+		 on tq.id=tqfpd.qualificationid 
+		 left join t_test_category tc
+		 on tc.id=tq.testprojectid
+		 left join t_test_method tm
+		 on tm.id=tq.methodid
+    </select>
+     <select id="getpriceproductbyid" parameterType="string" resultMap="PriceProductMap">
+    select
+		 tqfp.id
+		 ,null pid
+		  ,tqfp.perdecreace
+		 ,tqfp.pricename
+		 ,tqfp.pricename
+		 ,tqfp.formular
+		 ,tqfp.limitprice
+		 ,tqfpd.id quid
+		 ,tqfpd.qualificationid 
+		 ,tqfpd.exceptionprice
+		 ,tc.testproject testprojectname
+		 ,tm.methodname
+		 ,tq.price standardprice
+		 from t_qualificationprice tqfp
+		 left join t_qualificationprice_detail tqfpd
+		 on tqfpd.priceid=tqfp.id
+		 left join
+		   ( 
+		   select tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
+			 where tq.companyid=1
+			 ) tq
+		 on tq.id=tqfpd.qualificationid 
+		 left join t_test_category tc
+		 on tc.id=tq.testprojectid
+		 left join t_test_method tm
+		 on tm.id=tq.methodid
+		 where tqfp.id=#{id}
+    </select>
+    <insert id="addpriceproduct" parameterType="com.bjdfzh.businessprocess.entity.PriceProduct">
+        insert t_qualificationprice(
+		    id
+			,pricename
+			,formular
+			,limitprice
+			,mincount
+			,perdecreace  
+		)values 
+		(
+		 #{id}
+		,#{label}
+		,#{formular}
+		,#{limitprice}
+		,#{mincount} 
+		,#{perdecreace}   
+		) 
+		 
+    </insert>
+     <insert id="addpricequalification" parameterType="java.util.ArrayList">
+        insert t_qualificationprice_detail(
+		    id
+			,priceid
+			,qualificationid
+			,exceptionprice  
+		)values
+		<foreach collection="list" index="index" separator="," item="item">
+		(
+		  uuid()
+		,#{item.priceid}
+		,#{item.qualificationid}
+		,#{item.exceptionprice}
+		) 
+		 </foreach>
+    </insert>
+    <update id="updatepriceproduct" parameterType="com.bjdfzh.businessprocess.entity.PriceProduct">
+        update t_qualificationprice 
+          set
+			  pricename =#{label}
+			 ,formular=#{formular}
+			 ,limitprice=#{limitprice}
+			 ,mincount=#{mincount} 
+		     ,perdecreace=#{perdecreace} 
+			where id=#{id} 
+    </update>
+    <delete id="deletepriceproduct"  parameterType="string">
+     delete from  t_qualificationprice t where  id=#{id}
+    </delete>
+    <delete id="deletepricequalification"  parameterType="string">
+    delete from  t_qualificationprice_detail t where  priceid=#{id}
+    </delete> 
+</mapper>

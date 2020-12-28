@@ -117,13 +117,8 @@ export class EvirmentheathComponent extends PageBase implements OnInit,AfterCont
           (y)=>
           {
             this.contactlist.currentContact.testfee =Number(  this.contactlist.currentContact.testfee)+Number(y.price);
-            y.testprojects?.map(
-              (z)=>
-              {
-                if(z.isextern!=1&&z.realprice !=undefined)
-                this.contactlist.currentContact.standardfee =Number(  this.contactlist.currentContact.standardfee)+Number(z.realprice);
-              }
-            );  
+            this.contactlist.currentContact.standardfee =Number(  this.contactlist.currentContact.standardfee)+Number(y.standardfee);
+            
           }
         );
       }
@@ -139,8 +134,7 @@ export class EvirmentheathComponent extends PageBase implements OnInit,AfterCont
                                               +Number(this.contactlist.currentContact.collectionfee)
                                               +reportfee
                                               +Number(this.contactlist.currentContact.externfee))*100)/100;
-   this.contactlist.currentContact.ugency=this.contactlist.currentContact.service?.label;
-   console.log(this.contactlist.currentContact);
+   this.contactlist.currentContact.ugency=this.contactlist.currentContact.service?.label; 
     if(!this.businessprojectlist.contactdisabled)
     {
        this.contactService.updatecontactinfo( this.contactlist.currentContact).subscribe

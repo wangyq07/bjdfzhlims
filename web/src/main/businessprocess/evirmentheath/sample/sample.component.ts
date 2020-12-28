@@ -47,8 +47,8 @@ export class SampleComponent extends PageBase implements OnInit,DoCheck {
      return  {projectid:this.currentproject!=undefined?this.currentproject.id:undefined,id:ProjectUtil.JsNewGuid(),
       samplename:'',
      samplequality:1+'',
-     price:0.01,
-     externprice:0.01,
+     price:0.0,
+     externprice:0.0,
      testprojects:[]
      }; 
    }

@@ -12,6 +12,10 @@ export class SampleService extends RepositoryService<Sample> {
   {
     return this.http.post(`${this.option.controller?.name}/supplimentupdatesamples`,{sampledatas:samples},this.option.controller?.servicetype);
   }
+  getsamplestandardprice(contacttestprojects:any[])
+  {
+    return this.http.post(`${this.option.controller?.name}/getsamplestandardprice`,{testprojects:contacttestprojects},this.option.controller?.servicetype);
+  }
 }  
 export interface Sample extends Id {  
 samplename?:string;
@@ -47,4 +51,5 @@ testtypeother?:string;
  processother?:string;
 storeother?:string;
 statusother?:string;
+standardfee?:number;
 }

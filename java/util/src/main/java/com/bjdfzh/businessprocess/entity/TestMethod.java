@@ -1,20 +1,26 @@
 package com.bjdfzh.businessprocess.entity;
 
-public class TestMethod {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class TestMethod  implements  Serializable {
 int id;
-String methodname;
+String Methodname;
+ 
+ 
+public String getMethodname() {
+	return Methodname;
+}
+public void setMethodname(String methodname) {
+	Methodname = methodname;
+}
 public int getId() {
 	return id;
 }
 public void setId(int id) {
 	this.id = id;
 }
-public String getMethodname() {
-	return methodname;
-}
-public void setMethodname(String methodname) {
-	this.methodname = methodname;
-}
+ 
 public String getRemark() {
 	return remark;
 }

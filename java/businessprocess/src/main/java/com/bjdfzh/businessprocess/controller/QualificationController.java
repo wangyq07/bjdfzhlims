@@ -1,8 +1,11 @@
 package com.bjdfzh.businessprocess.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,10 +21,15 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bjdfzh.businessprocess.dao.CommonTypeMapper;
 import com.bjdfzh.businessprocess.dao.QualificationCompanyMapper;
-import com.bjdfzh.businessprocess.dao.QualificationMapper; 
+import com.bjdfzh.businessprocess.dao.QualificationMapper;
+import com.bjdfzh.businessprocess.dao.TestMethodMapper;
+import com.bjdfzh.businessprocess.dao.TestProjectMapper;
 import com.bjdfzh.businessprocess.entity.Qualification;
 import com.bjdfzh.businessprocess.entity.QualificationCompany;
 import com.bjdfzh.businessprocess.entity.ServiceType;
+import com.bjdfzh.businessprocess.entity.TestMethod;
+import com.bjdfzh.businessprocess.entity.TestProject;
+import com.bjdfzh.businessprocess.entity.TestStandard;
 import com.bjdfzh.businessprocess.util.CacheGetBusinessModel;
 import com.bjdfzh.userprivilage.entity.CommonType;
 import com.bjdfzh.util.JwtUtil;
@@ -233,8 +241,35 @@ public class QualificationController {
 		{
 			throw new Exception("认证已经过期，请登录");
 		}
-		 
-		 return cmService.getQualificationBySearch(Params.getIntValue("companyid"), Params.getString("searchkey"));
+		List<Qualification> retlist=new ArrayList<Qualification>();
+	    String companyid=	Params.getString("companyid");
+	    if(companyid.contentEquals("1"))
+		  retlist=qualificationservice.getqualificationsearch(String.format("%s%s%s", "%",Params.getString("project"),"%") ,String.format("%s%s%s", "%",Params.getString("method"),"%"));
+	    else
+	    	retlist=qualificationservice.getqualificationsearchnon(companyid,String.format("%s%s%s", "%",Params.getString("project"),"%"));
+	   return retlist;
+	}
+	@RequestMapping(value ="qualifications/{Params}",method = {RequestMethod.POST,RequestMethod.GET,RequestMethod.DELETE},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String getqualificationsbyid(
+			@RequestBody String Params
+		    ,@RequestHeader(name="Authorization") String headers
+		    ,HttpServletRequest request
+			) throws Exception {  
+				  
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		}
+		int id=Integer.parseInt(Params);
+		if(request.getMethod().contentEquals("GET") )
+	   return JSONObject.toJSONString(qualificationservice.getqualificationsbyid(id));
+		else if(request.getMethod().contentEquals("DELETE"))
+		{
+			qualificationservice.deletequalification(id);
+			return "{msg:'删除成功'}";
+		}
+		return "{msg:'失败'}";
 	}
 	@RequestMapping(value ="qualifications/10/1",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 	@ResponseBody
@@ -275,11 +310,74 @@ public class QualificationController {
 		if(ja !=null&&ja.size()>1)
 		{
 			
-		 List<Qualification> quals=qualificationservice.getqualificationsbycompany(ja.getJSONObject(0).getIntValue("value"),ja.getJSONObject(1).getIntValue("value"));
+		 List<Qualification> quals=qualificationservice.getqualificationsbycompany(ja.getJSONObject(0).getString("value"),ja.getJSONObject(1).getIntValue("value"));
 	    return   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", JSONObject.toJSONString(quals),quals.size(),Params);
    
 		}
 		 
 		return String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", "[]",0,Params);
+	}
+	
+
+		@RequestMapping(value ="qualifications/addqualification",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+		@ResponseBody
+		public Qualification	addqualification(@RequestBody(required = false) JSONObject Params
+				    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
+			  
+				if(!JwtUtil.isExpire(headers))
+				{
+					throw new Exception("认证已经过期，请登录");
+				}
+				TestProject tp=new TestProject();TestMethod tm=new TestMethod();Qualification qlf=new Qualification();
+				TestStandard tstand=new TestStandard();
+				setqualifm(tp,tm,qlf,tstand,Params);
+				   cmService.addQualification(tp, tm,tstand, qlf);
+			    return   qlf;
+		}
+		@RequestMapping(value ="qualifications/deletequalification",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+		@ResponseBody
+		public JSONObject	deletequalification(@RequestBody(required = false) JSONObject Params
+				    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
+			  
+				if(!JwtUtil.isExpire(headers))
+				{
+					throw new Exception("认证已经过期，请登录");
+				}
+				 int id=Params.getIntValue("qualificationid");
+				   this.qualificationservice.deletequalification(id);
+			    return   Params;
+		}
+		@RequestMapping(value ="qualifications/updatequalification",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+		@ResponseBody
+	   public Qualification	updatequalification(@RequestBody(required = false) JSONObject Params
+			    ,@RequestHeader(name="Authorization") String headers  ) throws Exception
+		 {  
+		  
+			if(!JwtUtil.isExpire(headers))
+			{
+				throw new Exception("认证已经过期，请登录");
+			}
+			TestProject tp=new TestProject();TestMethod tm=new TestMethod();Qualification qlf=new Qualification();
+			TestStandard tstand=new TestStandard();
+			setqualifm(tp,tm,qlf,tstand,Params);
+			   cmService.updateQualification(tp, tm,tstand, qlf);
+		    return   qlf;
+	    }
+	private void setqualifm(TestProject tp,TestMethod tm,Qualification qlf,TestStandard tstand,JSONObject Params)
+	{
+		    
+		 tp.setLabel(Params.getString("TestProject"));
+		 tp.setPid(Params.getString("parentprojectid"));
+		 tp.setId(Params.getString("testprojectid"));
+		 tp.setLevel(3); 
+		 tstand.setId(Params.getString("standardid"));
+		 tstand.setStandardname(Params.getString("standardname")); 
+		 tm.setMethodname(Params.getString("methodname")); 
+		 tm.setId(Params.getIntValue( "methodid"));
+		 qlf.setFirstid(Params.getIntValue("qualifiedid"));
+		 qlf.setSecondid(Params.getIntValue("parentprojectid"));
+		 qlf.setId(Params.getIntValue("qualificationid")); 
+		 qlf.setCompanyid(Params.getIntValue("companyid")); 
+		 qlf.setPrice(Params.getDoubleValue("price"));
 	}
 }

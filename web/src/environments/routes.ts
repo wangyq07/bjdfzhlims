@@ -211,6 +211,36 @@ export const layoutRoutes: Routes = [
   }
   
 },
+// 产品录入
+{
+  path: 'product',
+  loadChildren: () => import('../main/businessprocess/inputproduct/inputproduct.module').then((x) => x.InputproductModule),
+  canLoad: [AuthGuard],
+  data: {
+    animation: 'product'
+  }
+  
+},
+// 价格录入
+{
+  path: 'priceproduct',
+  loadChildren: () => import('../main/businessprocess/inputpricecaculate/inputpricecaculate.module').then((x) => x.InputpricecaculateModule),
+  canLoad: [AuthGuard],
+  data: {
+    animation: 'priceproduct'
+  }
+  
+},
+// 资质录入
+{
+  path: 'qualification',
+  loadChildren: () => import('../main/businessprocess/inputqualification/inputqualification.module').then((x) => x.InputqualificationModule),
+  canLoad: [AuthGuard],
+  data: {
+    animation: 'qualification'
+  }
+  
+},
   // 示例功能
   // { path: 'examples', loadChildren: 'src/main/examples/example.module#ExampleModule', canLoad: [AuthGuard] },
   // // 工作型首页

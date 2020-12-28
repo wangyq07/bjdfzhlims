@@ -126,6 +126,20 @@ public class Contact {
 		this.discount = discount;
 	}
 	int isjudgement;
+	int isextern;
+	int contactstatus;
+	public int getContactstatus() {
+		return contactstatus;
+	}
+	public void setContactstatus(int contactstatus) {
+		this.contactstatus = contactstatus;
+	}
+	public int getIsextern() {
+		return isextern;
+	}
+	public void setIsextern(int isextern) {
+		this.isextern = isextern;
+	}
 	String judgementstandard;
 	String excutegrade;
 	List<CommonType> seal;
@@ -153,6 +167,7 @@ public class Contact {
 	String remark;
 	double businessfee;
 	double externfee;
+	
 	String ugency;
 	public String getUgency() {
 		return ugency;

@@ -1,5 +1,5 @@
 <x-dialog #dialogcustomer  width="30%" height="70%" [(visible)]="visible"   
-[showConfirm]="false" [showCancel]="false">
+[showConfirm]="false" [showCancel]="false" [backdropClose]="false" [hasBackdrop]="false">
     <app-addcustomers #customercomponent style="width:100%;height:100%" (sendmessage)="handlecustomerchange($event)"></app-addcustomers>
 </x-dialog>
 <x-row> 

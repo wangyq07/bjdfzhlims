@@ -17,7 +17,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.bjdfzh.businessprocess.dao.ContactTestProjectMapper;
 import com.bjdfzh.businessprocess.dao.SampleMapper;
 import com.bjdfzh.businessprocess.entity.Contact;
+import com.bjdfzh.businessprocess.entity.ContactTestProject;
 import com.bjdfzh.businessprocess.entity.Sample;
+import com.bjdfzh.businessprocess.util.CacheGetBusinessModel;
 import com.bjdfzh.util.JwtUtil;
 @RestController
 @RequestMapping("")
@@ -27,6 +29,8 @@ public class SampleController {
 	 SampleMapper sampleservice;
 	@Autowired
 	 ContactTestProjectMapper testprojectservice;
+	@Autowired
+	CacheGetBusinessModel cacheService;
 	@RequestMapping(value ="samples/{Params}",method = {RequestMethod.GET,RequestMethod.PUT,RequestMethod.DELETE},produces = "application/json;charset=UTF-8")
     @ResponseBody
 	public JSONObject updateSample(
@@ -103,6 +107,31 @@ public class SampleController {
 		{
 		List<Sample> samples=	Params.getJSONArray("sampledatas").toJavaList(Sample.class);
 		sampleservice.supplimentupdatesamples(samples);
+		}
+		catch(Exception ex)
+		{
+			jo.put("msg", ex.getMessage());
+			jo.put("stack", ex.getStackTrace());
+		}
+		return jo;
+	}
+	@RequestMapping(value ="samples/getsamplestandardprice",method = {RequestMethod.POST,RequestMethod.PUT},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	JSONObject getsamplestandardprice(
+			@RequestBody JSONObject Params
+		    ,@RequestHeader(name="Authorization") String headers,
+		    HttpServletRequest request
+			) throws Exception {  
+				  
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		}
+		JSONObject jo=new JSONObject();
+		try
+		{
+		List<ContactTestProject> tests=	Params.getJSONArray("testprojects").toJavaList(ContactTestProject.class);
+		 jo=cacheService.getStandardPrice(tests);
 		}
 		catch(Exception ex)
 		{

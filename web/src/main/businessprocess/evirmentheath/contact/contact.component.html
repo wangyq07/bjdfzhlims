@@ -32,7 +32,7 @@
 </x-row> 
 <ng-template #contactTpl let-column="$column" let-row="$row">
     <div class="au-table-actions"> 
-      <x-link [disabled]="!auth['delete']" icon="fto-trash-2" (click)="auth['delete'] && cotactaction('delete', row)" title="删除"></x-link>
-      <x-link [disabled]="!auth['submit']" icon="fto-check" type="success" (click)="auth['submit'] && cotactaction('submit', row)" title="提交"></x-link> 
+      <x-link [disabled]="!auth['delete']||submitdisable(row)" icon="fto-trash-2" (click)="!submitdisable(row)&&auth['delete'] && cotactaction('delete', row)" title="删除"></x-link>
+      <x-link [disabled]="!auth['submit']||submitdisable(row)" icon="fto-check" type="success" (click)="!submitdisable(row)&&auth['submit'] && cotactaction('submit', row)" title="提交"></x-link> 
     </div>
   </ng-template>

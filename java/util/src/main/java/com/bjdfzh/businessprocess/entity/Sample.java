@@ -32,8 +32,7 @@ public class Sample {
 	 double externprice;
 	int domainid;
 	String testproject;
-	String methodname;
-	 
+	String methodname; 
 	 public String getTesttypeother() {
 		return testtypeother;
 	}
@@ -238,12 +237,19 @@ public class Sample {
 	}
 	public void setTestprojects(List<ContactTestProject> testprojects) {
 		this.testprojects = testprojects;
-	}/**/
+	}
 	String wrapherproperties;
 	public String getWrapherproperties() {
 		return wrapherproperties;
 	}
 	public void setWrapherproperties(String wrapherproperties) {
 		this.wrapherproperties = wrapherproperties;
+	}
+	double standardfee;
+	public double getStandardfee() {
+		return standardfee;
+	}
+	public void setStandardfee(double standardfee) {
+		this.standardfee = standardfee;
 	}
 }

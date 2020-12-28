@@ -21,4 +21,10 @@
 							      #{methodname}
 							    )
    </insert>
+   <update id="updatetestmethod" parameterType="com.bjdfzh.businessprocess.entity.TestMethod">
+      update t_test_method
+      set
+         methodname=#{methodname}
+        where id=#{id}
+    </update>
 </mapper>

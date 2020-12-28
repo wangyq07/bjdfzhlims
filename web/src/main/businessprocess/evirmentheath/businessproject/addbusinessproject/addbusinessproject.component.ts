@@ -119,7 +119,8 @@ export class AddbusinessprojectComponent implements OnInit {
   }
   multiplereportdata=[{id:0,label:'合出报告'},{id:1,label:'分出报告'}];
   multiplereport=0;
-  judgedata=[{id:1,label:'是'},{id:0,label:'否'}];  
+  judgedata=[{id:1,label:'是'},{id:0,label:'否'}]; 
+  externdata=[{id:1,label:'是'},{id:0,label:'否'}]; 
   domaindata:CommonType[]=[]; 
   domain=1;
   sealdata:CommonType[]=[]; 

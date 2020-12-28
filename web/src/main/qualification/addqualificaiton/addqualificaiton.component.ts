@@ -1,5 +1,5 @@
 import { Component, DoCheck, EventEmitter, OnInit, Output } from '@angular/core';
-import { TestProject, TestProjectService } from '../qualification.service';
+import { QualificaitonService, TestProject, TestProjectService } from '../qualification.service';
 
 @Component({
   selector: 'app-addqualificaiton',
@@ -8,7 +8,7 @@ import { TestProject, TestProjectService } from '../qualification.service';
 })
 export class AddqualificaitonComponent implements OnInit,DoCheck {
 
-  constructor(private service:TestProjectService) { }
+  constructor(private service:TestProjectService,private qualificationservice:QualificaitonService) { }
   ngDoCheck(): void {
      if(this.firstsel!=undefined&&this.firstsel!=this.oldfirstsel)
      {
@@ -45,6 +45,7 @@ export class AddqualificaitonComponent implements OnInit,DoCheck {
         {
           this.categorysel=this.categorydata[0].id;
           this.oldfirstsel=this.firstsel;
+         
         }
       }
     );
@@ -55,7 +56,7 @@ export class AddqualificaitonComponent implements OnInit,DoCheck {
      {
        return true;
      }
-     if(this.methodname==null||this.methodname=="")
+     if(this.standardname==null||this.standardname=="")
      {
        return true;
      }
@@ -71,28 +72,77 @@ export class AddqualificaitonComponent implements OnInit,DoCheck {
   companyid=1;
   savedata()
   {
-    this.service.savequalification(
-      {
-         qualifiedid:this.firstsel,
-         parentprojectid:this.categorysel,
-         TestProject:this.projectname,
-         methodname:this.methodname,
-         price:this.price,
-         companyid:this.companyid
-      }
-    ).subscribe((x)=>{
-      if(this.SaveQualification!=undefined)
-      {
-           this.SaveQualification.emit(x);
-      }
-    }
-    );
+            if(this.type=="add")
+            {
+            this.qualificationservice.addqualification(
+              { 
+                qualifiedid:this.firstsel, 
+                parentprojectid:this.categorysel,
+                TestProject:this.projectname,
+                testprojectid:null,
+                standardid:null,
+                methodname:this.methodname,
+                standardname:this.standardname,
+                methodid:null,
+                price:this.price,
+                companyid:this.companyid
+              }
+            ).subscribe((x)=>{
+              if(this.SaveQualification!=undefined)
+              {
+                  this.SaveQualification.emit(x);
+              }
+            }
+            );
+          }
+          else if(this.type=="edit")
+          {
+            this.qualificationservice.updatequalification(
+              { 
+                qualifiedid:this.firstsel, 
+                parentprojectid:this.categorysel,
+                qualificationid:this.currentquali.id+'',
+                standardid:this.currentquali.standardid+'',
+                TestProject:this.projectname,
+                testprojectid:this.currentquali.testprojectid+'',
+                methodname:this.methodname,
+                methodid:this.currentquali.methodid+'',
+                price:this.price,
+                companyid:this.companyid,
+                standardname:this.standardname
+              }
+            ).subscribe((x)=>{
+              if(this.SaveQualification!=undefined)
+              {
+                  this.SaveQualification.emit(x);
+              }
+            }
+            );
+          }
+  }
+  currentquali:any={};
+  type="info";
+  setqualificaiotndata(tpe:string,selquali?:any)
+  {
+    this.type=tpe;
+     if(selquali !=undefined)
+     { 
+      this.currentquali=selquali;
+       this.firstsel=selquali.firstid+'';
+       this.categorysel=selquali.secondid+''; 
+       
+       this.projectname=selquali.testproject;
+       this.price=selquali.price;
+       this.methodname=selquali.methodname;
+       this.standardname=selquali.standardname;
+     }
   }
   firstseldata:TestProject[]=[]; 
-  firstsel=0;
-  oldfirstsel=0;
+  firstsel:string="0";
+  oldfirstsel:string="0";
   price=0;
   categorydata:TestProject[]=[];
-    categorysel=0;
+    categorysel:string="0";
   methodname=""; 
+  standardname="";
 }

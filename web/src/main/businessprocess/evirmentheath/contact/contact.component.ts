@@ -144,6 +144,7 @@ export class ContactComponent extends PageBase implements OnInit {
                                           (z)=>
                                           {
                                              this.msg.success("提交成功");
+                                             this.currentContact.contactstatus=1;
                                           }
                                         )
                                       }
@@ -175,6 +176,7 @@ export class ContactComponent extends PageBase implements OnInit {
        (x)=>
        { 
          [this.contactdata,this.contacttotal]=[x.list as Contact[],Number(x.total)];  
+         console.log(x.list);
          if(this.contactdata.length>0)
           {
                if(init)
@@ -275,5 +277,10 @@ export class ContactComponent extends PageBase implements OnInit {
   {
      this.contactindex=index;
   }  
-   
+  submitdisable(row:Contact)
+   { 
+      if(row.contactstatus==1)
+        return true;
+        return false;
+   }
 }

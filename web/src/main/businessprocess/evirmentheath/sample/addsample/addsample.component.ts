@@ -2,7 +2,7 @@ import {  Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsu
 import {   XInputComponent , XMessageService, XQuery, XTableColumn, XTableRow  } from '@ng-nest/ui'; 
   
 import { Contact, ContactTestProject } from 'src/services/ContactService';
-import {  Sample } from 'src/services/sample.service';
+import {  Sample, SampleService } from 'src/services/sample.service';
  
 import {  SampleDomainService } from 'src/main/qualification/qualification.service';
  
@@ -31,11 +31,10 @@ export class AddsampleComponent implements OnInit {
 @ViewChild("selqual")qualificationcomponent:QualificationComponent; 
 quaconfirm()
 { 
-    this.projectdata=[];  this.currentsample.price=0.0; 
-   console.log(this.qualificationcomponent.selquali);
+    var tempdata:any[]=[];
     for(var i=0;i<this.qualificationcomponent.selquali.length;i++)
     {
-     this.projectdata.push({
+      tempdata.push({
                             id:ProjectUtil.JsNewGuid() 
                             ,sampleid:this.currentsample?.id+''
                             ,qualificationid:this.qualificationcomponent.selquali[i].id+''
@@ -47,12 +46,39 @@ quaconfirm()
                             ,isextern:0
                             
                              });
-                             //this.currentsample.price += Number(this.qualificationcomponent.selquali[i].price);
+                             
     } 
-   this.projecttotal=this.projectdata.length;  
-   if(this.projecttotal==0)
-   this.currentsample.price=0.0;  
+    this.service.getsamplestandardprice(tempdata).subscribe(
+      (x)=>
+      {
+        this.projectdata=[];
+        this.currentsample.standardfee =  x.price;
+         
+        x.formulars.map(
+          (y:any)=>
+          {
+            var formularprice=eval(y.formular);
+            var limitprice=(y.limitprice==0?formularprice:y.limitprice);
+             
+            this.currentsample.standardfee =this.currentsample.standardfee
+            //通过公式计算出费用
+            //,如果大于限价，则使用限价，打包价已经在后台计算完成
+                 + (formularprice<=limitprice?formularprice:limitprice);
+                 
+          }
+        ); 
+        tempdata.map(
+          (z)=>this.projectdata.push(z)
+        );
+      }
+    );
+    
+    
+    
+    
 } 
+qualitreeheight="300px";
+producthidden="inline";
 invalidstring="";
 get formInvalid()
 { 
@@ -145,8 +171,7 @@ return false;
               this.externprojectdata.push(x);
             } 
        }
-      );
-      //console.log(this.currentsample);
+      ); 
       this.projecttotal=Number(this.projectdata.length); 
       this.externtotal=Number(this.externprojectdata.length);  
       this.projectdata=[...this.projectdata];
@@ -205,6 +230,7 @@ return false;
   }
   
   constructor(  
+    private service:SampleService,
     private message: XMessageService  
     ,private domainservice:SampleDomainService
   ) {

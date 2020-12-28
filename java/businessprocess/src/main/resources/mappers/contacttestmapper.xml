@@ -8,6 +8,7 @@
 	 <result column="price" property="price"  />
 	 <result column="testproject" property="testproject"  />
 	 <result column="methodname" property="methodname"  />
+	 <result column="standardname" property="standardname" />
 	 <result column="outsitecustomerid" property="outsitecustomerid"  />
 	 <result column="remark" property="remark"  /> 
 	 <result column="realprice" property="realprice" />
@@ -23,6 +24,7 @@
 			,t.outsitecustomerid
 			,tc.testproject
 			,tm.methodname
+			,tstand.standardname
 			,tq.price
 			,t.realprice
 			,isextern
@@ -35,6 +37,8 @@
 			on tc.id=tq.testprojectid
 			left join t_test_method tm
 			on tm.id=tq.methodid
+			left join t_test_standard tstand
+			on tstand.id=tq.standardid
 	 where contactid=#{id} and sampleid=#{sampleid}
     </select>  
     <insert id="addcontactprojects" parameterType="java.util.ArrayList">

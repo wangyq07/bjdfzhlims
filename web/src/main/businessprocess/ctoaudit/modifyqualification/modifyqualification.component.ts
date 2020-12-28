@@ -26,15 +26,12 @@ export class ModifyqualificationComponent implements OnInit {
   search(searchkey:any)
   {
      if( searchkey!=undefined)
-     { 
-
-        this.qualservice.getqualificationbysearchkey(1,searchkey.name)
+     {  
+        this.qualservice.getqualificationbysearchkey(1,searchkey.name,'')
         .subscribe(
           (x)=>
           {
-            this.data=x as Qualificaiton[];
-            console.log(this.data);
-            console.log(searchkey.id);
+            this.data=x as Qualificaiton[]; 
             var findex=this.data.findIndex((d)=>d.id==searchkey.id);
             if(findex!=-1)  
             this.tablecom.activatedRow= this.data[findex];

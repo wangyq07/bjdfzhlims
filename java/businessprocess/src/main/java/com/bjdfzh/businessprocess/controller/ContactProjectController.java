@@ -1,6 +1,8 @@
 package com.bjdfzh.businessprocess.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List; 
 import javax.servlet.http.HttpServletRequest; 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController; 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.bjdfzh.businessprocess.dao.ContactMapper;
 import com.bjdfzh.businessprocess.dao.ContactProjectMapper;
 import com.bjdfzh.businessprocess.dao.ContactTestProjectMapper;
  
-import com.bjdfzh.businessprocess.dao.SampleMapper; 
+import com.bjdfzh.businessprocess.dao.SampleMapper;
+import com.bjdfzh.businessprocess.entity.Contact;
 import com.bjdfzh.businessprocess.entity.ContactProject;
 import com.bjdfzh.businessprocess.entity.ContactTestProject; 
 import com.bjdfzh.businessprocess.entity.Sample;
@@ -117,6 +121,8 @@ public class ContactProjectController {
 		}
 	    return Params;
    }
+	@Autowired
+	  ContactMapper contactService;
 	//contactprojects/getprojects
 	@RequestMapping(value ="contactprojects/getprojects",method = {RequestMethod.POST,RequestMethod.PUT},produces = "application/json;charset=UTF-8")
 	@ResponseBody
@@ -131,6 +137,13 @@ public class ContactProjectController {
 			throw new Exception("认证已经过期，请登录");
 		}
 		List<ContactProject> contacts=cprojectservice.getcontactprojects(Params.getString("id"));
+		Contact cont=new Contact();
+		cont.setId(Params.getString("id"));
+		SimpleDateFormat  sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		 
+		cont.setSigndate(sf.format(new Date()));
+		cont.setContactstatus(1);
+		contactService.updatecontact(cont);
 		return contacts;
 	}
 	private void setsamples(ContactProject project,List<Sample> samples
