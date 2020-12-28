@@ -4,3 +4,10 @@ deploy/
 *.jar
 *.class
 /.metadata/
+java/businessprocess/target/
+java/collectionreceiveprocess/target/
+java/flownotify/target/
+java/flowprocess/target/
+java/web/target/
+java/userprivilage/target/
+java/util/target/
