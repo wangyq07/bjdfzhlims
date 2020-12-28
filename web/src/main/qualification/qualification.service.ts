@@ -22,26 +22,35 @@ export class TestProjectService extends RepositoryService<TestProject> {
   { 
    return this.http.post(`${this.option.controller?.name}/getalltestProject`,{},this.option.controller?.servicetype);
   }
-  savequalification(savedata:any):Observable<any>
-  {
-    return this.http.post(`${this.option.controller?.name}/savequalification`,savedata,this.option.controller?.servicetype);
-  }
+  
 }
 export interface TestProject extends XTreeNode { 
  label?:string; 
- pid?:string;
+ pid?:string|number;
 }
 @Injectable({ providedIn: 'root' })
 export class QualificaitonService extends RepositoryService<Qualificaiton> {
   constructor(public http: HttpService) {
   super(http, { controller: { name: 'qualifications',servicetype:'businessprocess' } });
   }
-  getqualificationbysearchkey(compid:number,searchstr:string):Observable<Qualificaiton>
+  getqualificationbysearchkey(compid:number,projectname:string,methodname:string):Observable<Qualificaiton>
   { 
     return this.http.post(`${this.option.controller?.name}/getqualificationbysearchkey`
-            , {companyid:compid,searchkey:searchstr}
+            , {companyid:compid,project:projectname,method:methodname}
             , this.option.controller?.servicetype); 
     
+  }
+  addqualification(adddata:any):Observable<any>
+  {
+    return this.http.post(`${this.option.controller?.name}/addqualification`,adddata,this.option.controller?.servicetype);
+  }
+  updatequalification(updatedata:any):Observable<any>
+  {
+    return this.http.post(`${this.option.controller?.name}/updatequalification`,updatedata,this.option.controller?.servicetype);
+  }
+  deletequalification(id:string)
+  {
+    return this.http.post(`${this.option.controller?.name}/deletequalification`,{qualificationid:id},this.option.controller?.servicetype);
   }
 }
 @Injectable({ providedIn: 'root' })
@@ -51,15 +60,21 @@ export class QualificaitonServicebyid extends RepositoryService<Qualificaiton> {
   }
   getqualifications(ids:any[]):Observable<Qualificaiton>
   {
-    if(this.option.controller !=undefined)
-    return this.http.post(`${this.option.controller.name}`,ids,this.option.controller.servicetype);
-    return new Observable<Qualificaiton>();
+ 
+    return this.http.post(`${this.option.controller?.name}`,ids,this.option.controller?.servicetype);
+    
   }
 }
 
 export interface Qualificaiton extends XId { 
+  firstid?:string|number;
+  secondid?:string|number;
+  firstname?:string|number;
+  secondname?:string;
 testprojectid?:string | number;
   methodid?:string|number;
+  standardid?:string|number;
+  standardname?:string|number;
   projectsort?:string|number;
   testproject?:string;
    methodname?:string;

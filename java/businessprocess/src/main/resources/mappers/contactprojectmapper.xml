@@ -43,6 +43,7 @@
     <result column="storeother" property="storeother" />
     <result column="statusother" property="statusother" />
     <result column="domainid" property="domainid"/> 
+    <result column="standardfee" property="standardfee" />
       <association    property="store" javaType="com.bjdfzh.userprivilage.entity.CommonType" >
       <id column="storeid" property="id"/>
       <result column="storename" property="label"/>
@@ -67,6 +68,7 @@
 		 <result column="realprice" property="price"  />
 		 <result column="testproject" property="testproject"  />
 		 <result column="methodname" property="methodname"  />
+		 <result column="standardname" property="standardname"/>
 		 <result column="outsitecustomerid" property="outsitecustomerid"  />
 		 <result column="remark" property="remark"  /> 
 		 <result column="realprice" property="realprice" />
@@ -87,6 +89,7 @@
 		,tsd.label domain 
 		,projectstatus
     ,ts.sampleid 
+    ,ts.standardfee
 		,ts.samplename
 		,ts.samplenumber 
 		,ts.samplequality
@@ -130,6 +133,7 @@
 		ts.sampleid 
 		,ts.projectid
 		,ts.wrapherproperties
+		,ts.standardfee
 		,samplename
 		,samplenumber 
 		,samplequality
@@ -220,6 +224,7 @@
 		,ts.manufactoryaddress
 		,ts.purty
 		,ts.brand
+		,ts.standardfee
 		,ts.manufactoryphone
 		,ts.manudate
 		,ts.manuno
@@ -252,6 +257,7 @@
 	  select
 		ts.sampleid 
 		,ts.projectid
+		,ts.standardfee
 		,ts.wrapherproperties
 		,samplename
 		,samplenumber 

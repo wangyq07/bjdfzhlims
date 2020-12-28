@@ -9,9 +9,9 @@ public class ContactTestProject {
 	public void setIsextern(int isextern) {
 		this.isextern = isextern;
 	}
-	String qualificationid;
+	 String qualificationid;
 	 String outsitecustomerid;
-	 String remark;
+	 String remark; 
 	 double limitmax;
 	 public double getLimitmax() {
 		return limitmax;
@@ -80,6 +80,13 @@ public class ContactTestProject {
 	}
 	String methodname;
 	double price;
+	String standardname;
+	public String getStandardname() {
+		return standardname;
+	}
+	public void setStandardname(String standardname) {
+		this.standardname = standardname;
+	}
 	public double getPrice() {
 		return price;
 	}

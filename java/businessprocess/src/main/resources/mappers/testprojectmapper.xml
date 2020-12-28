@@ -24,4 +24,10 @@
 							      #{label},#{pid},#{level}
 							    )
    </insert>
+   <update id="updatetestproject" parameterType="com.bjdfzh.businessprocess.entity.TestProject">
+      update t_test_category
+      set
+         testproject=#{label}
+        where id=#{id}
+    </update>
 </mapper>

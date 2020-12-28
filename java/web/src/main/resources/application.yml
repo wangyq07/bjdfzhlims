@@ -1,0 +1,28 @@
+server:
+  port:
+    80
+spring:
+  cache:
+        #ehcache配置文件路径
+        ehcache:
+          config: classpath:/ehcache/ehcache.cfg.xml
+        #指定缓存类型，可加可不加
+        #type: ehcache
+  thymeleaf:
+    cache:
+      false
+  devtools:
+    restart:
+      enable:
+         true
+      additional-paths:
+         src/main/java 
+  datasource:
+    driver-class-name:
+      com.mysql.cj.jdbc.Driver
+    url:
+       jdbc:mysql://localhost:3306/limsdb?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
+    username:
+      root
+    password:
+      wyq---

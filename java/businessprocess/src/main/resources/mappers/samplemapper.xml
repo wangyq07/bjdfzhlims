@@ -31,6 +31,7 @@
 	<result column="expiredday" property="expiredday" />
 	<result column="price" property="price" />
 	<result column="externprice" property="externprice" /> 
+	<result column="standardfee" property="standardfee" />
 </resultMap>
 
     <select id="getsamples" parameterType="string" resultMap="SampleMap">
@@ -38,6 +39,7 @@
 		ts.sampleid 
 		,ts.projectid
 		,ts.wrapherproperties
+		,ts.standardfee
 		,samplename
 		,samplenumber 
 		,samplequality
@@ -102,6 +104,7 @@
 		ts.sampleid 
 		,ts.projectid
 		,ts.wrapherproperties
+		,ts.standardfee
 		,samplename
 		,samplenumber 
 		,samplequality
@@ -188,6 +191,7 @@
 		,remark
 		,expiredday
 		,price 
+		,standardfee
 		 )values(
 		#{id}
 		,#{projectid}
@@ -214,7 +218,7 @@
 		,#{remark}
 		,#{expiredday}
 		,#{price}
-		
+		,#{standardfee}
 		)
      </insert>
      <update id="updatesample" parameterType="com.bjdfzh.businessprocess.entity.Sample">
@@ -243,6 +247,7 @@
 			,remark=#{remark}
 			,expiredday=#{expiredday}
 			,price=#{price} 
+			,standardfee=#{standardfee}
 			where sampleid=#{id}
      </update>
       <insert id="addsamples" parameterType="java.util.ArrayList">
@@ -271,6 +276,7 @@
 		,remark
 		,expiredday
 		,price
+		,standardfee
 		 )values
      <foreach collection="list"   index="index" separator="," item="item">
         (
@@ -298,6 +304,7 @@
 		,#{item.remark}
 		,#{item.expiredday}
 		,#{item.price} 
+		,#{item.standardfee}
         )  
      </foreach>
     </insert> 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.businessprocess.dao.TestStandardMapper">
+<resultMap type="com.bjdfzh.businessprocess.entity.TestStandard" id="TestStandardMap">
+<id column="id" property="id"/>
+<result column="standardname" property="standardname" /> 
+<result column="remark" property="remark" /> 
+</resultMap>
+
+    <select id="getteststandards" parameterType="string" resultMap="TestStandardMap">
+        select id,standardname,remark from t_test_standard 
+    </select>
+   <insert id="addTestStandard" 
+               parameterType="com.bjdfzh.businessprocess.entity.TestStandard"
+              useGeneratedKeys="true" keyProperty="id">
+     insert into t_test_standard( 
+							 standardname 
+							     )
+							    values
+							    (
+							      #{standardname}
+							    )
+   </insert>
+   <update id="updateteststandard" parameterType="com.bjdfzh.businessprocess.entity.TestStandard">
+      update t_test_standard
+      set
+         standardname=#{standardname}
+        where id=#{id}
+    </update>
+</mapper>

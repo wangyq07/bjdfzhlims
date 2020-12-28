@@ -1,5 +1,5 @@
 <x-dialog [(visible)]="addvisible" #Seldialog width="20%" height="30%" placement="top"
-[showConfirm]="false" [showCancel]="false">  
+[showConfirm]="false" [showCancel]="false" [backdropClose]="false" [hasBackdrop]="false">  
 <app-addqualificaiton #addqualificaiton style="height:100%;width:100%" (SaveQualification)="SaveQualification($event)"></app-addqualificaiton>
 </x-dialog>
 <x-row>
@@ -8,18 +8,24 @@
     <x-select [data]="companydata" [(ngModel)]="company" label="公司" direction="row"></x-select>
   </div>
   </x-col>
-  <x-col span=10>
-  <x-input [(ngModel)]="searchkey" label="搜索" direction="row"></x-input></x-col>
+  <x-col span=5>
+  <x-input [(ngModel)]="projectsearchkey" label="项目" direction="row"></x-input></x-col>
+  <x-col span=5>
+    <x-input [(ngModel)]="methodsearchkey" label="测试标准" direction="row"></x-input></x-col>
     <x-col span=4>
      <x-button title="查询" icon="ado-search" plain style="color:blue" (click)="search()">查询</x-button>
     </x-col>
     <x-col span=4>
-      <x-button  icon="ado-plus" plain style="color:blue" (click)="add()">添加项目</x-button>
+      <x-button  icon="ado-plus" plain style="color:blue" (click)="add('add')">添加项目</x-button>
      </x-col>
 </x-row>
 <x-row>
 <x-col  [span]="treespan">
-<div style="overflow: scroll;height: 630px;"> 
+<x-row> 
+  <h4>
+    <span>资质树</span> 
+  </h4>
+  <div style="overflow: scroll;" [style.height]="qualitreeheight"> 
 <x-tree
       #treeCom
       au-adaption
@@ -32,8 +38,42 @@
     >
 </x-tree>
 </div>
+</x-row>
+ <x-row  >
+   <div [style.display]="producthidden">
+  <x-row   >
+    <h4> 
+      <span>产品树</span>
+    </h4>
+    </x-row>
+    <x-row >
+      <x-col span=10>
+        <x-input [(ngModel)]="productsearchkey" ></x-input></x-col>
+          <x-col span=4>
+           <x-button title="查询产品" icon="ado-search" plain  style="color:blue" (click)="productsearch()">查询产品</x-button>
+          </x-col> 
+    </x-row>
+   <x-row  >
+    <div style="overflow: scroll;height: 200px;"> 
+<x-tree
+      #producttreeCom
+      au-adaption 
+      [outerHeight]="50"
+      [data]="productdata" 
+      expandedLevel="0" 
+      [activatedId]="productactivatedId"
+      [nodeHeight]="1.875" 
+      (activatedChange)="productaction($event)"
+      (checkboxChange)="checkproductaction($event)" 
+     
+    >
+</x-tree>
+  </div>
+</x-row>
+</div>
+</x-row>
 </x-col>
-<x-col [span]="tablespan">
+<x-col [span]="tablespan"> 
   <x-table
   #qualtable
   [columns]="tablecolumns" 
@@ -41,24 +81,40 @@
   [(size)]="tablesize"
   [total]="tabletotal"
   [(index)]="tableindex"
-  [query]="tablequery" 
-  [bodyHeight]="420"
+  [query]="tablequery"  
   (indexChange)="indexChange($event)"
+  [bodyColumnTpl]="{ actions: actionsTpl }"
   (sortChange)="sortChange($event)" 
+  [headColumnTpl]="{checkbox: headerTpl}" 
   [virtualScroll]="true"
   scrollYWidth="50"
   loading
-  adaptionHeight="380"
+  adaptionHeight="200"
   (activatedRowChange)="tablerowchange($event)"
-  ></x-table>
+  ></x-table> 
 </x-col> 
-<x-col span=4>
-  <div>
-    <x-row *ngFor="let v of selquali">
+<x-col span=4 >
+  <div [style.display]="displayselquli">
+  <div style="overflow: scroll;height: 670px;">  
+     <x-row *ngFor="let v of selquali">
       <x-col span=15>{{v.testproject}}</x-col>
-      <x-col span=7><x-input [(ngModel)]="v.testcount"></x-input></x-col>
+      <x-col span=7>
+        <div [style.display]="inputtestcount"><x-input [(ngModel)]="v.testcount"></x-input> </div>
+      </x-col>
       <x-col span=2><x-link  icon="ado-close" title="删除" style="color: red;" (click)="delsel(v)"></x-link></x-col>
-    </x-row>
+    </x-row> 
+  </div>   
   </div> 
 </x-col>
+
 </x-row>
+
+<ng-template #actionsTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions"> 
+      <x-link [disabled]="disabled" icon="fto-edit" (click)="!disabled &&  add('edit', row)" title="修改"></x-link>
+      <x-link [disabled]="disabled" icon="fto-trash-2" (click)="!disabled&&  add('delete', row)" title="删除"></x-link>
+    </div>
+  </ng-template> 
+  <ng-template #headerTpl let-column="$column">
+    <x-checkbox [data]="[{ label: '全选', value: true }]" [(ngModel)]="checkedAll" (ngModelChange)="checkedAllChange()"></x-checkbox>
+  </ng-template>

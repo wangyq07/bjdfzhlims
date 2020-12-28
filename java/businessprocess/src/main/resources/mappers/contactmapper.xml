@@ -14,7 +14,9 @@
 <result column="projectmaxcount" property="projectmaxcount"/>
 <result column="testfee" property="testfee" />
 <result column="servicetype" property="ugency"/>
+<result column="isextern" property="isextern"/>
 <result column="standardfee" property="standardfee" />
+<result column="contactstatus" property="contactstatus" />
  <association javaType="com.bjdfzh.userprivilage.entity.CommonType" property="samplesource">
  <id column="samplesouceid" property="id"/> 
  <result column="samplesource" property="label" />
@@ -43,6 +45,7 @@
 	 ,DATE_FORMAT(signdate, '%Y-%c-%d' ) signdate
 	 ,userid
 	  ,tcu.id cuid
+	  ,t.contactstatus
 	 ,tcu.customerid
 	 ,tcu.area
 	 ,tcu.customertype
@@ -58,6 +61,7 @@
 	 ,tinfo.businessfee
 	 ,tinfo.collectionfee
 	 ,tinfo.externfee
+	 ,tinfo.isextern
 	 ,ifnull(tinfo.businessfee,0)+ifnull(tinfo.collectionfee,0)
 	  +ifnull(tp.reportfee,0)+ifnull(tp.testfee,0)+ifnull(tinfo.externfee,0) totalfee
 		,tp.testfee
@@ -118,6 +122,7 @@
     contactnumber  
 	 ,DATE_FORMAT(signdate, '%Y-%c-%d' ) signdate
 	 ,userid
+	 ,t.contactstatus
 	  ,tcu.id cuid
 	 ,tcu.customerid
 	 ,tcu.area
@@ -126,6 +131,7 @@
 	 ,tinfo.serviceid
 	 ,tservice.servicetype
 	 ,tinfo.samplesouceid
+	 ,tinfo.isextern
 	 ,tsour.samplesource
 	 ,tsour.sourcecode
 	 ,tcs.sealid
@@ -256,6 +262,7 @@
      <update id="updatecontact" parameterType="com.bjdfzh.businessprocess.entity.Contact">
 		 update t_contact set 
 		 signdate=#{signdate} 
+		 ,contactstatus=#{contactstatus}
 		where contactnumber=#{id}
      </update>
      <update id="updatecontactstandardfee" parameterType="com.bjdfzh.businessprocess.entity.Contact">
@@ -289,6 +296,8 @@
 		,judgementstandard
 		,excutegrade
 		,externfee 
+		,isextern
+		,standardfee
         )values
         (
           #{id}
@@ -300,6 +309,8 @@
 		, #{judgementstandard}
 		, #{excutegrade}
 		, #{externfee} 
+		,#{isextern}
+		,#{standardfee}
         )
      </insert>
      <delete id="deletecontacttestproject" parameterType="string">

@@ -1,0 +1,74 @@
+<x-dialog #dialogqulification width="80%" height="50%" placement="top"   [(visible)]="qvisible"  
+(confirm)="quaconfirm()" [backdropClose]="false" [hasBackdrop]="false"
+ > 
+  <app-qualification #selqual [modify]=1 [tablespan]=15 [treespan]=5 style="width:100%;height:100%" [inputtestcount]="inputtestcount"></app-qualification>
+</x-dialog>
+<x-inner class="au-inner">
+    <div class="au-panel au-tree-left" [x-loading]="treeLoading" style="width: 22rem;">
+        <h4>
+          <span>产品树</span>
+          <x-link icon="fto-plus" title="增加根节点" (click)="treeaction('add-root', selected)"></x-link>
+        </h4>
+        <x-tree
+          #treeCom
+          au-adaption
+          [outerHeight]="131"
+          [data]="treeData"
+          expandedLevel="0"
+          [activatedId]="activatedId"
+          [nodeHeight]="1.875"
+          [actions]="treeActions"
+          (activatedChange)="treeaction('info', $event)"
+        >
+        </x-tree>
+      </div>
+    <div class="au-table-right"  >
+      <x-row>
+      <au-tool top >
+        <x-row>
+          <x-col span=4>
+            <x-button type="primary" icon="fto-plus" [disabled]="!auth['add']||disabled" plain (click)="!disabled&&auth['add'] && action('add')">添加项目</x-button>
+          </x-col>
+          <x-col span=4>
+            <x-button type="primary" icon="fto-save" [disabled]="!auth['add']||disabled||invalidsave" plain (click)="!invalidsave&&!disabled&&auth['add'] && treeaction('save')">保存</x-button> 
+          </x-col>
+          <x-col span=4>
+            <div  [style.display]="invalidvisible" style="color: crimson;font-size: 10pt;" >{{invalidstring}}</div> 
+          </x-col>
+        </x-row> 
+     </au-tool> 
+    </x-row>
+    <x-row style="height: 20px;"></x-row>
+    <x-row>
+      <x-col span=4>
+        <x-input    label="产品名称" [readonly]="disabled" direction="row" [(ngModel)]="currentNode.label"  ></x-input>
+      </x-col> 
+      <x-col span=4>
+        <x-input    label="打包价" [readonly]="disabled" direction="row" [(ngModel)]="currentNode.price"  ></x-input>
+      </x-col> 
+    </x-row> 
+    <x-row style="height: 20px;"></x-row>
+    <x-row>
+      <x-table
+        #tableCom
+        [columns]="columns"
+        [rowHeight]="35"
+        [data]="data"
+        [total]="total"
+        [size]="20"
+        [(index)]="index"
+        [query]="query"
+        [bodyHeight]="100"
+        [bodyColumnTpl]="{ actions: actionsTpl }"
+        [adaptionHeight]="138"
+        virtualScroll
+        loading
+      ></x-table>
+    </x-row>
+    </div>
+  </x-inner>
+  <ng-template #actionsTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions"> 
+      <x-link [disabled]="!auth['delete']||disabled" icon="fto-trash-2" (click)="!disabled&&auth['delete'] && action('delete', row)" title="删除"></x-link>
+    </div>
+  </ng-template>

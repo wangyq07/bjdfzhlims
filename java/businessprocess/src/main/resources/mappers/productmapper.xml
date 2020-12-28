@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.businessprocess.dao.ProductMapper">
+<resultMap type="com.bjdfzh.businessprocess.entity.Product" id="ProductMap"> 
+<id column="id" property="id" /> 
+<result column="pid" property="pid"  />  
+<result column="productname" property="label"  />  
+<result column="price" property="price" /> 
+ <collection property="testprojects" ofType="com.bjdfzh.businessprocess.entity.ProductQualification">
+    <id column="quid" property="id"/>
+	<result column="qualificationid" property="qualificationid" />
+	<result column="id" property="productid" />
+	<result column="testprojectname" property="testprojectname" />  
+	<result column="methodname" property="methodname" />
+	<result column="standardprice" property="standardprice" />  
+  </collection> 
+</resultMap>
+    <select id="getproduct" parameterType="string" resultMap="ProductMap">
+     select
+		 tqfp.id
+		 ,null pid
+		 ,tqfp.productname
+		 ,tqfp.price 
+		 ,tqfpd.id quid
+		 ,tqfpd.qualificationid 
+		 ,tc.testproject testprojectname
+		 ,tm.methodname
+		 ,tq.price standardprice
+		 from t_product_qualification tqfp
+		 left join t_product_info tqfpd
+		 on tqfpd.productid=tqfp.id
+		 left join
+		   ( 
+		   select tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
+			 where tq.companyid=1
+			 ) tq
+		 on tq.id=tqfpd.qualificationid 
+		 left join t_test_category tc
+		 on tc.id=tq.testprojectid
+		 left join t_test_method tm
+		 on tm.id=tq.methodid
+    </select>
+    <select id="searchproduct" parameterType="string" resultMap="ProductMap">
+     select
+		 tqfp.id
+		 ,null pid
+		 ,tqfp.productname
+		 ,tqfp.price 
+		 ,tqfpd.id quid
+		 ,tqfpd.qualificationid 
+		 ,tc.testproject testprojectname
+		 ,tm.methodname
+		 ,tq.price standardprice
+		 from t_product_qualification tqfp
+		 left join t_product_info tqfpd
+		 on tqfpd.productid=tqfp.id
+		 left join
+		   ( 
+		   select tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
+			 where tq.companyid=1
+			 ) tq
+		 on tq.id=tqfpd.qualificationid 
+		 left join t_test_category tc
+		 on tc.id=tq.testprojectid
+		 left join t_test_method tm
+		 on tm.id=tq.methodid
+     where tqfp.productname like #{serach}
+    </select>
+     <select id="getproductbyid" parameterType="string" resultMap="ProductMap">
+    select
+		 tqfp.id
+		 ,null pid
+		 ,tqfp.productname
+		 ,tqfp.price 
+		 ,tqfpd.id quid
+		 ,tqfpd.qualificationid 
+		 ,tc.testproject testprojectname
+		 ,tm.methodname
+		 ,tq.price standardprice
+		 from t_product_qualification tqfp
+		 left join t_product_info tqfpd
+		 on tqfpd.productid=tqfp.id
+		 left join
+		   ( 
+		   select tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
+			 where tq.companyid=1
+			 ) tq
+		 on tq.id=tqfpd.qualificationid 
+		 left join t_test_category tc
+		 on tc.id=tq.testprojectid
+		 left join t_test_method tm
+		 on tm.id=tq.methodid
+		 where tqfp.id=#{id}
+    </select>
+    <insert id="addproduct" parameterType="com.bjdfzh.businessprocess.entity.Product">
+        insert t_product_qualification(
+		    id
+			,productname
+			,price
+		)values 
+		(
+		 #{id}
+		,#{label}
+		,#{price}  
+		) 
+		 
+    </insert>
+     <insert id="addproductqualification" parameterType="java.util.ArrayList">
+        insert t_product_info(
+		    id
+			,productid
+			,qualificationid  
+		)values
+		<foreach collection="list" index="index" separator="," item="item">
+		(
+		  uuid()
+		,#{item.productid}
+		,#{item.qualificationid}  
+		) 
+		 </foreach>
+    </insert>
+    <update id="updateproduct" parameterType="com.bjdfzh.businessprocess.entity.Product">
+        update t_product_qualification 
+          set
+			 productname =#{label}
+			,price=#{price} 
+			where id=#{id} 
+    </update>
+    <delete id="deleteproduct"  parameterType="string">
+     delete from  t_product_qualification t where  id=#{id}
+    </delete>
+    <delete id="deleteproductqualification"  parameterType="string">
+    delete from  t_product_info t where  productid=#{id}
+    </delete> 
+</mapper>

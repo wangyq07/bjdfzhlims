@@ -9,5 +9,5 @@ import com.bjdfzh.businessprocess.entity.TestProject;
 public interface TestProjectMapper {
 List<TestProject>	gettestprojects();
 void addtestProject(TestProject tp);
- 
+void updatetestproject(TestProject tp);
 }

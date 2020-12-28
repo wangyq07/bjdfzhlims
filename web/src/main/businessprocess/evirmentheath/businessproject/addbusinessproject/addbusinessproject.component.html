@@ -26,7 +26,9 @@
     </x-col>
      <x-col span="2">是否判定</x-col>
     <x-col span=5><x-radio [disabled]="disabled||contactdisabled" [data]="judgedata" [(ngModel)]="currentcontact.isjudgement"></x-radio></x-col> 
-</x-row>
+    <x-col span="2">是否外包</x-col>
+    <x-col span=5><x-radio [disabled]="disabled||contactdisabled" [data]="externdata" [(ngModel)]="currentcontact.isextern"></x-radio></x-col> 
+  </x-row>
 <x-row style="height: 20px;"></x-row>
 <x-row>
   <x-col span="2">资质盖章</x-col>

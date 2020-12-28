@@ -32,6 +32,7 @@ export interface Contact extends Id {
 	judgement?:string;
 	signdate?:string|Date;  
 	isjudgement?:string|number;
+	isextern?:string|number;
 	judgementstandard?:string;
 	collectionfee?:string|number;
 	businessfee?:string|number;
@@ -47,6 +48,7 @@ export interface Contact extends Id {
 	 remark?:string; 
 	 userid?:string;
 	 ugency?:string;
+	 contactstatus?:string|number;
 	 contactcustomers?:ContactCustomer[];
 }
 @Injectable({ providedIn: 'root' })
@@ -64,6 +66,7 @@ sampleid?:string;
 qualificationid?:string;
 testproject?:string;
 methodname?:string;
+standardname?:string;
 outsitecustomerid?:string;
 remark?:string;
 price?:string|number;

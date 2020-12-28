@@ -21,11 +21,29 @@ public void setCompanyid(int companyid) {
 public void setId(int id) {
 	this.id = id;
 }
-int testprojectid;
+String testprojectid;
   int methodid;
   int projectsort;
   String testproject;
-  String methodname;
+  public String getTestprojectid() {
+	return testprojectid;
+}
+public void setTestprojectid(String testprojectid) {
+	this.testprojectid = testprojectid;
+}
+public String getFirstname() {
+	return firstname;
+}
+public void setFirstname(String firstname) {
+	this.firstname = firstname;
+}
+public String getSecondname() {
+	return secondname;
+}
+public void setSecondname(String secondname) {
+	this.secondname = secondname;
+}
+String methodname;
   int testcount=1; 
   public int getTestcount() {
 	return testcount;
@@ -33,12 +51,7 @@ int testprojectid;
 public void setTestcount(int testcount) {
 	this.testcount = testcount;
 }
-public int getTestprojectid() {
-	return testprojectid;
-}
-public void setTestprojectid(int testprojectid) {
-	this.testprojectid = testprojectid;
-}
+ 
 public int getMethodid() {
 	return methodid;
 }
@@ -84,4 +97,36 @@ public void setPrice(double price) {
 int methodsort;
   String limitcomment;
   double price;
+  int firstid;
+  String firstname; 
+  int secondid;
+  String secondname;
+  String standardid;
+  String standardname;
+public String getStandardid() {
+	return standardid;
+}
+public void setStandardid(String standardid) {
+	this.standardid = standardid;
+}
+public String getStandardname() {
+	return standardname;
+}
+public void setStandardname(String standardname) {
+	this.standardname = standardname;
+}
+public int getFirstid() {
+	return firstid;
+}
+public void setFirstid(int firstid) {
+	this.firstid = firstid;
+}
+ 
+public int getSecondid() {
+	return secondid;
+}
+public void setSecondid(int secondid) {
+	this.secondid = secondid;
+}
+ 
 }
