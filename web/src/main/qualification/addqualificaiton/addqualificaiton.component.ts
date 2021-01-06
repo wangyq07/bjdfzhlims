@@ -1,14 +1,14 @@
 import { Component, DoCheck, EventEmitter, OnInit, Output } from '@angular/core';
-import { QualificaitonService, TestProject, TestProjectService } from '../qualification.service';
+import { QualificationService, TestProject, TestProjectService } from '../qualification.service';
 
 @Component({
-  selector: 'app-addqualificaiton',
-  templateUrl: './addqualificaiton.component.html',
-  styleUrls: ['./addqualificaiton.component.scss']
+  selector: 'app-addQualification',
+  templateUrl: './addqualification.component.html',
+  styleUrls: ['./addqualification.component.scss']
 })
-export class AddqualificaitonComponent implements OnInit,DoCheck {
+export class AddQualificationComponent implements OnInit,DoCheck {
 
-  constructor(private service:TestProjectService,private qualificationservice:QualificaitonService) { }
+  constructor(private service:TestProjectService,private qualificationservice:QualificationService) { }
   ngDoCheck(): void {
      if(this.firstsel!=undefined&&this.firstsel!=this.oldfirstsel)
      {

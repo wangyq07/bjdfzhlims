@@ -25,13 +25,15 @@
 	<result column="purty" property="purty" />
 	<result column="brand" property="brand" />
 	<result column="manufactoryphone" property="manufactoryphone" />
-	<result column="manudate" property="manudate" />
+	<result column="manudate" property="manudate" /> 
 	<result column="manuno" property="manuno" />
 	<result column="remark" property="remark" />
 	<result column="expiredday" property="expiredday" />
 	<result column="price" property="price" />
 	<result column="externprice" property="externprice" /> 
 	<result column="standardfee" property="standardfee" />
+	<result column="deleverdate" property="deleverdate"/>
+	<result column="specialcondition" property="specialcondition" />
 </resultMap>
 
     <select id="getsamples" parameterType="string" resultMap="SampleMap">
@@ -40,6 +42,8 @@
 		,ts.projectid
 		,ts.wrapherproperties
 		,ts.standardfee
+		,ts.deleverdate
+		,ts.specialcondition
 		,samplename
 		,samplenumber 
 		,samplequality
@@ -105,6 +109,8 @@
 		,ts.projectid
 		,ts.wrapherproperties
 		,ts.standardfee
+		,ts.deleverdate
+		,ts.specialcondition
 		,samplename
 		,samplenumber 
 		,samplequality
@@ -192,6 +198,8 @@
 		,expiredday
 		,price 
 		,standardfee
+		,deleverdate
+		,specialcondition
 		 )values(
 		#{id}
 		,#{projectid}
@@ -219,6 +227,8 @@
 		,#{expiredday}
 		,#{price}
 		,#{standardfee}
+		,#{deleverdate}
+		,#{specialcondition}
 		)
      </insert>
      <update id="updatesample" parameterType="com.bjdfzh.businessprocess.entity.Sample">
@@ -248,6 +258,8 @@
 			,expiredday=#{expiredday}
 			,price=#{price} 
 			,standardfee=#{standardfee}
+			,deleverdate=#{deleverdate}
+			,specialcondition=#{specialcondition}
 			where sampleid=#{id}
      </update>
       <insert id="addsamples" parameterType="java.util.ArrayList">
@@ -277,6 +289,8 @@
 		,expiredday
 		,price
 		,standardfee
+		,deleverdate
+		,specialcondition
 		 )values
      <foreach collection="list"   index="index" separator="," item="item">
         (
@@ -305,6 +319,8 @@
 		,#{item.expiredday}
 		,#{item.price} 
 		,#{item.standardfee}
+		,#{item.deleverdate}
+		,#{item.specialcondition}
         )  
      </foreach>
     </insert> 
@@ -327,21 +343,7 @@
                           when sampleid=#{i.id} then #{i.process.id}
                          </if>
                          </foreach>
-                         </trim>
-                         <trim prefix="testtypeid =case" suffix="end,">
-                 <foreach collection="list" item="i" index="index">
-                         <if test="i.id!=null">
-                          when sampleid=#{i.id} then #{i.testtype.id}
-                         </if>
-                         </foreach>
-                         </trim>
-                          <trim prefix="storeid =case" suffix="end,">
-                 <foreach collection="list" item="i" index="index">
-                         <if test="i.id!=null">
-                          when sampleid=#{i.id} then #{i.store.id}
-                         </if>
-                         </foreach>
-                         </trim>
+                         </trim>  
                <trim prefix="statusother =case" suffix="end,">
                  <foreach collection="list" item="i" index="index">
                          <if test="i.id!=null">
@@ -355,21 +357,28 @@
                           when sampleid=#{i.id} then #{i.processother}
                          </if>
                          </foreach>
-                         </trim>
-                         <trim prefix="testtypeother =case" suffix="end,">
+                         </trim> 
+                         <trim prefix="manudate =case" suffix="end,">
                  <foreach collection="list" item="i" index="index">
                          <if test="i.id!=null">
-                          when sampleid=#{i.id} then #{i.testtypeother}
+                          when sampleid=#{i.id} then #{i.manudate}
                          </if>
                          </foreach>
                          </trim>
-                          <trim prefix="storeother =case" suffix="end,">
-                         <foreach collection="list" item="i" index="index">
-	                         <if test="i.id!=null">
-	                          when sampleid=#{i.id} then #{i.storeother}
-	                         </if>
+                         <trim prefix="deleverdate =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when sampleid=#{i.id} then #{i.deleverdate}
+                         </if>
                          </foreach>
-                         </trim>
+                         </trim>  
+                          <trim prefix="specialcondition =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when sampleid=#{i.id} then #{i.specialcondition}
+                         </if>
+                         </foreach>
+                         </trim>  
                          <trim prefix="brand =case" suffix="end,">
                  <foreach collection="list" item="i" index="index">
                          <if test="i.id!=null">

@@ -330,7 +330,7 @@ public class QualificationController {
 				}
 				TestProject tp=new TestProject();TestMethod tm=new TestMethod();Qualification qlf=new Qualification();
 				TestStandard tstand=new TestStandard();
-				setqualifm(tp,tm,qlf,tstand,Params);
+				CacheGetBusinessModel.setqualifm(tp,tm,qlf,tstand,Params,false);
 				   cmService.addQualification(tp, tm,tstand, qlf);
 			    return   qlf;
 		}
@@ -359,25 +359,9 @@ public class QualificationController {
 			}
 			TestProject tp=new TestProject();TestMethod tm=new TestMethod();Qualification qlf=new Qualification();
 			TestStandard tstand=new TestStandard();
-			setqualifm(tp,tm,qlf,tstand,Params);
+			CacheGetBusinessModel.setqualifm(tp,tm,qlf,tstand,Params,true);
 			   cmService.updateQualification(tp, tm,tstand, qlf);
 		    return   qlf;
 	    }
-	private void setqualifm(TestProject tp,TestMethod tm,Qualification qlf,TestStandard tstand,JSONObject Params)
-	{
-		    
-		 tp.setLabel(Params.getString("TestProject"));
-		 tp.setPid(Params.getString("parentprojectid"));
-		 tp.setId(Params.getString("testprojectid"));
-		 tp.setLevel(3); 
-		 tstand.setId(Params.getString("standardid"));
-		 tstand.setStandardname(Params.getString("standardname")); 
-		 tm.setMethodname(Params.getString("methodname")); 
-		 tm.setId(Params.getIntValue( "methodid"));
-		 qlf.setFirstid(Params.getIntValue("qualifiedid"));
-		 qlf.setSecondid(Params.getIntValue("parentprojectid"));
-		 qlf.setId(Params.getIntValue("qualificationid")); 
-		 qlf.setCompanyid(Params.getIntValue("companyid")); 
-		 qlf.setPrice(Params.getDoubleValue("price"));
-	}
+	
 }

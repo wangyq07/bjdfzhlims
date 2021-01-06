@@ -14,7 +14,14 @@ public class ProductQualification implements Serializable  {
 	String qualificationid ;
    String productid ;
    String testprojectname ;
-    public String getQualificationid() {
+   String standardname;
+    public String getStandardname() {
+	return standardname;
+}
+public void setStandardname(String standardname) {
+	this.standardname = standardname;
+}
+	public String getQualificationid() {
 	    return qualificationid;
 		}
 		public void setQualificationid(String qualificationid) {

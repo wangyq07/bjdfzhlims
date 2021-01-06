@@ -1,5 +1,6 @@
 package com.bjdfzh.businessprocess.entity;
 
+import java.util.Date;
 import java.util.List;
 
 import com.bjdfzh.userprivilage.entity.CommonType;
@@ -24,7 +25,20 @@ public class Sample {
 	double purty;
 	String brand;
 	String manufactoryphone;
-	String manudate;
+	Date manudate;
+	Date deleverdate;
+	public Date getManudate() {
+		return manudate;
+	}
+	public void setManudate(Date manudate) {
+		this.manudate = manudate;
+	}
+	public Date getDeleverdate() {
+		return deleverdate;
+	}
+	public void setDeleverdate(Date deleverdate) {
+		this.deleverdate = deleverdate;
+	}
 	String manuno;
 	String  remark;
 	int expiredday;
@@ -61,6 +75,13 @@ public class Sample {
 	String processother;
 	 String storeother;
 	 String statusother;
+	 String specialcondition;
+	public String getSpecialcondition() {
+		return specialcondition;
+	}
+	public void setSpecialcondition(String specialcondition) {
+		this.specialcondition = specialcondition;
+	}
 	List<ContactTestProject> testprojects;
 	public double getExternprice() {
 		return externprice;
@@ -195,15 +216,12 @@ public class Sample {
 	public void setManufactoryphone(String manufactoryphone) {
 		this.manufactoryphone = manufactoryphone;
 	}
-	public String getManudate() {
-		return manudate;
-	}
-	public void setManudate(String manudate) {
-		this.manudate = manudate;
-	}
+	 
+     
 	public String getManuno() {
 		return manuno;
 	}
+	
 	public void setManuno(String manuno) {
 		this.manuno = manuno;
 	}

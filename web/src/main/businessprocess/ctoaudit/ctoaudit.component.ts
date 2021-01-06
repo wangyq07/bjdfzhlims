@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { XMessageService, XQuery, XSort, XTableColumn, XTableComponent } from '@ng-nest/ui';
 import { IndexService } from 'src/layout/index/index.service';
 import { FlowService, Task } from 'src/main/flow/flowprocess/flowhandle.service'; 
-import { Qualificaiton } from 'src/main/qualification/qualification.service';
+import { Qualification } from 'src/main/qualification/qualification.service';
 import { RoleAuditSettingService } from 'src/main/system/roleauditset/roleautidtset-service';
 import { Contact, ContactService, ContactTestProject } from 'src/services/ContactService';
 import { Sample } from 'src/services/sample.service';
@@ -103,7 +103,7 @@ export class CtoauditComponent extends PageBase implements OnInit,AfterViewInit 
     if(this.modifiqual.tablecom.activatedRow!=undefined
       &&this.currentitem.qualificationid!=this.modifiqual.tablecom.activatedRow.id)
     {
-       var selqualification=this.modifiqual.tablecom.activatedRow as Qualificaiton;
+       var selqualification=this.modifiqual.tablecom.activatedRow as Qualification;
         this.currentitem.qualificationid=selqualification.id+'';
         this.currentitem.testproject=selqualification.testproject;
         this.currentitem.methodname=selqualification.methodname;  

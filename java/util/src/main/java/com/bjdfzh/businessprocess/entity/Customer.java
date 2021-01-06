@@ -73,6 +73,13 @@ public class Customer {
 	}
 	String customeraddress;
 	 	CustomerType customertype;
+	 int functiontype=1;
+	public int getFunctiontype() {
+		return functiontype;
+	}
+	public void setFunctiontype(int functiontype) {
+		this.functiontype = functiontype;
+	}
 	String contacter;
 	String phone;
 	String fax;

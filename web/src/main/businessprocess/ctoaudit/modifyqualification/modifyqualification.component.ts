@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { XQuery, XSort, XTableColumn, XTableComponent } from '@ng-nest/ui';
-import { Qualificaiton, QualificaitonService } from 'src/main/qualification/qualification.service';
+import { Qualification, QualificationService } from 'src/main/qualification/qualification.service';
 
 @Component({
   selector: 'app-modifyqualification',
@@ -8,7 +8,7 @@ import { Qualificaiton, QualificaitonService } from 'src/main/qualification/qual
   styleUrls: ['./modifyqualification.component.scss']
 })
 export class ModifyqualificationComponent implements OnInit {
- data:Qualificaiton[]=[];
+ data:Qualification[]=[];
  index=1;
   size=10000;
   total=0;
@@ -21,7 +21,7 @@ export class ModifyqualificationComponent implements OnInit {
     { id: 'testproject', label: '项目',width:150},
     { id: 'methodname', label: '方法', width:500}
   ];
-  constructor(private qualservice:QualificaitonService) { }
+  constructor(private qualservice:QualificationService) { }
   @ViewChild("tablecom")tablecom:XTableComponent;
   search(searchkey:any)
   {
@@ -31,7 +31,7 @@ export class ModifyqualificationComponent implements OnInit {
         .subscribe(
           (x)=>
           {
-            this.data=x as Qualificaiton[]; 
+            this.data=x as Qualification[]; 
             var findex=this.data.findIndex((d)=>d.id==searchkey.id);
             if(findex!=-1)  
             this.tablecom.activatedRow= this.data[findex];
@@ -43,8 +43,8 @@ export class ModifyqualificationComponent implements OnInit {
    limitmin=0;
   ngOnInit(): void {
   }
-  current:Qualificaiton;
-  activatedRow(item:Qualificaiton)
+  current:Qualification;
+  activatedRow(item:Qualification)
   {
     this.current=item;
   }

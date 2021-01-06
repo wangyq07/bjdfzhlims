@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjdfzh.businessprocess.dao.QualificationMethodMapper">
+<resultMap type="com.bjdfzh.businessprocess.entity.QualificationMethod" id="QualificationMethodMap"> 
+<id column="id" property="id"/>
+<result column="firstid" property="firstid"/> 
+<result column="firstname" property="firstname"/> 
+<result column="secondid" property="secondid"/> 
+<result column="secondname" property="secondname"/>
+<result column="testprojectid" property="testprojectid" />
+<result column="methodid" property="methodid" />
+ <result column="standardid" property="standardid" /> 
+ <result column="testproject" property="testproject" />
+ <result column="methodname" property="methodname" />
+ <result column="standardname" property="standardname" />
+ <result column="qualificationid" property="qualificationid"/>
+ <result column="userid" property="userid" />
+ <result column="roleid" property="roleid" />
+ <result column="userid" property="beforeuserid"/>
+ <result column="methodname" property="beforemethodname"/>
+ <result column="roleid" property="beforeroleid"/>
+ <result column="price" property="price" />
+</resultMap>
+
+    <select id="getqualificationmethods" parameterType="integer" resultMap="QualificationMethodMap">
+        select 
+         uuid() id
+         ,t1.id firstid
+		,t1.testproject firstname
+		,t2.id secondid
+		,t2.testproject secondname 
+		,t.id qualificationid 
+		,t.price
+			,t.testprojectid
+			,t.methodid
+			,t.standardid 
+			,t3.testproject
+			,tm.methodname
+			,tstand.standardname
+		  ,tqr.roleid
+			,tqr.userid
+			from t_qualification t
+			inner join  
+			(
+			select id,pid,testproject from (
+			
+			              select t1.id,t1.pid,t1.level,t1.testproject,
+			
+			              if(find_in_set(pid, @pids) > 0, @pids := concat(@pids, ',', id), 0) as ischild
+			
+			              from (
+			
+			                   select id,pid,level,testproject from t_test_category t   order by pid, id
+			
+			                  ) t1,
+			
+			                  (select @pids := #{projectid} ) t2
+			
+			             ) t3 where ischild != 0 and level=3
+			       union
+				 select id,pid,testproject from t_test_category where level=3 and id = #{projectid}
+				)t3
+				on t3.id=t.testprojectid
+				inner join t_test_category t2
+						on t2.id=t3.pid
+						inner join t_test_category t1
+						on t1.id=t2.pid
+						left join 
+						(
+					 
+					 select 
+					 tq.qualificationid,roleid,userid
+					 from
+					 (
+				   select qualificationid from  t_qualificaiton_dispatch group by qualificationid
+					 ) tq
+				  left join
+					(
+					select t.qualificationid,t.typeid roleid  from t_qualificaiton_dispatch t
+					where t.datatype=1
+					) tqr
+				   on tqr.qualificationid=tq.qualificationid
+					  left join
+					(
+					select t.qualificationid,t.typeid userid  from t_qualificaiton_dispatch t
+					where t.datatype=2
+					) tqu
+				   on tqu.qualificationid=tq.qualificationid 
+					)tqr
+				  on tqr.qualificationid=t.id
+				left join t_test_method tm
+				on tm.id=t.methodid
+				left join t_test_standard tstand
+				on tstand.id=t.standardid  
+				where t.companyid=1
+				order by t.projectsort,t.methodsort
+    </select> 
+     <select id="getqualificationmethodbyid" parameterType="integer" resultMap="QualificationMethodMap">
+			    select 
+         uuid() id
+         ,t1.id firstid
+         ,t.price
+		,t1.testproject firstname
+		,t2.id secondid
+		,t2.testproject secondname  
+			,t.testprojectid
+			,t.methodid
+			,t.standardid 
+			,t3.testproject
+			,tm.methodname
+			,tstand.standardname
+			,t.id qualificationid 
+		  ,tqr.roleid
+			,tqr.userid
+			from t_qualification t
+			inner join t_test_category  t3
+				on t3.id=t.testprojectid
+				inner join t_test_category t2
+						on t2.id=t3.pid
+						inner join t_test_category t1
+						on t1.id=t2.pid
+						left join 
+						( 
+					 select 
+					 tq.qualificationid,roleid,userid
+					 from
+					 (
+				   select qualificationid from  t_qualificaiton_dispatch group by qualificationid
+					 ) tq
+				  left join
+					(
+					select t.qualificationid,t.typeid roleid  from t_qualificaiton_dispatch t
+					where t.datatype=1
+					) tqr
+				   on tqr.qualificationid=tq.qualificationid
+					  left join
+					(
+					select t.qualificationid,t.typeid userid  from t_qualificaiton_dispatch t
+					where t.datatype=2
+					) tqu
+				   on tqu.qualificationid=tq.qualificationid 
+					)tqr
+				  on tqr.qualificationid=t.id
+				left join t_test_method tm
+				on tm.id=t.methodid
+				left join t_test_standard tstand
+				on tstand.id=t.standardid  
+				where  t.id= #{id}
+				order by t.projectsort,t.methodsort
+					
+    </select>
+    <select id="getqualificationsbyids" parameterType="string" resultMap="QualificationMethodMap">
+        select 
+         uuid() id
+         ,t.price
+         ,t1.id firstid
+		,t1.testproject firstname
+		,t2.id secondid
+		,t2.testproject secondname  
+			,t.testprojectid
+			,t.methodid
+			,t.standardid 
+			,t3.testproject
+			,tm.methodname
+			,tstand.standardname
+		  ,tqr.roleid
+		  ,t.id qualificationid 
+			,tqr.userid
+			from t_qualification t
+			inner join t_test_category  t3
+				on t3.id=t.testprojectid
+				inner join t_test_category t2
+						on t2.id=t3.pid
+						inner join t_test_category t1
+						on t1.id=t2.pid
+						left join 
+						( 
+					 select 
+					 tq.qualificationid,roleid,userid
+					 from
+					 (
+				   select qualificationid from  t_qualificaiton_dispatch group by qualificationid
+					 ) tq
+				  left join
+					(
+					select t.qualificationid,t.typeid roleid  from t_qualificaiton_dispatch t
+					where t.datatype=1
+					) tqr
+				   on tqr.qualificationid=tq.qualificationid
+					  left join
+					(
+					select t.qualificationid,t.typeid userid  from t_qualificaiton_dispatch t
+					where t.datatype=2
+					) tqu
+				   on tqu.qualificationid=tq.qualificationid 
+					)tqr
+				  on tqr.qualificationid=t.id
+				left join t_test_method tm
+				on tm.id=t.methodid
+				left join t_test_standard tstand
+				on tstand.id=t.standardid  
+				where t.id in (${ids})
+				order by t.projectsort,t.methodsort
+    </select>
+    <select id="getqualificationmethodsearch" parameterType="string" resultMap="QualificationMethodMap">
+        select 
+         uuid() id
+         ,t.price
+         ,t.id qualificationid
+         ,t1.id firstid
+		,t1.testproject firstname
+		,t2.id secondid
+		,t2.testproject secondname  
+			,t.testprojectid
+			,t.methodid
+			,t.standardid 
+			,t3.testproject
+			,tm.methodname
+			,tstand.standardname
+		  ,tqr.roleid
+			,tqr.userid
+			from t_qualification t
+			inner join t_test_category  t3
+				on t3.id=t.testprojectid
+				inner join t_test_category t2
+						on t2.id=t3.pid
+						inner join t_test_category t1
+						on t1.id=t2.pid
+						left join 
+						( 
+						 select 
+						 tq.qualificationid,roleid,userid
+						 from
+						 (
+					   select qualificationid from  t_qualificaiton_dispatch group by qualificationid
+						 ) tq
+					    left join
+						(
+						select t.qualificationid,t.typeid roleid  from t_qualificaiton_dispatch t
+						where t.datatype=1
+						) tqr
+					   on tqr.qualificationid=tq.qualificationid
+					  left join
+							(
+							select t.qualificationid,t.typeid userid  from t_qualificaiton_dispatch t
+							where t.datatype=2
+							) tqu
+						   on tqu.qualificationid=tq.qualificationid 
+							)tqr
+						  on tqr.qualificationid=t.id
+						left join t_test_method tm
+						on tm.id=t.methodid
+						left join t_test_standard tstand
+						on tstand.id=t.standardid  
+				where companyid=1 and (t3.testproject like  #{projectname} and tstand.standardname like #{methodname})
+				order by t.projectsort,t.methodsort
+    </select>  
+    <update id="updatequalificationmethod" parameterType="com.bjdfzh.businessprocess.entity.QualificationMethod">
+      update t_qualificaiton_dispatch
+      set
+         typeid=case when datatype=2 then #{userid} else #{roleid} end
+        where qualificationid=#{id}
+    </update> 
+    <insert id="addqualificationmethod" parameterType="java.util.ArrayList">
+      insert into t_qualificaiton_dispatch
+      ( 
+        id,
+        datatype,
+        typeid,
+        qualificationid
+       )
+       values
+       <foreach collection="list" index="index" separator="," item="item">
+       (
+         uuid()
+       ,#{item.datatype}
+       ,#{item.typeid} 
+       ,#{item.qualificationid} 
+       )
+       </foreach>
+    </insert>
+    <delete id="deletequalificationmethod" parameterType="integer">
+    delete from t_qualificaiton_dispatch where qualificationid=#{id}
+    </delete>
+    <delete id="deletequalificationmethods" parameterType="String">
+    delete from t_qualificaiton_dispatch where qualificationid in(${ids})
+    </delete>
+</mapper>

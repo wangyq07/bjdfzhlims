@@ -12,7 +12,8 @@
 	<result column="id" property="productid" />
 	<result column="testprojectname" property="testprojectname" />  
 	<result column="methodname" property="methodname" />
-	<result column="standardprice" property="standardprice" />  
+	<result column="standardprice" property="standardprice" /> 
+	<result column="standardname" property="standardname"/> 
   </collection> 
 </resultMap>
     <select id="getproduct" parameterType="string" resultMap="ProductMap">
@@ -25,13 +26,14 @@
 		 ,tqfpd.qualificationid 
 		 ,tc.testproject testprojectname
 		 ,tm.methodname
+		 ,tstand.standardname
 		 ,tq.price standardprice
 		 from t_product_qualification tqfp
 		 left join t_product_info tqfpd
 		 on tqfpd.productid=tqfp.id
 		 left join
 		   ( 
-		   select tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
+		   select tq.standardid, tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
 			 where tq.companyid=1
 			 ) tq
 		 on tq.id=tqfpd.qualificationid 
@@ -39,6 +41,9 @@
 		 on tc.id=tq.testprojectid
 		 left join t_test_method tm
 		 on tm.id=tq.methodid
+		 left join t_test_standard tstand
+		 on tstand.id=tq.standardid
+		 
     </select>
     <select id="searchproduct" parameterType="string" resultMap="ProductMap">
      select
@@ -50,13 +55,14 @@
 		 ,tqfpd.qualificationid 
 		 ,tc.testproject testprojectname
 		 ,tm.methodname
+		 ,tstand.standardname
 		 ,tq.price standardprice
 		 from t_product_qualification tqfp
 		 left join t_product_info tqfpd
 		 on tqfpd.productid=tqfp.id
 		 left join
 		   ( 
-		   select tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
+		   select tq.standardid, tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
 			 where tq.companyid=1
 			 ) tq
 		 on tq.id=tqfpd.qualificationid 
@@ -64,6 +70,8 @@
 		 on tc.id=tq.testprojectid
 		 left join t_test_method tm
 		 on tm.id=tq.methodid
+		 left join t_test_standard tstand
+		 on tstand.id=tq.standardid
      where tqfp.productname like #{serach}
     </select>
      <select id="getproductbyid" parameterType="string" resultMap="ProductMap">
@@ -76,13 +84,14 @@
 		 ,tqfpd.qualificationid 
 		 ,tc.testproject testprojectname
 		 ,tm.methodname
+		 ,tstand.standardname
 		 ,tq.price standardprice
 		 from t_product_qualification tqfp
 		 left join t_product_info tqfpd
 		 on tqfpd.productid=tqfp.id
 		 left join
 		   ( 
-		   select tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
+		   select tq.standardid, tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
 			 where tq.companyid=1
 			 ) tq
 		 on tq.id=tqfpd.qualificationid 
@@ -90,6 +99,8 @@
 		 on tc.id=tq.testprojectid
 		 left join t_test_method tm
 		 on tm.id=tq.methodid
+		 left join t_test_standard tstand
+		 on tstand.id=tq.standardid
 		 where tqfp.id=#{id}
     </select>
     <insert id="addproduct" parameterType="com.bjdfzh.businessprocess.entity.Product">

@@ -43,6 +43,8 @@
     <result column="storeother" property="storeother" />
     <result column="statusother" property="statusother" />
     <result column="domainid" property="domainid"/> 
+    <result column="deleverdate" property="deleverdate"/>
+	<result column="specialcondition" property="specialcondition" />
     <result column="standardfee" property="standardfee" />
       <association    property="store" javaType="com.bjdfzh.userprivilage.entity.CommonType" >
       <id column="storeid" property="id"/>
@@ -75,6 +77,8 @@
 		 <result column="testcount" property="testcount"/>
 		 <result column="limitmax" property="limitmax"/>
 		 <result column="limitmin" property="limitmin"/>
+		 <result column="roleid" property="roleid"/>
+		 <result column="userid" property="userid"/>
     </collection>
   </collection> 
 </resultMap>
@@ -90,6 +94,9 @@
 		,projectstatus
     ,ts.sampleid 
     ,ts.standardfee
+    ,tstand.standardname
+    ,ts.deleverdate
+		,ts.specialcondition
 		,ts.samplename
 		,ts.samplenumber 
 		,ts.samplequality
@@ -124,7 +131,9 @@
 		,tp.limitmin
 		,tp.testcount
 	  ,tc.testproject
-	  ,tm.methodname 
+	  ,tm.methodname
+		,tqr.roleid
+		,tqr.userid
 	from t_business_project t 
 	left join t_sample_domain tsd
 	on tsd.id=t.domainid
@@ -134,6 +143,8 @@
 		,ts.projectid
 		,ts.wrapherproperties
 		,ts.standardfee
+		,ts.deleverdate
+		,ts.specialcondition
 		,samplename
 		,samplenumber 
 		,samplequality
@@ -172,14 +183,14 @@
 		  select
 			 t.sampleid,
 			GROUP_CONCAT(tc.testproject) testproject,
-			GROUP_CONCAT(tm.methodname) methodname
+			GROUP_CONCAT(tstand.standardname) methodname
 			from t_test_project t
 			inner join t_qualification tq
 			on tq.id=t.qualificationid
 			inner join t_test_category tc
 			on tc.id=tq.testprojectid
-			left join t_test_method tm
-			on tm.id=tq.methodid
+			left join t_test_standard tstand
+	         on tstand.id=tq.standardid
 			group by  t.sampleid
 		 ) tm
 		 on   tm.sampleid=ts.sampleid
@@ -188,7 +199,7 @@
 		 left join t_sapmple_store_type tstore
 		 on tstore.id=ts.storeid
 		 left join t_sample_process_type tprocess
-		 on tstore.id=ts.processid
+		 on tprocess.id=ts.processid
 		 left join t_sapmle_status_type tsttus
 		 on tsttus.id=ts.statusid
 	 ) ts
@@ -197,10 +208,34 @@
 	on tp.sampleid=ts.sampleid
 	left join t_qualification tqf
 	on tqf.id=tp.qualificationid
+	left join 
+						( 
+					 select 
+					 tq.qualificationid,roleid,userid
+					 from
+					 (
+				   select qualificationid from  t_qualificaiton_dispatch group by qualificationid
+					 ) tq
+				  left join
+					(
+					select t.qualificationid,t.typeid roleid  from t_qualificaiton_dispatch t
+					where t.datatype=1
+					) tqr
+				   on tqr.qualificationid=tq.qualificationid
+					  left join
+					(
+					select t.qualificationid,t.typeid userid  from t_qualificaiton_dispatch t
+					where t.datatype=2
+					) tqu
+				   on tqu.qualificationid=tq.qualificationid 
+					)tqr
+				  on tqr.qualificationid=tqf.id
 	left join t_test_category tc
 	on tc.id=tqf.testprojectid
 	left join t_test_method tm
 	on tm.id=tqf.methodid
+	left join t_test_standard tstand
+	on tstand.id=tqf.standardid
 		 where  contactid=#{contactid} and  t.projectstatus !=-1
     </select>
      <select id="getcontactproject" parameterType="string" resultMap="ContactProjectMap">
@@ -214,6 +249,10 @@
 		,tsd.label domain 
 		,projectstatus
     ,ts.sampleid 
+    ,ts.standardfee
+    ,tstand.standardname
+    ,ts.deleverdate
+		,ts.specialcondition
 		,ts.samplename
 		,ts.samplenumber 
 		,ts.samplequality
@@ -224,7 +263,6 @@
 		,ts.manufactoryaddress
 		,ts.purty
 		,ts.brand
-		,ts.standardfee
 		,ts.manufactoryphone
 		,ts.manudate
 		,ts.manuno
@@ -249,7 +287,9 @@
 		,tp.limitmin
 		,tp.testcount
 	  ,tc.testproject
-	  ,tm.methodname 
+	  ,tm.methodname
+		,tqr.roleid
+		,tqr.userid
 	from t_business_project t 
 	left join t_sample_domain tsd
 	on tsd.id=t.domainid
@@ -257,8 +297,10 @@
 	  select
 		ts.sampleid 
 		,ts.projectid
-		,ts.standardfee
 		,ts.wrapherproperties
+		,ts.standardfee
+		,ts.deleverdate
+		,ts.specialcondition
 		,samplename
 		,samplenumber 
 		,samplequality
@@ -297,14 +339,14 @@
 		  select
 			 t.sampleid,
 			GROUP_CONCAT(tc.testproject) testproject,
-			GROUP_CONCAT(tm.methodname) methodname
+			GROUP_CONCAT(tstand.standardname) methodname
 			from t_test_project t
 			inner join t_qualification tq
 			on tq.id=t.qualificationid
 			inner join t_test_category tc
 			on tc.id=tq.testprojectid
-			left join t_test_method tm
-			on tm.id=tq.methodid
+			left join t_test_standard tstand
+	         on tstand.id=tq.standardid
 			group by  t.sampleid
 		 ) tm
 		 on   tm.sampleid=ts.sampleid
@@ -313,7 +355,7 @@
 		 left join t_sapmple_store_type tstore
 		 on tstore.id=ts.storeid
 		 left join t_sample_process_type tprocess
-		 on tstore.id=ts.processid
+		 on tprocess.id=ts.processid
 		 left join t_sapmle_status_type tsttus
 		 on tsttus.id=ts.statusid
 	 ) ts
@@ -322,10 +364,34 @@
 	on tp.sampleid=ts.sampleid
 	left join t_qualification tqf
 	on tqf.id=tp.qualificationid
+	left join 
+						( 
+					 select 
+					 tq.qualificationid,roleid,userid
+					 from
+					 (
+				   select qualificationid from  t_qualificaiton_dispatch group by qualificationid
+					 ) tq
+				  left join
+					(
+					select t.qualificationid,t.typeid roleid  from t_qualificaiton_dispatch t
+					where t.datatype=1
+					) tqr
+				   on tqr.qualificationid=tq.qualificationid
+					  left join
+					(
+					select t.qualificationid,t.typeid userid  from t_qualificaiton_dispatch t
+					where t.datatype=2
+					) tqu
+				   on tqu.qualificationid=tq.qualificationid 
+					)tqr
+				  on tqr.qualificationid=tqf.id
 	left join t_test_category tc
 	on tc.id=tqf.testprojectid
 	left join t_test_method tm
 	on tm.id=tqf.methodid
+	left join t_test_standard tstand
+	on tstand.id=tqf.standardid
 		 where  t.projectid=#{id} and  t.projectstatus !=-1
     </select>
      <insert id="addcontactprojects" parameterType="java.util.ArrayList">

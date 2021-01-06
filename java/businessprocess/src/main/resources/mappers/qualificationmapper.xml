@@ -9,7 +9,7 @@
 <result column="secondname" property="secondname"/>
 <result column="testprojectid" property="testprojectid" />
  <result column="methodid" property="methodid" />
- <result column="standarddid" property="standarddid" />
+ <result column="standardid" property="standardid" />
  <result column="projectsort" property="projectsort" />
  <result column="testproject" property="testproject" />
   <result column="methodname" property="methodname" />

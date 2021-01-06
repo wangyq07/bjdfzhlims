@@ -241,6 +241,26 @@ export const layoutRoutes: Routes = [
   }
   
 },
+// 委托协议单生成
+{
+  path: 'outputlist',
+  loadChildren: () => import('../main/businessprocess/outputlist/outputlist.module').then((x) => x.OutputlistModule),
+  canLoad: [AuthGuard],
+  data: {
+    animation: 'outputlist'
+  }
+  
+},
+// 资质方法维护
+{
+  path: 'qualificationmethod',
+  loadChildren: () => import('../main/collectionreceive/modifyqualificationmethod/modifyqualificationmethod.module').then((x) => x.ModifyqualificationmethodModule),
+  canLoad: [AuthGuard],
+  data: {
+    animation: 'qualificationmethod'
+  }
+  
+},
   // 示例功能
   // { path: 'examples', loadChildren: 'src/main/examples/example.module#ExampleModule', canLoad: [AuthGuard] },
   // // 工作型首页

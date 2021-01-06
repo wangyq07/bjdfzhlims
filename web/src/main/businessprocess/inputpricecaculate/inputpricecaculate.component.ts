@@ -42,7 +42,8 @@ export class InputpricecaculateComponent extends PageBase {
     { id: 'actions', label: '操作', width: 100 },
     { id: 'testprojectname', label: '项目', width: 100,   sort: true },
     { id: 'standardprice', label: '标准价格',width:100,  sort: true } ,
-    { id: 'methodname', label: '标准方法' }
+    { id: 'standardname', label: '标准' } 
+
   ];
 
   @ViewChild('tableCom') tableCom: XTableComponent;
@@ -53,48 +54,7 @@ export class InputpricecaculateComponent extends PageBase {
     private message: XMessageService,
     private msgBox: XMessageBoxService
   ) {
-    super(indexService);
-    /*this.tadata=[{a:1,b:[
-                         {
-                          c:2,
-                             d:[
-                                {e:3},
-                                {e:4},
-                                {e:5}
-                               ]
-                            },
-                            {
-                              c:4,
-                                 d:[
-                                    {e:3},
-                                    {e:4},
-                                    {e:5}
-                                   ]
-                                }
-                        
-                      ]
-                    },
-                    {a:2,b:[
-                      {
-                       c:3,
-                          d:[
-                             {e:3},
-                             {e:4},
-                             {e:5}
-                            ]
-                         },
-                         {
-                           c:4,
-                              d:[
-                                 {e:3},
-                                 {e:4},
-                                 {e:5}
-                                ]
-                             }
-                     
-                   ]
-                 }
-                  ];*/
+    super(indexService); 
   }
   tablerowchange(item:any)
   {
@@ -132,7 +92,8 @@ export class InputpricecaculateComponent extends PageBase {
                             ,qualificationid:this.qualificationcomponent.selquali[i].id+''
                             ,testprojectname:this.qualificationcomponent.selquali[i].testproject
                             ,methodname:this.qualificationcomponent.selquali[i].methodname
-                            ,standardprice:this.qualificationcomponent.selquali[i].price  
+                            ,standardprice:this.qualificationcomponent.selquali[i].price 
+                            ,standardname:this.qualificationcomponent.selquali[i].standardname 
                              });
                             
                           
@@ -207,6 +168,17 @@ export class InputpricecaculateComponent extends PageBase {
           prices: this.data
            } ;
         break;
+        ; 
+      case 'add':
+        this.type = type;
+         this.data=[]; 
+        this.currentNode={
+          id: ProjectUtil.JsNewGuid(),
+          pid: node?.id,
+          label: '',
+          prices: this.data
+           } ;
+        break;
       case 'edit':
         this.treeaction('info',node);
         this.type = type;
@@ -222,8 +194,11 @@ export class InputpricecaculateComponent extends PageBase {
               this.priceProductService.deletepriceproduct(node.id).subscribe((x) => {
                 if(node !=undefined)
                 {
+                  
                 this.treeCom.removeNode(node); 
                 this.message.success('删除成功！');
+                 this.currentNode={};
+                 this.type="info";
               }
               });
           }
@@ -231,16 +206,15 @@ export class InputpricecaculateComponent extends PageBase {
         break;
       case 'save':
          
-        if (this.type === 'add-root') {
-          this.priceProductService.addpriceproduct(this.currentNode).subscribe((x) => {
-            
+        if (this.type === 'add-root'||this.type=='add') {
+          this.priceProductService.addpriceproduct(this.currentNode).subscribe((x) => { 
             this.treeCom.addNode(x);
             this.message.success('新增成功！');
           });
         } else if (this.type === 'edit') {
-          console.log(this.selquali);
+         
           this.priceProductService.updatepriceproduct(this.currentNode).subscribe((x) => {
-            console.log(this.selquali);
+            
             this.treeCom.updateNode(this.currentNode, x);
             console.log(this.selquali);
             this.message.success('修改成功！');
@@ -279,7 +253,15 @@ export class InputpricecaculateComponent extends PageBase {
      var index= data?.findIndex((x)=>{return x.id===id});  
       data?.splice(Number(index),1);    
  }
-  treeActions: XTreeAction[] = [  
+  treeActions: XTreeAction[] = [ 
+    {
+      id: 'add',
+      label: '添加',
+      icon: 'fto-plus',
+      handler: (node: PriceProduct) => {
+        this.treeaction('add', node);
+      }
+    } ,
     {
       id: 'delete',
       label: '删除',
@@ -288,6 +270,7 @@ export class InputpricecaculateComponent extends PageBase {
         this.treeaction('delete', node);
       }
     }
+    
   ]; 
   get disabled()
   {
@@ -304,25 +287,33 @@ export class InputpricecaculateComponent extends PageBase {
         this.invalidstring="名称为空";
        return true;
     }
-    if(this.currentNode!=undefined&&this.currentNode.formular==undefined)
+   /* if(this.currentNode!=undefined&&this.currentNode.formular==undefined)
     {
       this.invalidvisible="inline";
         this.invalidstring="公式为空";
        return true;
-    }
-    if(this.currentNode!=undefined&&!this.getstring(this.currentNode.formular))
+    }*/ 
+    if(this.currentNode!=undefined&&this.currentNode.formular!=undefined&&this.currentNode.formular!=''&&!this.getstring(this.currentNode.formular))
     {
       this.invalidvisible="inline"; 
        return true;
     }
-    if(this.currentNode==undefined||this.currentNode.prices==undefined
-       ||this.currentNode.prices.length<=1
+    if(this.currentNode !=undefined&&this.currentNode.prices!=undefined
+       &&this.currentNode.prices.length>0&&(this.currentNode.formular==''&&this.currentNode.perdecreace=='')
+      )
+      {
+        this.invalidvisible="inline";
+        this.invalidstring="公式为空";
+       return true;
+      }
+    /*if((this.currentNode==undefined||this.currentNode.prices==undefined
+       ||this.currentNode.prices.length<1)&&this.type !='add-root'
       )
       {
         this.invalidvisible="inline";
         this.invalidstring="检测项目为空";
        return true;
-      }  
+      }  */
       return false;
   }
   getstring(st?:string)

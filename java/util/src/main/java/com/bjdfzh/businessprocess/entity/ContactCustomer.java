@@ -12,6 +12,27 @@ public class ContactCustomer {
 	int customerid;
 	String customername;
 	String area; 
+	String customeraddress;
+	String phone;
+	String contacter;
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getContacter() {
+		return contacter;
+	}
+	public void setContacter(String contacter) {
+		this.contacter = contacter;
+	}
+	public String getCustomeraddress() {
+		return customeraddress;
+	}
+	public void setCustomeraddress(String customeraddress) {
+		this.customeraddress = customeraddress;
+	}
 	public String getArea() {
 		return area;
 	}

@@ -1,0 +1,39 @@
+ 
+<x-row>
+    <x-col span=24>
+        <x-input label="资质" [(ngModel)]="qual.firstname" direction="row"  [disabled]="true"></x-input>
+    </x-col>
+  </x-row>
+  <x-row style="height: 10px;"></x-row>
+  <x-row>
+    <x-col span=24>
+        <x-input label="分类" [(ngModel)]="qual.secondname" direction="row"  [disabled]="true"></x-input>
+        
+    </x-col>
+  </x-row>
+  <x-row style="height: 10px;"></x-row>
+  <x-row>
+    <x-col span=24>
+        <x-input label="项目" [(ngModel)]="qual.testproject" direction="row"  [disabled]="true"></x-input>
+       
+    </x-col>
+  </x-row>
+  <x-row style="height: 10px;"></x-row>
+  <x-row>
+    <x-col span=24>
+        <x-input label="标准" [(ngModel)]="qual.standardname" direction="row"  [disabled]="true"></x-input>
+    </x-col>
+  </x-row>
+  <x-row style="height: 10px;"></x-row>
+  <x-row>
+    <x-col span=24>
+  <x-input label="方法" [(ngModel)]="qual.methodname" direction="row" ></x-input>
+    </x-col>
+  </x-row> 
+  <x-row style="height: 30px;"></x-row>
+  <x-row justify="center">
+      <x-col span=5>
+      <x-button [disabled]="disabled"  icon="fto-save" type="primary" plain (click)="!disabled&&savedata()">保存</x-button>
+      </x-col>
+  </x-row>
+  

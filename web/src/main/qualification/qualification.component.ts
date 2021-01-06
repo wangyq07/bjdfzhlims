@@ -3,8 +3,8 @@ import { FormGroup } from '@angular/forms';
 import { XMessageBoxAction, XMessageBoxService, XMessageService, XQuery, XSort, XTableColumn, XTableComponent, XTreeComponent } from '@ng-nest/ui';
 import { ProjectUtil } from 'src/share/utilclass';
 import { Product, ProductService } from '../businessprocess/inputproduct/inputproduct.service';
-import { AddqualificaitonComponent } from './addqualificaiton/addqualificaiton.component';
-import { Qualificaiton, QualificaitonService, QualificaitonServicebyid, QualificationCompany, QualificationCompanyService, TestProject, TestProjectService } from './qualification.service';
+import { AddQualificationComponent } from './addqualificaiton/addqualificaiton.component';
+import {  QualificationCompanyService, QualificationServicebyid, Qualification, QualificationCompany, QualificationService, TestProject, TestProjectService } from './qualification.service';
 
 @Component({
   selector: 'app-qualification',
@@ -52,7 +52,7 @@ export class QualificationComponent  implements OnInit {
         .subscribe(
           (x)=>
           {
-            this.tablealldata=x as Qualificaiton[];
+            this.tablealldata=x as Qualification[];
             this.tableindex=1;
             this.tablequery={filter:[]}; 
             this.gettableData();
@@ -61,8 +61,8 @@ export class QualificationComponent  implements OnInit {
      }
   }
   addvisible=false;
-  @ViewChild("addqualificaiton")addqualificaiton:AddqualificaitonComponent;
-  add(tpe:string,item?:Qualificaiton)
+  @ViewChild("addqualificaiton")addqualificaiton:AddQualificationComponent;
+  add(tpe:string,item?:Qualification)
   {
     this.type=tpe;
     if(tpe !="delete")
@@ -114,7 +114,7 @@ export class QualificationComponent  implements OnInit {
   {
     
   }
-  delsel(delitem:Qualificaiton)
+  delsel(delitem:Qualification)
   {
    var index= this.selquali.findIndex((x)=>x.id==delitem.id);
    if(index !=-1)
@@ -169,7 +169,7 @@ export class QualificationComponent  implements OnInit {
 
   formGroup = new FormGroup({});
   data:TestProject[]; 
-  selquali:Qualificaiton[]=[];
+  selquali:Qualification[]=[];
   treeLoading = true;
    type:string;
    selected:TestProject;
@@ -177,11 +177,11 @@ export class QualificationComponent  implements OnInit {
    productactivatedId:string;
    productSelected:Product;
   constructor(private service:TestProjectService,
-    private qualservice:QualificaitonService,
+    private qualservice:QualificationService,
     private productService:ProductService,
     private cdr: ChangeDetectorRef,
     private comanyservice:QualificationCompanyService,
-    private  Qualifis:QualificaitonServicebyid,
+    private  Qualifis:QualificationServicebyid,
     private msgBox:XMessageBoxService,
     private msg:XMessageService
     
@@ -194,8 +194,8 @@ export class QualificationComponent  implements OnInit {
   @Input() tablespan=19;
   @Input() treespan=5;
   @Input() modify=0;
-  tabledata:Qualificaiton[]=[];
-  tablealldata:Qualificaiton[]=[];
+  tabledata:Qualification[]=[];
+  tablealldata:Qualification[]=[];
   tableindex=1;
   tabletotal=0;
   tablesize=20;
@@ -303,6 +303,17 @@ export class QualificationComponent  implements OnInit {
         { id: 'price', label: '价格', width:100}  
       ]
     }
+    else if(this.modify==2)
+    {
+      this.tablecolumns=[
+       
+        
+       { id: 'testproject', label: '项目',width:150},
+       { id: 'standardname', label: '标准',width:600},
+       { id: 'methodname', label: '方法', width:150},  
+       { id: 'price', label: '价格', width:100}  
+     ]
+    }
   }
   @ViewChild("rrow")rrow:HTMLDivElement;
   ngOnInit() {  
@@ -387,8 +398,7 @@ export class QualificationComponent  implements OnInit {
   this.tableindex=1;
   this.tablequery={filter:[{field:'id',value:id,operation:"="},{field:'companyid',value:this.company+'',operation:"="}]};
   this.qualservice.getList(this.tableindex,this.tablesize,this.tablequery).subscribe((x)=>{
-    this.tablealldata=x.list as Qualificaiton[];
-    console.log(x);
+    this.tablealldata=x.list as Qualification[]; 
     this.tablequery={}; 
     this.gettableData();  
   });
@@ -422,7 +432,7 @@ export class QualificationComponent  implements OnInit {
   tablerowchange(item:any)
   {
     var iitem=this.selquali.findIndex((x)=>x.testprojectid==item.testprojectid&&x.methodid==item.methodid);
-      console.log(item);
+      
     if(iitem==-1&&item.checkbox)
       {
         this.selquali.push(ProjectUtil.cloneobject(item));
@@ -440,7 +450,7 @@ export class QualificationComponent  implements OnInit {
       this.Qualifis.getqualifications(this.selquali).subscribe(
         (x)=>
         {
-         var  sels=x as Qualificaiton[];
+         var  sels=x as Qualification[];
           sels.map(
             (y)=>
             {

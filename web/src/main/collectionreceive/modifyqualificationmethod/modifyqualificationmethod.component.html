@@ -1,0 +1,77 @@
+ <x-dialog [(visible)]="addvisible" #Seldialog width="35%" height="25%" placement="top"
+[showConfirm]="false" [showCancel]="false" [backdropClose]="false" [hasBackdrop]="false">  
+<app-addmethodqualification #addqualificaitonmethod style="height:100%;width:100%"  (datachange)="datachange($event)" ></app-addmethodqualification>
+</x-dialog> 
+<x-row> 
+  <x-col span=5>
+  <x-input [(ngModel)]="projectsearchkey" label="项目" direction="row"></x-input></x-col>
+  <x-col span=5>
+    <x-input [(ngModel)]="methodsearchkey" label="测试标准" direction="row"></x-input></x-col>
+    <x-col span=4>
+     <x-button title="查询" icon="ado-search" plain style="color:blue" (click)="search()">查询</x-button>
+    </x-col> 
+    <x-col span=4>
+        <x-button   icon="fto-plus" plain style="color:blue" (click)="add('add')">添加</x-button>
+       </x-col>
+    <x-col span=4>
+        <x-button   icon="fto-save" plain style="color:blue" (click)="save()">保存</x-button>
+    </x-col> 
+</x-row>
+<x-row>
+<x-col   span ="5">
+<x-row> 
+  <h4>
+    <span>资质树</span> 
+  </h4>
+  <div style="overflow: scroll;  height:650px"> 
+<x-tree
+      #treeCom
+      au-adaption
+      [outerHeight]="50"
+      [data]="data" 
+      expandedLevel="0" 
+      [activatedId]="activatedId"
+      [nodeHeight]="1.875" 
+      (activatedChange)="action($event)" 
+    >
+</x-tree>
+</div>
+</x-row> 
+</x-col>
+<x-col span="19"> 
+  <x-table
+  #qualtable
+  [columns]="tablecolumns" 
+  [data]="tabledata" 
+  [(size)]="tablesize"
+  [total]="tabletotal"
+  [(index)]="tableindex"
+  [query]="tablequery"  
+  (indexChange)="indexChange($event)"
+  [bodyColumnTpl]="{ actions: actionsTpl,role:selectroleTpl,editmethodname:editmethodTpl }"
+  (sortChange)="sortChange($event)"  
+  [virtualScroll]="true"
+  scrollYWidth="50"
+  loading
+  adaptionHeight="120"
+  (activatedRowChange)="tablerowchange($event)"
+  ></x-table> 
+</x-col>  
+</x-row> 
+<ng-template #actionsTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions">  
+      <x-link [disabled]="disabled" icon="fto-trash-2" (click)="!disabled&&  add('delete', row)" title="删除"></x-link>
+    </div>
+  </ng-template> 
+  <ng-template #selectroleTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions"> 
+      <x-select [disabled]="disabled"  [data]="roles" [(ngModel)]="row.roleid"  (ngModelChange)="rowchange(2,row)" ></x-select> 
+    </div>
+  </ng-template>
+  <ng-template #editmethodTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions"> 
+      <x-input [disabled]="disabled"    [(ngModel)]="row.methodname"  (ngModelChange)="rowchange(1,row)" ></x-input> 
+    </div>
+  </ng-template>
+  
+

@@ -31,7 +31,6 @@ import com.bjdfzh.businessprocess.entity.QualificationCompany;
 import com.bjdfzh.businessprocess.entity.TestMethod;
 import com.bjdfzh.businessprocess.entity.TestProject;
 import com.bjdfzh.businessprocess.entity.TestStandard;
-import com.bjdfzh.businessprocess.entity.TestMethod;
 import com.bjdfzh.util.EhCacheUtil;
 @Service
 public class CacheGetBusinessModel {
@@ -85,7 +84,12 @@ public class CacheGetBusinessModel {
 	 {
 		 for(PriceQualification qualificaiton:prod.getPrices())
 		 {
+			 if(qualificaiton.getQualificationid()!=null&&prod.getId()!=null)
 			 mp.put(qualificaiton.getQualificationid(), prod.getId()); 
+			 else
+			 {
+				 System.out.print(JSONObject.toJSON(prod));
+			 }
 		 }
 		 
 	 }
@@ -100,7 +104,7 @@ public class CacheGetBusinessModel {
 			 mp=new ConcurrentHashMap<>();
 			 for(TestMethod tm:methods)
 			 {
-				 mp.put(tm.getMethodname(), tm);
+				 mp.put(tm.getMethodname().replace(" ", ""), tm);
 			 }
 			 EhCacheUtil.setValue(key, mp);
 		 }
@@ -109,6 +113,7 @@ public class CacheGetBusinessModel {
 	 public TestMethod getTestMethodByName(String MethodName)
 	 {
 		 Map<String,TestMethod> mp=getTestMthods();
+		 MethodName=MethodName.replace(" ", "");
 		 if(mp !=null&&mp.containsKey(MethodName))
 			 return mp.get(MethodName);
 		 return null;
@@ -161,6 +166,7 @@ public class CacheGetBusinessModel {
 				EhCacheUtil.setValue("PriceQualification", p);
 			 } 
 		 priceProductService.addpriceproduct(pduct);
+		 if(pduct.getPrices().size()>0)
 		 priceProductService.addpricequalification(pduct.getPrices());
 		
 	}
@@ -170,27 +176,25 @@ public class CacheGetBusinessModel {
 		
 		PriceProduct  oldpriceProduct=mp.get(pduct.getId());
 	    Map<String,String> qu=getPriceQualification(mp); 
+	   if(oldpriceProduct!=null)
 	    removePriceQualification(qu,oldpriceProduct.getPrices());
 	    addpricequalification(pduct,qu);
 	    mp.put(pduct.getId(), pduct);
 	    EhCacheUtil.setValue("PriceProduct", mp);
 	    EhCacheUtil.setValue("PriceQualification", qu);
-	    priceProductService.updatepriceproduct(pduct);
-	    priceProductService.deletepricequalification(pduct.getId());
-		priceProductService.addpricequalification(pduct.getPrices());
+	    priceProductService.updatepriceproduct(pduct); 
+	    if(pduct.getPrices().size()>0)
+	    {
+		 priceProductService.addpricequalification(pduct.getPrices());
+		 priceProductService.deletepricequalification(pduct.getId());
+	    }
 	}
 	public void deletePriceProduct(String id)
 	{
-		Map<String,PriceProduct> mp=getPriceProduct();
-		
-		PriceProduct  oldpriceProduct=mp.get(id);
-	    Map<String,String> qu=getPriceQualification(mp); 
-	    removePriceQualification(qu,oldpriceProduct.getPrices());
-	    mp.remove(id);
-	    EhCacheUtil.setValue("PriceProduct", mp);
-	    EhCacheUtil.setValue("PriceQualification", qu);
-	    priceProductService.deletepriceproduct(id);
 	    priceProductService.deletepricequalification(id); 
+	    priceProductService.deletepriceproduct(id);
+	    EhCacheUtil.remove("PriceProduct");
+	    EhCacheUtil.remove("PriceQualification"); 
 	}
 	public JSONObject getCurrentQualificationexists(List<PriceQualification> qualifications)
 	{
@@ -204,7 +208,7 @@ public class CacheGetBusinessModel {
 			  {
 				  isexits=true;
 				  PriceProduct pd=mp.get(qu.get(qf.getQualificationid()));
-				  retobj.put("msg",String.format("%s:%s存在于%s中",qf.getTestprojectname(),qf.getMethodname(),pd.getLabel()));
+				  retobj.put("msg",String.format("%s:%s存在于%s中",qf.getTestprojectname(),qf.getStandardname(),pd.getLabel()));
 				  break;
 			  }
 		  }
@@ -661,6 +665,8 @@ public class CacheGetBusinessModel {
 		Map<String,Product> productmp=getProducts();
 		Product oldproduct= productmp.get(id);
 		Map<String,List<Product>> mp=getProductByQualificaitons();
+		if(oldproduct !=null)
+		{
 		for(ProductQualification pq:oldproduct.getTestprojects())
 		{
 		    if(mp!=null&&mp.containsKey(pq.getQualificationid()))
@@ -669,6 +675,7 @@ public class CacheGetBusinessModel {
 		    } 
 		}
 		EhCacheUtil.setValue("productqualification", mp);
+		}
 	}
 	public void deleteProduct(String id)
 	{
@@ -702,6 +709,26 @@ public class CacheGetBusinessModel {
 		quals=this.qualiService.getqualificationsbyids(idds);
 		}
 		return quals;
+	}
+	public static void setqualifm(TestProject tp,TestMethod tm,Qualification qlf,TestStandard tstand,JSONObject Params,boolean isupdate)
+	{  
+		 tp.setLabel(Params.getString("TestProject"));
+		 tp.setPid(Params.getString("parentprojectid"));
+		 tp.setId(Params.getString("testprojectid"));
+		 tp.setLevel(3); 
+		 tstand.setId(Params.getString("standardid"));
+		 tstand.setStandardname(Params.getString("standardname")); 
+		 tm.setMethodname(Params.getString("methodname")); 
+		 tm.setId(Params.getIntValue( "methodid"));
+		 qlf.setFirstid(Params.getIntValue("qualifiedid"));
+		 qlf.setSecondid(Params.getIntValue("parentprojectid"));
+		 qlf.setId(Params.getIntValue("qualificationid")); 
+		 qlf.setCompanyid(Params.getIntValue("companyid")); 
+		 qlf.setPrice(Params.getDoubleValue("price"));
+		 if(isupdate)
+		 {
+			 qlf.setId(Params.getIntValue("id"));
+		 }
 	}
 	 public void addQualification(TestProject tp,TestMethod tm,TestStandard tstand,Qualification qlf)
 	 {
@@ -785,7 +812,15 @@ public class CacheGetBusinessModel {
 			   qlf.setTestprojectid( tempproject.getId());//插入之后才能得到相关id
 		   return updatejudge;
 	 }
-	 public void updateQualification(TestProject tp,TestMethod tm,TestStandard tstand,Qualification qlf)
+	 public void updateQualifications(List<Qualificationtemp> tqs)
+	 {
+		 for(Qualificationtemp qt:tqs)
+		 {
+			 updatesingle(qt.getTp(),qt.getTm(),qt.getTstand(),qt.getQlf());
+		 }
+		 removeQualification();
+	 }
+	 void updatesingle(TestProject tp,TestMethod tm,TestStandard tstand,Qualification qlf)
 	 {
 		 Updataprojectmethodstandard updatejudge=setqlf( tp,  tm,  tstand,  qlf);
 		   if(updatejudge.isUpdatatestproject())
@@ -795,6 +830,10 @@ public class CacheGetBusinessModel {
 		   if(updatejudge.isUpdatastandard())
 		   this.tstandardService.updateteststandard(tstand);
 		   qualiService.updatequalification(qlf);
+	 }
+	 public void updateQualification(TestProject tp,TestMethod tm,TestStandard tstand,Qualification qlf)
+	 {
+		 updatesingle(tp,tm,tstand,qlf);
 		   removeQualification();
 	 }
 	 void removeQualification()

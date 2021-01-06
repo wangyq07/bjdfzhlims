@@ -23,7 +23,8 @@ export class AddbusinessprojectComponent implements OnInit {
     ,private Msg:XMessageService
     ) { }
   @Output() private projectchange=new EventEmitter<BusinessProject[]>();
- 
+  process:CommonType[]=[];
+  processid=1;
   ngOnInit(): void {
     this.receiveservice.getList(1,20,{}).subscribe(
       (x)=>
@@ -50,9 +51,22 @@ export class AddbusinessprojectComponent implements OnInit {
         this.domaindata=x.list as CommonType[]; 
       }
     );
+    this.sealService.getsampleprocess().subscribe(
+      (x:any)=>
+      {
+        this.process=x.list as CommonType[];
+      }
+    );
       setTimeout(()=>{this.showTableBoolean=true},0); 
   }
- 
+  getprocessmodel(processid:any)
+  {
+    if(processid==null||processid==undefined)
+    {
+      return 2;
+    }
+    return processid;
+  }
   type:string;
   @Input() currentproject:BusinessProject; 
   currentprojectcount:number=0;
@@ -136,6 +150,8 @@ export class AddbusinessprojectComponent implements OnInit {
   selvisible=false;
   customeradaption=240;
   @ViewChild("selcustomer")selcustomer:CustomerComponent;
+  @ViewChild("inspectcustomer")inspectcustomer:CustomerComponent;
+  @ViewChild("paycustomer")paycustomer:CustomerComponent;
   @ViewChild("sampledata")sampledata:SampleComponent;
   hidebutton='none';
   selconfirm()
@@ -147,10 +163,10 @@ export class AddbusinessprojectComponent implements OnInit {
         
         break;
         case 'pay':
-          this.pays=[this.selcustomer.customtable.activatedRow as Customer]; 
+          this.pays=[this.paycustomer.customtable.activatedRow as Customer]; 
           break;
           case 'inspect':
-            this.inspects=[this.selcustomer.customtable.activatedRow as Customer];
+            this.inspects=[this.inspectcustomer.customtable.activatedRow as Customer];
             break;
 
    }
@@ -373,23 +389,29 @@ export class AddbusinessprojectComponent implements OnInit {
   disablecls="x-radio x-flex x-justify-start x-align-start x-direction-column";
   samplesourcedata:CommonType[]=[]; 
   samplesource=1; 
+  payvisible=false;
+  inspectvisible=false;
+  inspectfunctiontype=3;
+  payfunctiontype=2;
   addcustomer(type:string)
-  {
-    this.selvisible=true; 
+  { 
     this.customertype=type;
     switch(type)
     {
       case 'delegate':
+        this.selvisible=true; 
         this.selcustomer.seldata=this.delegates;
         this.selcustomer.setselect();
         break;
         case 'pay':
-          this.selcustomer.seldata=this.pays;
-          this.selcustomer.setselect(false);
+          this.payvisible=true;
+          this.paycustomer.seldata=this.pays;
+          this.paycustomer.setselect(false);
           break;
           case 'inspect':
-            this.selcustomer.seldata= this.inspects;
-            this.selcustomer.setselect(false);
+            this.inspectvisible=true;
+            this.inspectcustomer.seldata= this.inspects;
+            this.inspectcustomer.setselect(false);
             break; 
    }
   }

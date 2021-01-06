@@ -1,5 +1,6 @@
 import { ITS_JUST_ANGULAR } from '@angular/core/src/r3_symbols';
 import { isArray } from 'lodash';
+import * as moment from 'moment';
 
  export class ProjectUtil
 {
@@ -100,6 +101,113 @@ import { isArray } from 'lodash';
           rnd += Math.floor(Math.random() * 10);
       return rnd;
   }  
+  static getMareData(projects:any[],judgement:string)
+  {
+    var p=0;var q=0;
+    var pindex=0;var qindex=0;
+    var pdata:any[]=[];
+    var sdata:any[]=[];
+    let data:any[]=[];
+     projects.map(
+       (x)=>
+       {
+          p=0;
+         x.samples?.map(
+          (y:any)=>
+          {
+              q=0;  
+              y.testprojects?.map(
+                (z:any)=>
+                { 
+                  if(z.testproject!=undefined&&z.testproject!='')
+                  {
+                  p=p+1;
+                  q=q+1;
+                   data.push(
+                    {
+                      projectid:x.id,
+                      sampleid:y.id,
+                      projectname:x.projectnumber, 
+                      samplename:y.samplename,
+                      brand:y.brand, 
+                      samplespec:y.samplespect,
+                      samplequality:y.samplequality,
+                      manudate:moment(y.manudate).format('YYYY.MM.DD'),
+                      executegrade:y.executegrade,
+                      specialcondition:y.specialcondition,
+                      wrapherproperties:y.wrapherproperties+','+y.status.label,
+                      judge:judgement,
+                      deleverdate:moment(y.deleverdate).format('YYYY.MM.DD'),
+                      testproject:z.testproject,
+                      standardname:z.standardname,
+                      roleid:z.roleid,
+                      userid:z.userid,
+                      executestandard:y.executestandard,
+
+                    }
+                  
+                  ); 
+                }
+                }
+                 
+              );
+              sdata.push({id:y.id,rowspan:q,index:qindex});
+              qindex=qindex+q;
+          }
+         );
+         pdata.push({id:x.id,rowspan:p,index:pindex});
+         pindex=pindex+p;
+       }
+     );
+     var i=0;
+     data.map(
+       (x)=>
+       {
+         var ffindex= pdata.findIndex((y)=>y.id==x.projectid);
+         if(ffindex !=-1)
+         {
+           x.projectrowspan=pdata[ffindex].rowspan;
+           x.projectindex=pdata[ffindex].index;
+         }
+         ffindex= sdata.findIndex((y)=>y.id==x.sampleid);
+         if(ffindex !=-1)
+         {
+           x.samplerowspan=sdata[ffindex].rowspan;
+           x.sampleindex=sdata[ffindex].index;
+         }
+         x.testprojectindex=i;
+         x.testprojecrowspan=1;
+         i=i+1;
+       }
+     );
+     return data;
+  }
   
-      
+}
+export interface AdditionalData
+{
+  projectid?:string;
+  sampleid?:string;
+  projectindex?:number;
+  sampleindex?:number;
+  projectrowspan?:number;
+  samplerowspan?:number;
+  projectname?:string; 
+  samplename?:string; 
+  brand?:string; 
+  samplespec?:string;
+  samplequality?:number;
+  manudate?:string;
+  executegrade?:string;
+  specialcondition?:string;
+  wrapherproperties?:string;
+  judge?:string;
+  deleverdate?:string;
+  testproject?:string;
+  standardname?:string;  
+  executestandard?:string;
+  roleid?:string;
+  userid?:string;
+  testprojectindex?:number;
+  testprojecrowspan?:number;
 }

@@ -1,11 +1,11 @@
 <x-dialog #dialogcustomer  width="30%" height="70%" [(visible)]="visible"   
 [showConfirm]="false" [showCancel]="false" [backdropClose]="false" [hasBackdrop]="false">
-    <app-addcustomers #customercomponent style="width:100%;height:100%" (sendmessage)="handlecustomerchange($event)"></app-addcustomers>
+    <app-addcustomers #customercomponent [functiontype]="functiontype" style="width:100%;height:100%" (sendmessage)="handlecustomerchange($event)"></app-addcustomers>
 </x-dialog>
 <x-row> 
 <x-col span=3 > 
   <div id ="buttonpanel" [style.display]="hidebutton">
-    <x-button   icon="fto-plus"    plain [disabled]="!auth['add']" (click)="auth['add'] && action('add')" >
+    <x-button   icon="fto-plus"    plain   (click)="action('add')" >
        新增   
     </x-button> 
   </div>
@@ -37,8 +37,8 @@
 </x-row>
 <ng-template #actionsTpl let-column="$column" let-row="$row">
     <div class="au-table-actions">
-      <x-link [disabled]="!auth['info']" icon="fto-eye" (click)="auth['info'] && action('info', row)" title="查看"></x-link>
-      <x-link [disabled]="!auth['edit']" icon="fto-edit" (click)="auth['edit'] && action('edit', row)" title="修改"></x-link>
-      <x-link [disabled]="!auth['delete']" icon="fto-trash-2" (click)="auth['delete'] && action('delete', row)" title="删除"></x-link>
+      <x-link   icon="fto-eye" (click)=" action('info', row)" title="查看"></x-link>
+      <x-link  icon="fto-edit" (click)="action('edit', row)" title="修改"></x-link>
+      <x-link icon="fto-trash-2" (click)=" action('delete', row)" title="删除"></x-link>
     </div>
   </ng-template>

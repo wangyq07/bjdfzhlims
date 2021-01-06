@@ -7,7 +7,7 @@ import {  Sample, SampleService } from 'src/services/sample.service';
 import {  SampleDomainService } from 'src/main/qualification/qualification.service';
  
 import { ProjectUtil } from 'src/share/utilclass';
-import { CommonType } from '../../businessproject/businessproject.service';
+import { CommonType, SealService } from '../../businessproject/businessproject.service';
 import { QualificationComponent } from 'src/main/qualification/qualification.component';
 
 @Component({
@@ -18,8 +18,7 @@ import { QualificationComponent } from 'src/main/qualification/qualification.com
   
 })
 export class AddsampleComponent implements OnInit {
-  @Input() currentsample:Sample;
-
+  @Input() currentsample:Sample; 
  id: string | null;
   type: string | null;  
   currentcontact:Contact={};
@@ -146,7 +145,7 @@ return false;
   projectcolumns:XTableColumn[]=[ 
     {id:'actions',label:'操作',width:80},
     { id: 'testproject', label: '项目', width: 200, sort: true },
-    { id: 'methodname', label: '检测方法', width: 200, sort: true }, 
+    { id: 'standardname', label: '检测标准', width: 200, sort: true }, 
     { id: 'price', label: '标准价格', width: 200, sort: true },
     { id: 'realprice', label: '实际价格', width: 200, sort: true } 
   ];
@@ -154,11 +153,17 @@ return false;
     {id:'actions',label:'操作',width:80},
     { id: 'testproject', label: '检测项目', width: 200, sort: true } 
   ];
+  process:CommonType[]=[];
+  processid=1;
   getproject()
    {
      
       this.projectdata=[];
-      this.externprojectdata=[]; 
+      this.externprojectdata=[];  
+      if(this.currentsample.process!=undefined)
+      this.processid=Number(this.currentsample.process?.id);
+      else
+      this.processid=2;
      this.currentsample.testprojects?.map
        ( (x)=>
        { 
@@ -231,6 +236,7 @@ return false;
   
   constructor(  
     private service:SampleService,
+    private commonservice:SealService,
     private message: XMessageService  
     ,private domainservice:SampleDomainService
   ) {
@@ -290,6 +296,7 @@ showdivBoolean=false;
     );
      setTimeout(()=>{this.showTableBoolean=true},3000);
      setTimeout(()=>{this.showdivBoolean=true},0);
+    
   }
 
   ngAfterViewInit() {
@@ -304,7 +311,7 @@ showdivBoolean=false;
                for(var q=0;q<concatprojects.length;q++)
                 {
                   this.currentsample.testproject += concatprojects[q].testproject; 
-                  this.currentsample.methodname +=concatprojects[q].methodname; 
+                  this.currentsample.methodname +=concatprojects[q].standardname; 
                   if(q !=concatprojects.length-1)
                   {
                     this.currentsample.testproject += ','; 
@@ -312,7 +319,9 @@ showdivBoolean=false;
                   }
                   this.currentsample.testprojects.push(concatprojects[q]);
                 }
-                console.log(this.currentsample.testprojects);  
+                var findindex=this.process.findIndex((x)=>x.id==this.processid);
+                if(findindex !=-1)
+                 this.currentsample.process=this.process[findindex]; 
               
   }
   action(type: string | null) { 

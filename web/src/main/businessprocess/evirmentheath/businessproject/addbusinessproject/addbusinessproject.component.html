@@ -1,7 +1,17 @@
  <x-dialog [(visible)]="selvisible" #Seldialog width="50%" height="30%" placement="top"
- (confirm)="selconfirm()"
+ (confirm)="selconfirm()"  [backdropClose]="false" [hasBackdrop]="false"
  >
 <app-customer #selcustomer [customeradaption]="customeradaption" [hidebutton]="hidebutton" style="width:100%;height: 100%;"></app-customer>
+ </x-dialog>
+ <x-dialog [(visible)]="payvisible" #Seldialog width="50%" height="30%" placement="top"
+ (confirm)="selconfirm()"  [backdropClose]="false" [hasBackdrop]="false"
+ >
+<app-customer #paycustomer [customeradaption]="customeradaption" [functiontype]="payfunctiontype"  style="width:100%;height: 100%;"></app-customer>
+ </x-dialog>
+ <x-dialog [(visible)]="inspectvisible" #Seldialog width="50%" height="30%" placement="top"
+ (confirm)="selconfirm()"  [backdropClose]="false" [hasBackdrop]="false"
+ >
+<app-customer #inspectcustomer [customeradaption]="customeradaption" [functiontype]="inspectfunctiontype"  style="width:100%;height: 100%;"></app-customer>
  </x-dialog>
  <x-inner class="au-inner au-column"> 
     <div id="displaytag" *ngIf="showTableBoolean" style="color: crimson;font-size: 10pt;" >{{invalidinfo}}</div>
@@ -21,13 +31,16 @@
 <x-row style="height: 20px;"></x-row>
 <x-row>
   <x-col span="2">样品来源</x-col>
-  <x-col span="7">
+  <x-col span="5">
       <x-radio  [disabled]="disabled||contactdisabled" [data]="samplesourcedata" [(ngModel)]="samplesource"></x-radio>
     </x-col>
      <x-col span="2">是否判定</x-col>
-    <x-col span=5><x-radio [disabled]="disabled||contactdisabled" [data]="judgedata" [(ngModel)]="currentcontact.isjudgement"></x-radio></x-col> 
+    <x-col span=3><x-radio [disabled]="disabled||contactdisabled" [data]="judgedata" [(ngModel)]="currentcontact.isjudgement"></x-radio></x-col> 
     <x-col span="2">是否外包</x-col>
-    <x-col span=5><x-radio [disabled]="disabled||contactdisabled" [data]="externdata" [(ngModel)]="currentcontact.isextern"></x-radio></x-col> 
+    <x-col span=3><x-radio [disabled]="disabled||contactdisabled" [data]="externdata" [(ngModel)]="currentcontact.isextern"></x-radio></x-col> 
+    <x-col span=5>
+      <x-select [data]="process" [(ngModel)]="currentcontact.processid" label="样品处理" direction="row"></x-select>
+  </x-col>
   </x-row>
 <x-row style="height: 20px;"></x-row>
 <x-row>

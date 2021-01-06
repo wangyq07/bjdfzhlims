@@ -29,7 +29,8 @@ export class InputproductComponent extends PageBase {
     { id: 'index', label: '序号', width: 80,  type: 'index' },
     { id: 'actions', label: '操作', width: 100 },
     { id: 'testprojectname', label: '项目', width: 100,   sort: true },
-    { id: 'methodname', label: '标准方法' }
+    { id: 'standardname', label: '标准' },
+    { id: 'methodname', label: '方法' }
   ];
 
   @ViewChild('tableCom') tableCom: XTableComponent;
@@ -54,6 +55,7 @@ export class InputproductComponent extends PageBase {
                             ,testprojectname:this.qualificationcomponent.selquali[i].testproject
                             ,methodname:this.qualificationcomponent.selquali[i].methodname
                             ,standardprice:this.qualificationcomponent.selquali[i].price  
+                            ,standardname:this.qualificationcomponent.selquali[i].standardname
                              }); 
                           
                         }  

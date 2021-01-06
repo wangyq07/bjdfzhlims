@@ -1,4 +1,5 @@
-<x-row>
+
+ <x-row>
   <x-col span=8 style="display: inline;"> 
     <div   class="au-panel au-content" au-adaption [outerHeight]="50"> 
       <x-table [columns]="columns"
@@ -22,6 +23,7 @@
     <x-row style="height: 20px;"></x-row>
     <x-row>
       <x-col span=5><x-button icon="ado-check" style="color: green;" plain type="primary" (click)="acction(1)">提交</x-button></x-col>  
+      <x-col span=5><x-button icon="ado-check" style="color: green;" plain type="primary" (click)="genera(1)">生成协议书</x-button></x-col>  
       </x-row>
       <x-row style="height: 20px;"></x-row>
       <x-row>
@@ -58,7 +60,7 @@
           <td  style=" width:10%; text-align: center;">样品</td>
           <td [style.display]="showtablecel"   style="width:5%;text-align: center;">检测费</td>
           <td  style=" width:10%; text-align: center">项目</td>
-          <td  style="width:40%;  text-align: center">方法</td>
+          <td  style="width:40%;  text-align: center">标准</td>
           <td  style=" width:5%; text-align: center">外包</td>
           <td  style=" width:5%; text-align: center">次数</td>
         </thead>
@@ -86,7 +88,7 @@
           <td  style=" width:40%; text-align: center">
             <ng-container *ngFor="let sample of project.samples;"> 
             <ng-container *ngFor="let f of sample.testprojects;">
-            {{f.methodname}}<br>
+            {{f.standardname}}<br>
           </ng-container> 
         </ng-container>
           </td>
@@ -105,13 +107,17 @@
           </ng-container>
           </td>
         </tr> 
-      </table>
-        
+      </table> 
        </x-col>
       </x-row>
     </div>
 
   </x-col>
+</x-row>
+<x-row >
+  <div style="display: none;">
+<app-outputlist style="width:100%;height: 100%;"  id="iframeprint" #iframeprint (sendcomplete)="sendcomplete()"></app-outputlist>
+</div> 
 </x-row>
 
   

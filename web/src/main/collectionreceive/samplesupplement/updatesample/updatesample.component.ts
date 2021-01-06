@@ -74,7 +74,10 @@ export class UpdatesampleComponent implements OnInit,DoCheck {
   }
   setSample(sample:Sample)
   {
+        
       this.curentsample=ProjectUtil.deepClone(sample);
+       this.curentsample.deleverdate=sample.deleverdate;
+       this.curentsample.manudate=sample.manudate;
       if(this.curentsample.testtype!=undefined&&this.curentsample.testtype.id!=0)
       {
          this.testtypeid=Number(this.curentsample.testtype.id);
