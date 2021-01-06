@@ -3,6 +3,7 @@ web/dist/
 deploy/
 *.jar
 *.zip
+*.rar
 *.class
 /.metadata/
 java/businessprocess/target/
