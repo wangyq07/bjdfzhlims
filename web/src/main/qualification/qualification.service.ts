@@ -29,11 +29,11 @@ export interface TestProject extends XTreeNode {
  pid?:string|number;
 }
 @Injectable({ providedIn: 'root' })
-export class QualificaitonService extends RepositoryService<Qualificaiton> {
+export class QualificationService extends RepositoryService<Qualification> {
   constructor(public http: HttpService) {
   super(http, { controller: { name: 'qualifications',servicetype:'businessprocess' } });
   }
-  getqualificationbysearchkey(compid:number,projectname:string,methodname:string):Observable<Qualificaiton>
+  getqualificationbysearchkey(compid:number,projectname:string,methodname:string):Observable<Qualification>
   { 
     return this.http.post(`${this.option.controller?.name}/getqualificationbysearchkey`
             , {companyid:compid,project:projectname,method:methodname}
@@ -54,11 +54,11 @@ export class QualificaitonService extends RepositoryService<Qualificaiton> {
   }
 }
 @Injectable({ providedIn: 'root' })
-export class QualificaitonServicebyid extends RepositoryService<Qualificaiton> {
+export class QualificationServicebyid extends RepositoryService<Qualification> {
   constructor(public http: HttpService) {
   super(http, { controller: { name: 'qualificationsid',servicetype:'businessprocess' } });
   }
-  getqualifications(ids:any[]):Observable<Qualificaiton>
+  getqualifications(ids:any[]):Observable<Qualification>
   {
  
     return this.http.post(`${this.option.controller?.name}`,ids,this.option.controller?.servicetype);
@@ -66,7 +66,7 @@ export class QualificaitonServicebyid extends RepositoryService<Qualificaiton> {
   }
 }
 
-export interface Qualificaiton extends XId { 
+export interface Qualification extends XId { 
   firstid?:string|number;
   secondid?:string|number;
   firstname?:string|number;
@@ -82,6 +82,11 @@ testprojectid?:string | number;
   limitcomment?:string;
    price?:string|number;
    testcount?:string|number;
+   userid?:string;
+  roleid?:string; 
+  beforeuserid?:string;
+  beforeroleid?:string; 
+  beforemethodname?:string;
 }
 @Injectable({ providedIn: 'root' })
 export class QualificationCompanyService extends RepositoryService<QualificationCompany> {

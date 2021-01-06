@@ -6,9 +6,9 @@ import { XButtonModule, XCheckboxModule, XDialogModule, XIconModule, XInputModul
 import { NgNestModule } from 'src/share/ng-nest.module';
 import { AuToolModule } from 'src/share/tool/tool.module';
 import { AuAdaptionModule } from 'src/share/adaption/adaption.module';  
-import { AddqualificaitonComponent } from './addqualificaiton/addqualificaiton.component';
+import { AddQualificationComponent } from './addqualificaiton/addqualificaiton.component';
 @NgModule({
-  declarations: [QualificationComponent, AddqualificaitonComponent],
+  declarations: [QualificationComponent, AddQualificationComponent],
   imports: [
     CommonModule,
     ShareModule,

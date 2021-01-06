@@ -1,0 +1,30 @@
+:host {
+    @media print{@page {size: landscape}}
+    div.PageBreak
+    {
+        page-break-after:always
+    }
+
+    div.page
+    { 
+        writing-mode: tb-rl;
+        height: 80%;
+        margin: 10% 0%;
+    }
+    table{
+        font-size:18px;  
+        border-collapse:collapse;  
+        text-align: center;   
+        margin: 0 auto;  
+    }
+    .al{
+        /* table宽、高度 ：210mm、297mm，这是A4纸的宽度、高度*/
+        width: 210mm;
+        height: 297mm;
+    }
+    div.page table 
+    {
+        margin-right: 80pt;
+        filter: progid:DXImageTransform.Microsoft.BasicImage(Rotat  ion=1);
+    }
+}

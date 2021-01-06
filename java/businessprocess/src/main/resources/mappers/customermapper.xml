@@ -13,6 +13,7 @@
 <result column="remark" property="remark" />
 <result column="area" property="area" />
 <result column="userid" property="userid" />
+<result column="functiontype" property="functiontype"/> 
  <association property="customertype" 
    javaType="com.bjdfzh.businessprocess.entity.CustomerType">
    <id column="customertypeid" property="id"/> 
@@ -27,6 +28,7 @@
 		,customername
 		,customeraddress
 		,customertypeid
+		,functiontype
 		,customertype
 		,contacter
 		,phone
@@ -48,6 +50,7 @@
 		,customertypeid
 		,customertype
 		,contacter
+		,functiontype
 		,phone
 		,fax
 		,postcode
@@ -72,6 +75,7 @@
 			,email=#{email}
 			,remark=#{remark}
 			,area=#{area}
+			,functiontype=#{functiontype}
 			where id=#{id}
     </update>
       <insert id="addCustomer" parameterType="com.bjdfzh.businessprocess.entity.Customer" useGeneratedKeys="true" keyProperty="id">
@@ -88,6 +92,7 @@
 		,remark
 		,area
 		,userid
+		,functiontype
 		)values(
 		#{customername}
 		,#{customeraddress}
@@ -100,6 +105,7 @@
 		,#{remark}
 		,#{area}
 		,#{userid}
+		,#{functiontype}
 		)
      </insert>
      <delete id="deletecustomer" parameterType="string">

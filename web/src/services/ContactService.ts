@@ -49,6 +49,8 @@ export interface Contact extends Id {
 	 userid?:string;
 	 ugency?:string;
 	 contactstatus?:string|number;
+	 urgencyfee?:string|number;
+	 processid?:string|number;
 	 contactcustomers?:ContactCustomer[];
 }
 @Injectable({ providedIn: 'root' })
@@ -75,4 +77,6 @@ realprice?:string|number;
 testcount?:string|number;
 limitmax?:string|number;
 limitmin?:string|number;
+roleid?:string;
+userid?:string;
 }

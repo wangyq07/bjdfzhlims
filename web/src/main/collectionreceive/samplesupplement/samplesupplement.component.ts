@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { XMessageService, XTableColumn } from '@ng-nest/ui';
+import * as moment from 'moment';
+import * as printJS from 'print-js';
 import { IndexService } from 'src/layout/index/index.service';
 import { BusinessProject, CommonType } from 'src/main/businessprocess/evirmentheath/businessproject/businessproject.service';
+import { OutputadditionallistComponent } from 'src/main/businessprocess/outputadditionallist/outputadditionallist.component';
 import { FlowService } from 'src/main/flow/flowprocess/flowhandle.service'; 
 import { Contact, ContactService } from 'src/services/ContactService';
 import { Sample, SampleService } from 'src/services/sample.service';
@@ -81,7 +84,7 @@ samplesource: string='';
             (z:any)=>
             {
               if(z.id==this.modifisample.curentsample.id)
-              {
+              { 
                  for(var m in z)
                  {
                    if(m !='id')
@@ -141,6 +144,8 @@ samplesource: string='';
              this.samplesource=this.currentcontact.samplesource?.label+'';
       }
     }
+     this.printtable.setdata(this.projects,this.ispanding);
+     
     var allprojects:any={id:ProjectUtil.JsNewGuid(),type:0,label:'所有项目',reportcount:0,domainlabel:'',pid:null,samples:[]};
     this.projects.map((z:any)=>
            {
@@ -162,18 +167,7 @@ samplesource: string='';
   }
   submit()
   {
-    let samples:Sample[]=[];
-    this.projects.map(
-      (x)=>
-      {
-        x.samples?.map((z)=>samples.push(z))
-      }
-    );
-    if(samples.length>0)
-    {
-    this.sampleservice.supplimentupdatesamples(samples).subscribe(
-      (x)=>
-      {
+   
         this.flowservice.excutetask(
           this.taskid,
           {
@@ -187,10 +181,7 @@ samplesource: string='';
           {
             this.msg.success("提交成功！");
           }
-        );
-      }
-    );
-  }
+        ); 
   }
   setsamplelabel(x:any)
   {
@@ -198,6 +189,63 @@ samplesource: string='';
     x.testtypelabel=x.testtype?.label;
     x.statuslabel=x.status?.label;
     x.processlabel=x.process?.label;
+    if(x.deleverdate !=null && x.deleverdate !=undefined)
+    x.deleverdatelabel=moment( x.deleverdate).format('YYYY.MM.DD');
+    if(x.deleverdate !=null && x.deleverdate !=undefined)
+    x.manudatelabel=moment( x.manudate).format('YYYY.MM.DD');
+  }
+  @ViewChild("printtable")printtable:OutputadditionallistComponent;
+  save()
+  {
+    let samples:Sample[]=[];
+    var projectss:any[]=[];
+    this.projects.map(
+      (x:any)=>
+      {
+        if(x.type !=0)
+        {
+          projectss.push(x);
+        }
+        x.samples?.map((z:any)=>samples.push(z));
+      }
+    );
+    if(samples.length>0)
+    {
+    this.sampleservice.supplimentupdatesamples(samples).subscribe(
+      (x)=>
+      { 
+        this.printtable.setdata(projectss,this.ispanding);
+        this.msg.success("保存成功！");
+      }
+      );
+    }
+  }
+  copydata()
+  {
+    
+    if(this.modifisample.curentsample!=null&&this.modifisample.curentsample!=undefined)
+    { 
+    this.sampledata.map(
+           (y)=>
+           { 
+             //拷贝特定字段，不能使用copy
+             y.samplequality=this.modifisample.curentsample.samplequality;
+             y.executegrade=this.modifisample.curentsample.executegrade;
+             y.specialcondition=this.modifisample.curentsample.specialcondition;  
+             y.wrapherproperties=this.modifisample.curentsample.wrapherproperties
+             y.manudate=this.modifisample.curentsample.manudate;
+             y.deleverdate= this.modifisample.curentsample.deleverdate;
+             y.samplespec=this.modifisample.curentsample.samplespec
+             y.brand=this.modifisample.curentsample.brand;
+             y.executestandard=this.modifisample.curentsample.executestandard;
+             y.status=this.modifisample.curentsample.status;
+             y.process=this.modifisample.curentsample.process;
+             this.setsamplelabel(y);
+           }
+         );
+          
+        this.sampledata=[...this.sampledata];
+    }
   }
   sampledata:any[]=[];
   action(row:BusinessProject)
@@ -210,14 +258,18 @@ samplesource: string='';
         this.setsamplelabel(x);
         this.sampledata.push(x);
       }
-     ) ;  
+     );   
   }
-  
+  genu()
+  { 
+    //console.log(document.getElementById("printtable")?.innerHTML);
+    printJS({ printable: 'printtable', type: 'html',maxWidth:'98%',targetStyles:['*'],style:'@media print{@page {size:landscape}}'});
+  }
   columns: XTableColumn[] = [ 
     { id: 'actions', label: '操作', width: 100 }, 
     { id: 'samplename', label: '名称', width: 150, sort: true }, 
-    { id: 'storelabel', label: '保存条件', width: 150, sort: true }, 
-    { id: 'testtypelabel', label: '监测类别', width: 150, sort: true } , 
+    { id: 'deleverdatelabel', label: '交付时间', width: 150, sort: true }, 
+    { id: 'manudatelabel', label: '生产日期及批号', width: 150, sort: true } , 
     { id: 'processlabel', label: '处理方式', width: 150, sort: true } , 
     { id: 'statuslabel', label: '样品状态', width: 150, sort: true } , 
     { id: 'samplespec', label: '规格', width: 150, sort: true } , 
@@ -225,7 +277,8 @@ samplesource: string='';
     { id: 'executestandard', label: '产品执行标准', width: 150, sort: true }, 
     { id: 'wrapherproperties', label: '样品包装及性状', width: 150, sort: true }, 
     { id: 'samplequality', label: '样品数量', width: 150, sort: true }, 
-    { id: 'executegrade', label: '样品等级', width: 150, sort: true }            
+    { id: 'executegrade', label: '样品等级', width: 150, sort: true }, 
+    { id: 'specialcondition', label: '特殊情况', width: 150, sort: true }              
   ];
   index=0;
   size=200;

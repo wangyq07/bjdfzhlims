@@ -30,7 +30,7 @@ manufactoryaddress?:string;
 purty?:string;
 brand?:string;
 manufactoryphone?:string;
-manudate?:string;
+manudate?:string|Date;
 manuno?:string;
 remark?:string;
 expiredday?:string;
@@ -52,4 +52,6 @@ testtypeother?:string;
 storeother?:string;
 statusother?:string;
 standardfee?:number;
+specialcondition?:string;
+deleverdate?:string|Date
 }

@@ -146,8 +146,22 @@ public class Contact {
 	CommonType service;
 	CommonType samplesource;
 	String customerid;
-	 public String getCustomerid() {
+	double urgencyfee;
+	 public double getUrgencyfee() {
+		return urgencyfee;
+	}
+	public void setUrgencyfee(double urgencyfee) {
+		this.urgencyfee = urgencyfee;
+	}
+	public String getCustomerid() {
 		return customerid;
+	}
+	int processid;
+	public int getProcessid() {
+		return processid;
+	}
+	public void setProcessid(int processid) {
+		this.processid = processid;
 	}
 	public void setCustomerid(String customerid) {
 		this.customerid = customerid;
@@ -186,8 +200,5 @@ public class Contact {
 	}
 	public void setExternfee(double externfee) {
 		this.externfee = externfee;
-	}
-    
-	 
-
+	} 
 }

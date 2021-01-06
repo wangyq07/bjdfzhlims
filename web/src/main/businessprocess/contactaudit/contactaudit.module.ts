@@ -11,6 +11,7 @@ import { QualificationModule } from 'src/main/qualification/qualification.module
 import { AuToolModule } from 'src/share/tool/tool.module';
 import { AuAdaptionModule } from 'src/share/adaption/adaption.module';
 import { ScrolltableComponent } from './scrolltable/scrolltable.component';
+import { OutputlistModule } from '../outputlist/outputlist.module';
 @NgModule({
   declarations: [ContactauditComponent, ScrolltableComponent],
   imports: [
@@ -23,6 +24,7 @@ import { ScrolltableComponent } from './scrolltable/scrolltable.component';
     ,QualificationModule
     ,AuAdaptionModule
     ,AuToolModule
+    ,OutputlistModule
   ]
 })
 export class ContactauditModule { }

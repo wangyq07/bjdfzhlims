@@ -24,4 +24,5 @@ remark?:string;
 customertype?:CustomerType;
 area?:string;
 userid?:string;
+functiontype?:string|number;
 }

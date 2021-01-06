@@ -45,8 +45,7 @@ export class EvirmentheathComponent extends PageBase implements OnInit,AfterCont
      }
      this.contactlist.activeid="";
       if(this.taskcustomerid !=-1)
-      {
-        
+      { 
         this.contactlist.activeid=this.taskcontactid;
       }
        

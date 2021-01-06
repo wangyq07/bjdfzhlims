@@ -9,7 +9,14 @@ public class PriceQualification implements Serializable {
    String priceid ;
    String  testprojectname ;
    String methodname ;
-   String standardprice ;
+   String standardname;
+   public String getStandardname() {
+	return standardname;
+}
+public void setStandardname(String standardname) {
+	this.standardname = standardname;
+}
+String standardprice ;
    double exceptionprice;
 public double getExceptionprice() {
 	return exceptionprice;

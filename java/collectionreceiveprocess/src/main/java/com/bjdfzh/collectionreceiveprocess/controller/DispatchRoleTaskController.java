@@ -38,7 +38,7 @@ public List<RoleTestProject> getRoleTaskDispatch(
 		throw new Exception("认证已经过期，请登录");
 	} 
 	 
-	return dispatchService.getroletaskdispatch(Params.getString("contactid"));
+	return dispatchService.getroletaskdispatch();
 }
 	@RequestMapping(value ="addroletaskdispatch",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 	@ResponseBody

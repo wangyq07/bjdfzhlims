@@ -8,7 +8,7 @@ import com.bjdfzh.collectionreceiveprocess.entity.DispatchRoleTask;
 import com.bjdfzh.collectionreceiveprocess.entity.RoleTestProject; 
 @Transactional
 public interface DispatchRoleTaskMapper {
-List<RoleTestProject>	getroletaskdispatch(String contactid);
+List<RoleTestProject>	getroletaskdispatch();
 void addtaskdispatchs(List<DispatchRoleTask> tasks);
 void deletedispatchtask(String contactid);
 }

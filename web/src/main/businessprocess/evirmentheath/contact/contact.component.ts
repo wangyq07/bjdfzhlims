@@ -28,8 +28,8 @@ export class ContactComponent extends PageBase implements OnInit {
   contactdata:Contact[]=[];
   allcontactdata:Contact[]=[];  
   contactcolumns: XTableColumn[] = [
-    { id: 'index', label: '序号', width: 50,  type: 'index' },
-    { id: 'actions', label: '操作', width: 50},
+    { id: 'index', label: '序号', width: 80,  type: 'index' },
+    { id: 'actions', label: '操作', width: 180},
     { id: 'id', label: '合同编号', width: 80, sort: true },
     { id: 'totalfee', label: '总费用', width: 80, sort: true } ,
     { id: 'testfee', label: '检测费', width: 80, sort: true },

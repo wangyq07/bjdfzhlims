@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { XQuery, XSort, XTableColumn, XTableComponent } from '@ng-nest/ui';
 import { IndexService } from 'src/layout/index/index.service';
@@ -6,7 +6,9 @@ import { FlowService, Task } from 'src/main/flow/flowprocess/flowhandle.service'
 import { RoleAuditSettingService } from 'src/main/system/roleauditset/roleautidtset-service';
 import { Contact, ContactService } from 'src/services/ContactService';
 import { AuditResultService } from 'src/services/transform.data.service';
-import { PageBase } from 'src/share/base/base-page'; 
+import { PageBase } from 'src/share/base/base-page';  
+import * as printJS from 'print-js';
+import { OutputlistComponent } from '../outputlist/outputlist.component';
 @Component({
   selector: 'app-contactaudit',
   templateUrl: './contactaudit.component.html',
@@ -148,9 +150,10 @@ showtablecel:string="none";//"table-cell";
      this.contactservice.getcontactproject(tsk.contactid+'').subscribe(
        (x)=>
        { 
-         console.log(x);
+          
         this.CurrentContact=x.contact;  
         this.projects=x.projects as any[];
+        this.iframe.setprojects(this.projects,this.CurrentContact); 
          if(this.CurrentContact !=null)
          { 
          if(this.CurrentContact.contactcustomers !=null)
@@ -199,8 +202,17 @@ showtablecel:string="none";//"table-cell";
     
     }
      
-   
- 
+    @ViewChild('iframeprint') iframe: OutputlistComponent;
+    genera(typ:number)
+    {
+       
+      printJS({ printable: 'iframeprint', type: 'html',style:'@media print{@page {size:portrait}}' });
+      
+    }
+    sendcomplete()
+    {
+      printJS("iframeprint","html");   
+    }
   CurrentContact:Contact={};
   activatedRow(row:Task)
   {

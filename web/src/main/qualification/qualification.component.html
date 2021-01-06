@@ -1,6 +1,6 @@
 <x-dialog [(visible)]="addvisible" #Seldialog width="20%" height="30%" placement="top"
 [showConfirm]="false" [showCancel]="false" [backdropClose]="false" [hasBackdrop]="false">  
-<app-addqualificaiton #addqualificaiton style="height:100%;width:100%" (SaveQualification)="SaveQualification($event)"></app-addqualificaiton>
+<app-addQualification #addqualificaiton style="height:100%;width:100%" (SaveQualification)="SaveQualification($event)"></app-addQualification>
 </x-dialog>
 <x-row>
   <x-col span=10>

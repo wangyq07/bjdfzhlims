@@ -1,0 +1,244 @@
+  
+ <table style="height:  297mm;width: 200mm;" > 
+    
+   
+    <tr><td colspan='4' align="center"  style="font-size: 20;font-weight: bold;font-family:微软雅黑;">北京东方纵横产品检测有限公司</td></tr>
+    <tr style="height:5mm"><td width="15%">EAAC-GL-07-02(v2.0)</td><td align="left" colspan="3" style="font-size: 20;font-weight: bold;font-family:微软雅黑;">委 托 检 验 协 议 书</td></tr>
+    <tr style="height:240mm">
+      <td colspan="4">
+  <table border="1" cellspacing="0"  style="width: 100%;height: 100%;"> 
+      <tr height=20px>  
+  <td colspan="4">
+  <table style="height:100%;width: 100%;">
+      <tr>
+      <td style="font-size: 9pt;width: 100px;">委托单位名称:</td>
+      <td colspan="5"    id="weituo">  
+        {{delegatename}}
+      </td>
+  </tr></table>
+</td>
+</tr>
+<tr style="height: 20px;">  
+  <td colspan="4" style="font-size: 9pt;">
+  <table style="height:100%;width: 100%;">
+      <tr>
+      <td style="font-size: 9pt;width: 100px;">委托单位地址:</td>
+      <td colspan="5" id="weituoaddr">  
+          {{delegateadd}}
+      </td>
+  </tr></table>
+  </td>
+  </tr>
+  <tr style="height: 20px;" ><td colspan="4" style="font-size: 9pt;">
+    <table style="width: 100%;height:100%">
+        <tr>
+        <td style="font-size: 9pt;width: 100px;">付款单位名称:</td>
+        <td colspan="5"  id="fukuan" >  {{payuser}}
+        </td>
+    </tr></table>
+</td></tr>
+<tr style="height: 20px;">
+    <td colspan="4">
+    <table style="width: 100%;height:100%">
+        <tr style="font-size: 9pt;">
+            <td width=50%>联系人: {{delegatecontacter}}</td>
+            <td width=50%>电话(Tel):{{delegatephone}}</td> 
+            </tr>
+    </table>
+    </td>
+        </tr>
+        <tr height=20px ><td colspan="4" style="font-size: 9pt;">
+          <table style="height:100%;width: 100%;">
+              <tr>
+              <td style="font-size: 9pt;width: 20%;">受检单位名称:</td>
+              <td colspan="5" id="shoujian">{{inspectuser}}    
+              </td>
+          </tr></table>
+      </td></tr>
+      <tr  height=20px><td colspan="4" style="font-size: 9pt;">
+          <table style="height:100%;width: 100%;">
+              <tr>
+              <td style="font-size: 9pt;width: 20%;">生产/受检单位地址:</td>
+              <td colspan="5"  id="shoujianaddr" ></td> {{inspectadd}}  
+          </tr></table>
+      </td></tr> 
+          <tr   style="font-size:9pt;height:40px"> 
+            <td style="text-align: center;">项目号</td><td style="text-align: center;">样品名称</td><td style="text-align: center;">项目号</td><td style="text-align: center;">样品名称</td>
+          </tr> 
+          <tr *ngFor="let project of projects" style="font-size:9pt;height:40px">
+            <td style="text-align: center;">{{project.projectname0}}</td>
+            <td style="text-align: center;">{{project.samplename0}}</td>
+            <td style="text-align: center;">{{project.projectname1}}</td>
+            <td style="text-align: center;">{{project.samplename1}}</td>
+          </tr> 
+          <tr style="height: 30px;">
+              <td>样品来源</td>
+              <td>
+                  <span *ngFor="let samplesource of sampleSource">
+                      <input type="checkbox" [checked]="samplesource.checked">{{samplesource.label}}
+                  </span> 
+              </td>
+              <td>检测项目及依据</td>
+              <td>见附页</td>
+          </tr>
+          <tr style="height:40px">
+            <td colspan="1">是否分包</td>
+            <td colspan="3">
+            <span *ngFor="let dataextern of dataexterns">
+                <input type="checkbox" [checked]="dataextern.checked">{{dataextern.label}}<br>
+            </span> </td>
+           </tr>
+           <tr style="height:30px">
+               <td colspan="1">资质盖章</td>
+               <td colspan="3">
+                <span *ngFor="let seal of seals">
+                    <input type="checkbox" [checked]="seal.checked">{{seal.label}}
+                </span> </td>
+           </tr>
+           <tr style="height:30px">
+            <td colspan="1">样品处理方式</td>
+            <td colspan="3">
+             <span *ngFor="let process of processes">
+                 <input type="checkbox" [checked]="process.checked">{{process.label}}
+             </span> </td>
+            </tr>
+             <tr style="font-size:9pt;height:60px">
+              <td style="text-align: center;width:15%" >服务类型</td>
+              <td colspan=3 width=88% id="fuwuleixing">
+                <span *ngFor="let service of services">
+                    <input type="checkbox" [checked]="service.checked">{{service.label}}<br>
+                </span> 
+              </td>
+             </tr> 
+             <tr style="font-size:9pt;height:20px">
+              <td style="text-align: center;width:15%" >请选择报告形式</td>
+              <td colspan="1"  id="baogaoyoujidizhi" > 
+                <span *ngFor="let reportform of reportforms">
+                    <input type="checkbox" [checked]="reportform.checked">{{reportform.label}}
+                </span>
+              </td>
+              <td style="text-align: center;width:12%" >需要报告份数</td>
+              <td colspan="1"  id="baogaoyoujidizhi" > 
+                一式{{reportcount}}份（2份以上每份报告加收 50  元）
+              </td>
+             </tr>
+             <tr style="font-size:9pt;height:20px">
+              <td style="text-align: center;width:15%"  >检测费</td>
+              <td width=38% id="jiancefei"> {{testfee}}</td>
+              <td width=12% style="text-align: center;">加急费</td>
+              <td width=38% id="jiajifei">
+                 {{urgencyfee}}
+              </td>
+             </tr>
+             <tr style="font-size:9pt;font-weight: bolder;height:40px">
+              <td style="text-align: center;" width=8%>声明</td>
+              <td colspan="3" width=88%> 
+              对样品及相关资料的真实性负责，并同意背面双方约定条款，委托单正面，背面及相应附件的内容均属委托单位组成部分，委托单位签字表明已看过并理解委托单背面双方约定条款，双方同意履行。
+              </td>
+             </tr>
+             <tr style="font-size:9pt;height: 40px;">
+              <td colspan="1" style="text-align: center;" width=12%>备注</td>
+              <td colspan="3" width=88%></td> 
+             </tr>
+             <tr style="font-size:9pt;height:120px">
+              <td  colspan="2"  width=50% style="vertical-align: text-top;">
+                  <br>委托单位盖章:<br><br><br>代理人签字:<br>日期:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日
+              </td>
+              <td width=50% colspan="2"> 
+                  <br>检测单位:<br> 北京东方纵横产品检测有限公司  检测单位盖章<br><br>业务人员签字:<br>日期:日期:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日
+              </td>
+             </tr> 
+    </table></td>
+</tr> 
+ 
+ 
+    <tr style="height:42mm">
+        <td colspan="4">
+            <table style="width: 100%;height: 100%;">
+                <tr>
+                    <td colspan="4" style="font-size: 9pt;">
+                    单位名称:北京东方纵横产品检测有限公司
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="font-size: 9pt;">
+                    开 户 行:中国农业银行股份有限公司北京英家坟支行 
+                    </td>
+                    <td colspan="1" style="font-size: 9pt;">账  号:11042901040011602
+                     </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="font-size: 9pt;">
+                    通讯地址(邮政编码):北京市通州区马驹桥镇联东U谷工业园西四区121栋(101102) 
+                    </td>
+                    <td colspan="1" style="font-size: 9pt;">
+                    联系电话:(010)56495878/56495858
+                     
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+ 
+ 
+              <table style="width: 200mm">
+                <tbody>
+                  <tr style="height: 5mm;">
+                      <td align="center">
+            <h2>委托协议服务条款</h2>  </td>
+        </tr>
+         <tr style="height:248mm"><td valign="top">
+             <h4>
+            本协议委托单位“代理人”和检测单位“业务人员”签字或盖章后协议生效；<br>
+            一、委托方责任与义务<br>
+            1、委托方对样品及相关资料的真实性负责，需如实提供检测所需各项信息及资料，并保证提供的资料与信息真实有效。如因委托方提供的资料与信息存在虚假，错漏，隐瞒，误导等造成的任何损失，由委托方承担全部责任。<br>
+            2、委托方对于送检样品中可能含有或确定含有的已知的潜在危害，例如含有毒害，放射性，易燃易爆等成分，应提前告知。否则，由此产生的任何损失，由委托方承担全部责任。<br>
+            3、委托方应完整填写检测协议书，由于委托方的疏漏造成的空白项，则视为按照本公司的决定，并且由此带来的相关责任由委托方承担。<br>
+            4、委托方如需变更委托要求，应在原检测协议书中添加备注或划改签名，重大变更需重新填写新的委托协议。须经过本公司的合同评审通过之后，方可进行协议更改，否则视为变更无效。<br>
+            5、委托方需根据本公司的要求支付检测费用。<br>
+            6、检毕样品委托方无退样要求的，由本公司负责监护处理。<br>
+            7、客户领回退样用作其他用途的，造成人身伤害或者其他损害的本公司概不负责。<br>
+            8、委托方如对检测结果有异议的，应在报告签发后的15日内向本公司提出异议。经本公司审核通过后，按原样品及原检测方法进行复检。如复检结果与初检结果的偏差符合检测方法的规定要求，则委托方需向本公司支付与原检测项目等同的复检费用。以下情况不予以受理复检申请：<br>
+            已退样的样品或无法保存的样品；超过保质期的样品或样品已被销毁；微生物项目等不可重复的项目；<br>
+            9、如委托单位需要我单位外出采样，则委托单位应当确保采样场所不存在任何可能危及或影响我单位采样人员人身、财产安全的危险因素，否则由此给采样人员和/或我单位造成的一切损失（包括但不限于医疗费用、工伤待遇、经济赔偿）由委托单位承担。<br>
+            二、承检方责任与义务<br>
+            10、本公司严格按照检测协议中的委托要求及相关标准中列明的条款(条件)进行检测。对于协议中委托方缺失或未指明的内容，本公司将根据内部规定及要求、行业惯例或本公司认为的适当方法进行处理。<br>
+            11、本公司只对委托单位送检样品的检测结果负责，由于样品的检测结果与样品所代表的同种产品或物质真实情况存在的客观误差,所引发的一切法律后果由委托单位自行承担；如因本公司过错导致样品的检测结果与样品的真实情况超过正常的客观误差范围，本公司承担不超过两倍的此样品此检测项目的检测费作为赔偿,除此之外，本公司对其它任何原因导致的检测结果的使用所产生的直接或间接的损失不承担任何法律责任。<br>
+            12、以下情况检测报告（含复印件）均属无效： <br>
+            无签发人员签字或等效标识；<br>
+            未加盖“北京东方纵横产品检测有限公司”检验检测专用章（首页与骑缝）；<br>
+            任何形式的涂改；<br>
+            本公司的检测周期“以收到样品、委托协议且均完整无误”起开始计算检测周期，一般为7个工作日，特殊项目周期另有约定，加急项目需在协议书上说明。当天12：00之前受理的项目从当天起计算检测周期，12：00之后自次日起计算检测周期。本公司如对样品有疑问或无法按期完成检测工作时，会及时通知委托方进行协商<br></h4>
+        </td></tr>
+         <tr   >
+             <td>
+                <table style="width: 100%;height: 15mm;">
+                    <tr>
+                        <td colspan="4" style="font-size: 9pt;">
+                        单位名称:北京东方纵横产品检测有限公司
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="font-size: 9pt;">
+                        开 户 行:中国农业银行股份有限公司北京英家坟支行 
+                        </td>
+                        <td colspan="1" style="font-size: 9pt;">账  号:11042901040011602
+                         </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="font-size: 9pt;">
+                        通讯地址(邮政编码):北京市通州区马驹桥镇联东U谷工业园西四区121栋(101102) 
+                        </td>
+                        <td colspan="1" style="font-size: 9pt;">
+                        联系电话:(010)56495878/56495858
+                         
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            </tr>
+            </table>
+            
+ 
+ 

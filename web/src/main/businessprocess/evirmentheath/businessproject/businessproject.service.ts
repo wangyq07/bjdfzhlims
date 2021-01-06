@@ -41,6 +41,9 @@ contactid?:string;
 customerid?:string|number;
 customername?:string;
 area?:string;
+phone?:string;
+customeraddress?:string;
+contacter?:string;
 customertype?:string|number; 
 }
 export interface CommonType extends XId

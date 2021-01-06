@@ -18,55 +18,12 @@
 		        select
 				 tr.id
 				 ,tr.pid
-				 ,tr.label
-				 ,tsd.id taskid
-				 ,tsd.roleid 
-				 ,tp.id testid
-				 ,tp.sampleid
-				 ,tsd.receivequality 
-				 ,tsd.screendiameter
+				 ,tr.label 
 				 from
 				 (
 				 select t.id,null pid,t.name label  from t_role  t
-				 where exists
-				 (
-				 select 1
-				 from
-				 (
-				 SELECT id 
-				 FROM t_organization t where t.parentId= 'fe77519d-4467-214e-647b-e0089e45306d' 
-				 ) t1
-				 where t1.id=t.organizationId
-				 )
-				 ) tr
-				 left join t_sample_dispatch tsd
-				 on tsd.roleid=tr.id
-				 left join
-				 (
-				 select
-				 tp.id,tp.sampleid
-				 from
-				 t_test_project tp 
-				 where exists
-				 (
-				   select 1 from
-					 (
-					   select  sampleid from t_sample ts
-						 where exists 
-						 (
-						    select 1 from 
-								(
-								select projectid from
-								t_business_project
-								where contactid=#{contactid}
-								) tpro
-								where tpro.projectid=ts.projectid 
-						 )
-					 ) ts
-					 where ts.sampleid=tp.sampleid
-				 )
-				 ) tp
-				 on tp.id=tsd.testprojectid  
+				 where  t.organizationId= 'fe77519d-4467-214e-647b-e0089e45306d' 
+				 )  tr 
     </select>  
     <insert id="addtaskdispatchs" parameterType="java.util.ArrayList">
      insert into t_sample_dispatch(

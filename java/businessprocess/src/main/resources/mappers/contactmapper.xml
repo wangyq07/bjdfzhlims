@@ -17,6 +17,8 @@
 <result column="isextern" property="isextern"/>
 <result column="standardfee" property="standardfee" />
 <result column="contactstatus" property="contactstatus" />
+<result column="urgencyfee" property="urgencyfee"/>
+<result column="processid" property="processid" />
  <association javaType="com.bjdfzh.userprivilage.entity.CommonType" property="samplesource">
  <id column="samplesouceid" property="id"/> 
  <result column="samplesource" property="label" />
@@ -36,6 +38,9 @@
  <result column="customerid" property="customerid" />
  <result column="customername" property="customername" />
  <result column="area" property="area" /> 
+ <result column="customeraddress" property="customeraddress"/>
+ <result column="contacter" property="contacter"/>
+ <result column="phone" property="phone" />
  <result column="customertype" property="customertype" />
  </collection>  
 </resultMap> 
@@ -50,7 +55,11 @@
 	 ,tcu.area
 	 ,tcu.customertype
 	 ,tcu.customername
+	 ,tcu.customeraddress
+		 ,tcu.phone
+		 ,tcu.contacter
 	 ,tinfo.serviceid
+	 ,tinfo.processid
 	 ,tservice.servicetype
 	 ,tinfo.samplesouceid
 	 ,tsour.samplesource
@@ -64,26 +73,40 @@
 	 ,tinfo.isextern
 	 ,ifnull(tinfo.businessfee,0)+ifnull(tinfo.collectionfee,0)
 	  +ifnull(tp.reportfee,0)+ifnull(tp.testfee,0)+ifnull(tinfo.externfee,0) totalfee
-		,tp.testfee
+		,tp.testfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		                when 3 then 1.5 end testfee
+		,(tp.testfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		                when 3 then 1.5 end)-tp.testfee urgencyfee
 		,ifnull(tinfo.standardfee,tp.standardfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
 		                when 3 then 1.5 end) standardfee
-		,round(tp.testfee/nullif(ifnull(tinfo.standardfee,tp.standardfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		,round((tp.testfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		                when 3 then 1.5 end)/nullif(ifnull(tinfo.standardfee,tp.standardfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
 		                when 3 then 1.5 end),0),2) discount
 	 from t_contact t
 	 inner join 
 	 (
-	   select
+	   select  
+	    t.contactid 
+	   from t_contact_customer t 
+		  where  t.customerid=#{customerid}  and t.customertype=1
+	 ) tbcu
+	 on tbcu.contactid=t.contactnumber
+	 inner join 
+	 (
+	    select
 	    t.id,t.contactid
          ,t.customerid
 		 ,t.customertype
 		 ,tcu.area
+		 ,tcu.customeraddress
+		 ,tcu.phone
+		 ,tcu.contacter
 		 ,tcu.customername
 	   from t_contact_customer t
 		 inner join t_customer tcu
 		 on tcu.id=t.customerid
-		  where t.customerid=#{customerid}
 	 ) tcu
-	 on tcu.contactid=t.contactnumber
+	  on tcu.contactid=t.contactnumber
 	 left join t_contact_info tinfo
 	 on t.contactnumber=tinfo.contactid
 	 left join t_contact_seal tcs
@@ -122,16 +145,19 @@
     contactnumber  
 	 ,DATE_FORMAT(signdate, '%Y-%c-%d' ) signdate
 	 ,userid
-	 ,t.contactstatus
 	  ,tcu.id cuid
+	  ,t.contactstatus
 	 ,tcu.customerid
 	 ,tcu.area
 	 ,tcu.customertype
 	 ,tcu.customername
+	 ,tcu.customeraddress
+		 ,tcu.phone
+		 ,tcu.contacter
 	 ,tinfo.serviceid
+	 ,tinfo.processid
 	 ,tservice.servicetype
 	 ,tinfo.samplesouceid
-	 ,tinfo.isextern
 	 ,tsour.samplesource
 	 ,tsour.sourcecode
 	 ,tcs.sealid
@@ -140,12 +166,17 @@
 	 ,tinfo.businessfee
 	 ,tinfo.collectionfee
 	 ,tinfo.externfee
+	 ,tinfo.isextern
 	 ,ifnull(tinfo.businessfee,0)+ifnull(tinfo.collectionfee,0)
 	  +ifnull(tp.reportfee,0)+ifnull(tp.testfee,0)+ifnull(tinfo.externfee,0) totalfee
-		,tp.testfee
+		,tp.testfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		                when 3 then 1.5 end testfee
+		,(tp.testfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		                when 3 then 1.5 end)-tp.testfee urgencyfee
 		,ifnull(tinfo.standardfee,tp.standardfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
 		                when 3 then 1.5 end) standardfee
-		,round(tp.testfee/nullif(ifnull(tinfo.standardfee,tp.standardfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		,round((tp.testfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		                when 3 then 1.5 end)/nullif(ifnull(tinfo.standardfee,tp.standardfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
 		                when 3 then 1.5 end),0),2) discount
 	 from t_contact t
 	 inner join 
@@ -155,6 +186,9 @@
          ,t.customerid
 		 ,t.customertype
 		 ,tcu.area
+		 ,tcu.customeraddress
+		 ,tcu.phone
+		 ,tcu.contacter
 		 ,tcu.customername
 	   from t_contact_customer t
 		 inner join t_customer tcu
@@ -193,7 +227,7 @@
 			group by t.contactid
 	 ) tp
 	 on tp.contactid=t.contactnumber
-	 where contactnumber=#{id}
+	 where t.contactnumber=#{id}
     </select>  
     <insert id="addcontact" parameterType="com.bjdfzh.businessprocess.entity.Contact" >
      insert into t_contact(
@@ -298,6 +332,7 @@
 		,externfee 
 		,isextern
 		,standardfee
+		,processid
         )values
         (
           #{id}
@@ -311,6 +346,7 @@
 		, #{externfee} 
 		,#{isextern}
 		,#{standardfee}
+		,#{processid}
         )
      </insert>
      <delete id="deletecontacttestproject" parameterType="string">

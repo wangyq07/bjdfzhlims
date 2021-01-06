@@ -27,7 +27,7 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
     ,private router: Router
     ,private globalaudit:AuditResultService
     ,private msg:XMessageService
-    
+    ,private roleservice:DispatchRoleTaskService
     ) {
     super(indexService);
     if(actroute !=undefined)
@@ -38,7 +38,7 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
             this.contactid=x.contactid;
             this.taskid=x.taskid;
             this.getData();
-           
+             
           }
         );
       }
@@ -249,32 +249,14 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
                this.seal= this.seal+this.currentcontact.seal[i].label+',';
                }
               this.samplesource=this.currentcontact.samplesource?.label+'';
-              this.settreeData();
-              
-              this.treeData=p; 
-              this.currentkeys=[];
-              p.map(
-                (h:any)=>
+              this.roleservice.getroletaskdispatchs('').subscribe(
+                (y)=>
                 {
-                   this.treeCom.addNode(h);
-                   h.taskdispatchs.map(
-                     (n:any)=>
-                     {
-                        this.currentkeys.push(n.testid);
-                     }
-                   );
+                  this.roles=y;
                 }
               );
-            var activenode=  this.treeCom.nodes.find((n)=>n.id==this.treeCom.activatedId);
-            if(activenode !=undefined)
-            {
-            this.projecttreeCom.nodes.map(
-                (n)=>
-                {
-                  this.recursionNodeDisable(n, activenode as RoleTestProject);
-                }
-              ); 
-            } 
+               this.data=ProjectUtil.getMareData(this.projects,this.ispanding);
+               
       }
     }
      
@@ -284,6 +266,12 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
     );
     
   }
+  projectclick(item:any)
+  {
+    
+  }
+  roles:RoleTestProject[]=[];
+  data:any[]=[];
   settreeData()
   { 
     this.projects.map(

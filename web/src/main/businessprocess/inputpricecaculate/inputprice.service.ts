@@ -51,5 +51,6 @@ export interface PriceQualification extends XId
     testprojectname?:string;
     methodname?:string;
     standardprice?:string|number;
+    standardname?:string;
     exceptionprice?:string|number; 
 }

@@ -51,5 +51,6 @@ export interface ProductQualification extends XId
     productid?:string;
     testprojectname?:string;
     methodname?:string;
+    standardname?:string;
     standardprice?:string|number;
 }

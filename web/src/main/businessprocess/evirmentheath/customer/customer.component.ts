@@ -32,6 +32,7 @@ export class CustomerComponent   implements OnInit,AfterViewInit {
   }
   setActive(contactid:number)
   {
+    console.log(this.functiontype);
     var findex= this.data.findIndex((x)=>x.id==contactid);
     if(findex !=-1)
     {
@@ -63,6 +64,7 @@ setselect(ismultiple:boolean=true)
 {
   this.getalldata(this.indexService.auth.user.id+'');
   this.getData();
+  console.log(this.data);
   this.multiple=ismultiple;
    if(ismultiple)
    {
@@ -81,6 +83,8 @@ setselect(ismultiple:boolean=true)
    else
    {
     this.columns = [ 
+      { id: 'index', label: '序号', width: 100, left: 0, type: 'index' },
+      { id: 'actions', label: '操作', width: 100, left: 80 },
       { id: 'customername', label: '客户名称', width: 200, sort: true },
       { id: 'area', label: '区域', width: 300, sort: true },
       { id: 'customeraddress', label: '单位地址', width: 300, sort: true },
@@ -119,13 +123,13 @@ searchkeydown()
                this.query.filterLogic='or';
                this.query.filter=[{field:"customername",value:this.searchcustom.value,operation:"%"}
               , {field:"customeraddress",value:this.searchcustom.value,operation:"%"}]; 
-            } 
-            else
-            {
-              this.query.filter=[]; 
-              this.total=this.alldata.length;
-            }
-            this.getData();
+                } 
+                else
+                {
+                  this.query.filter=[]; 
+                  this.total=this.alldata.length;
+                }
+                this.getData();
             }
   ngOnInit(): void {
      
@@ -167,9 +171,24 @@ searchkeydown()
               }
            }
          );
+
         }
-       this.currentCustomer=this.data[0];
-       this.customtable.activatedRow=this.data[0];
+         
+          if(this.seldata.length==0)
+          {
+            this.currentCustomer=this.data[0];
+            this.customtable.activatedRow=this.data[0];
+          }
+          else
+          {
+           var ffindex= this.data.findIndex((z)=>z.id==this.seldata[0].id);
+           if(ffindex!=-1)
+           {
+            this.currentCustomer=this.data[ffindex];
+            this.customtable.activatedRow=this.data[ffindex];
+          }
+           
+        }
        
        if(this.ChangeCustomer !=undefined)
        this.ChangeCustomer.emit(this.data[0]);
@@ -177,6 +196,7 @@ searchkeydown()
       }
     ); 
   }
+  @Input() functiontype:any=1;
   @ViewChild('customtable')customtable:XTableComponent;
   @ViewChild('customercomponent')AddcustomersComponent:AddcustomersComponent;
   @ViewChild('searchcustom')searchcustom:XInputComponent;
@@ -187,9 +207,23 @@ searchkeydown()
     this.query={filter:[{field:'userid',value:userid,operation:"="}]}
     this.service.getList(this.index, this.size, this.query)
     .subscribe((x)=>
-     { 
-
-      [this.alldata, this.total] = [x.list as Customer[], Number(x.total)];
+     {  
+      if(this.functiontype==1)
+      {
+        this.alldata=[];
+      x.list?.map(
+        (y)=>
+        {
+          if(y.functiontype==1)
+          this.alldata.push(y);
+        }
+      );
+      this.total=this.alldata.length;
+      }
+      else
+      {
+        [this.alldata, this.total] = [x.list as Customer[], Number(x.total)];
+      }
       this.getData();
       this.cdr.detectChanges(); 
      }
@@ -214,7 +248,8 @@ searchkeydown()
         this.currentCustomer=this.AddcustomersComponent.currentcustomer as Customer;
             switch(obj)
             {
-              case 'add':  
+              case 'add': 
+               
                this.data.push(this.currentCustomer); 
                this.data=this.data.map((x)=>{return x;}); 
                this.customtable.activatedRow=this.currentCustomer;

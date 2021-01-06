@@ -15,6 +15,7 @@
 	<result column="id" property="priceid" />
 	<result column="testprojectname" property="testprojectname" />  
 	<result column="methodname" property="methodname" />
+	<result column="standardname" property="standardname"/> 
 	<result column="standardprice" property="standardprice" />  
 	<result column="exceptionprice" property="exceptionprice" />
   </collection> 
@@ -22,7 +23,7 @@
     <select id="getpriceproduct" parameterType="string" resultMap="PriceProductMap">
      select
 		 tqfp.id
-		 ,null pid
+		 ,tqfp.pid
 		 ,tqfp.mincount
 		 ,tqfp.perdecreace
 		 ,tqfp.pricename
@@ -31,6 +32,7 @@
 		 ,tqfpd.id quid
 		 ,tqfpd.qualificationid 
 		 ,tqfpd.exceptionprice
+		 ,tstand.standardname
 		 ,tc.testproject testprojectname
 		 ,tm.methodname
 		 ,tq.price standardprice
@@ -39,7 +41,7 @@
 		 on tqfpd.priceid=tqfp.id
 		 left join
 		   ( 
-		   select tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
+		   select tq.standardid, tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
 			 where tq.companyid=1
 			 ) tq
 		 on tq.id=tqfpd.qualificationid 
@@ -47,19 +49,22 @@
 		 on tc.id=tq.testprojectid
 		 left join t_test_method tm
 		 on tm.id=tq.methodid
+		 left join t_test_standard tstand
+		 on tstand.id=tq.standardid
     </select>
      <select id="getpriceproductbyid" parameterType="string" resultMap="PriceProductMap">
     select
 		 tqfp.id
-		 ,null pid
-		  ,tqfp.perdecreace
-		 ,tqfp.pricename
+		  ,tqfp.pid
+		 ,tqfp.mincount
+		 ,tqfp.perdecreace
 		 ,tqfp.pricename
 		 ,tqfp.formular
 		 ,tqfp.limitprice
 		 ,tqfpd.id quid
 		 ,tqfpd.qualificationid 
 		 ,tqfpd.exceptionprice
+		 ,tstand.standardname
 		 ,tc.testproject testprojectname
 		 ,tm.methodname
 		 ,tq.price standardprice
@@ -68,7 +73,7 @@
 		 on tqfpd.priceid=tqfp.id
 		 left join
 		   ( 
-		   select tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
+		   select tq.standardid, tq.testprojectid,tq.price,tq.methodid,tq.id  from t_qualification tq
 			 where tq.companyid=1
 			 ) tq
 		 on tq.id=tqfpd.qualificationid 
@@ -76,12 +81,15 @@
 		 on tc.id=tq.testprojectid
 		 left join t_test_method tm
 		 on tm.id=tq.methodid
+		 left join t_test_standard tstand
+		 on tstand.id=tq.standardid
 		 where tqfp.id=#{id}
     </select>
     <insert id="addpriceproduct" parameterType="com.bjdfzh.businessprocess.entity.PriceProduct">
         insert t_qualificationprice(
 		    id
 			,pricename
+			,pid
 			,formular
 			,limitprice
 			,mincount
@@ -90,6 +98,7 @@
 		(
 		 #{id}
 		,#{label}
+		,#{pid}
 		,#{formular}
 		,#{limitprice}
 		,#{mincount} 
@@ -124,9 +133,39 @@
 			where id=#{id} 
     </update>
     <delete id="deletepriceproduct"  parameterType="string">
-     delete from  t_qualificationprice t where  id=#{id}
+    delete from t_qualificationprice where id 
+    in
+    (
+     select s.id from
+				(
+				select id  from (
+							
+							              select t1.id,t1.pid,t1.pricename, 
+							              if(find_in_set(pid, @pids) > 0, @pids := concat(@pids, ',', id), 0) as ischild 
+							              from ( 
+							                   select id,pid,pricename from t_qualificationprice t   order by pid, id 
+							                  ) t1, 
+							                  (select @pids := #{id} ) t2 
+							             ) t3 where ischild != 0 
+							       union
+								 select id from t_qualificationprice where  id = #{id}
+								 ) s
+	)
     </delete>
     <delete id="deletepricequalification"  parameterType="string">
-    delete from  t_qualificationprice_detail t where  priceid=#{id}
+    delete from  t_qualificationprice_detail t where  priceid in
+				(
+				select id  from (
+							
+							              select t1.id,t1.pid,t1.pricename, 
+							              if(find_in_set(pid, @pids) > 0, @pids := concat(@pids, ',', id), 0) as ischild 
+							              from ( 
+							                   select id,pid,pricename from t_qualificationprice t   order by pid, id 
+							                  ) t1, 
+							                  (select @pids := #{id} ) t2 
+							             ) t3 where ischild != 0 
+							       union
+								 select id from t_qualificationprice where  id = #{id}
+								 )
     </delete> 
 </mapper>
