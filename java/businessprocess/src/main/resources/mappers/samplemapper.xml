@@ -27,13 +27,15 @@
 	<result column="manufactoryphone" property="manufactoryphone" />
 	<result column="manudate" property="manudate" /> 
 	<result column="manuno" property="manuno" />
-	<result column="remark" property="remark" />
-	<result column="expiredday" property="expiredday" />
+	<result column="remark" property="remark" /> 
 	<result column="price" property="price" />
 	<result column="externprice" property="externprice" /> 
 	<result column="standardfee" property="standardfee" />
 	<result column="deleverdate" property="deleverdate"/>
 	<result column="specialcondition" property="specialcondition" />
+	<result column="avilabletime" property="avilabletime" /> 	 
+	<result column="leftsamplequality" property="leftsamplequality" />
+	<result column="expireddate" property="expireddate" />
 </resultMap>
 
     <select id="getsamples" parameterType="string" resultMap="SampleMap">
@@ -57,8 +59,10 @@
 		,manufactoryphone
 		,manudate
 		,manuno
-		,ts.remark
-		,expiredday
+	 ,avilabletime 
+	 ,leftsamplequality 
+	 ,expireddate 
+		,ts.remark 
 		,price
 		,tm.testproject
 		,tm.methodname
@@ -111,6 +115,9 @@
 		,ts.standardfee
 		,ts.deleverdate
 		,ts.specialcondition
+		,avilabletime 
+	 ,leftsamplequality 
+	 ,expireddate 
 		,samplename
 		,samplenumber 
 		,samplequality
@@ -124,8 +131,7 @@
 		,manufactoryphone
 		,manudate
 		,manuno
-		,ts.remark
-		,expiredday
+		,ts.remark 
 		,price
 		,tm.testproject
 		,tm.methodname
@@ -195,7 +201,7 @@
 		,manudate
 		,manuno
 		,remark
-		,expiredday
+		 
 		,price 
 		,standardfee
 		,deleverdate
@@ -224,7 +230,7 @@
 		,#{manudate}
 		,#{manuno}
 		,#{remark}
-		,#{expiredday}
+		 
 		,#{price}
 		,#{standardfee}
 		,#{deleverdate}
@@ -255,7 +261,7 @@
 			,manudate=#{manudate}
 			,manuno=#{manuno}
 			,remark=#{remark}
-			,expiredday=#{expiredday}
+			 
 			,price=#{price} 
 			,standardfee=#{standardfee}
 			,deleverdate=#{deleverdate}
@@ -285,8 +291,7 @@
 		,manufactoryphone
 		,manudate
 		,manuno
-		,remark
-		,expiredday
+		,remark 
 		,price
 		,standardfee
 		,deleverdate
@@ -315,8 +320,7 @@
 		,#{item.manufactoryphone}
 		,#{item.manudate}
 		,#{item.manuno}
-		,#{item.remark}
-		,#{item.expiredday}
+		,#{item.remark} 
 		,#{item.price} 
 		,#{item.standardfee}
 		,#{item.deleverdate}
@@ -418,6 +422,41 @@
                          <foreach collection="list" item="i" index="index">
 	                         <if test="i.id!=null">
 	                          when sampleid=#{i.id} then #{i.samplequality}
+	                         </if>
+                         </foreach>
+                         </trim>
+                         <trim prefix="samplenumber =case" suffix="end,">
+                         <foreach collection="list" item="i" index="index">
+	                         <if test="i.id!=null">
+	                          when sampleid=#{i.id} then #{i.samplenumber}
+	                         </if>
+                         </foreach>
+                         </trim>
+                         <trim prefix="sampledate =case" suffix="end,">
+                         <foreach collection="list" item="i" index="index">
+	                         <if test="i.id!=null">
+	                          when sampleid=#{i.id} then #{i.sampledate}
+	                         </if>
+                         </foreach>
+                         </trim>
+                          <trim prefix="avilabletime =case" suffix="end,">
+                         <foreach collection="list" item="i" index="index">
+	                         <if test="i.id!=null">
+	                          when sampleid=#{i.id} then #{i.avilabletime}
+	                         </if>
+                         </foreach>
+                         </trim>
+                          <trim prefix="leftsamplequality =case" suffix="end,">
+                         <foreach collection="list" item="i" index="index">
+	                         <if test="i.id!=null">
+	                          when sampleid=#{i.id} then #{i.leftsamplequality}
+	                         </if>
+                         </foreach>
+                         </trim>
+                          <trim prefix="expireddate =case" suffix="end,">
+                         <foreach collection="list" item="i" index="index">
+	                         <if test="i.id!=null">
+	                          when sampleid=#{i.id} then #{i.expireddate}
 	                         </if>
                          </foreach>
                          </trim>

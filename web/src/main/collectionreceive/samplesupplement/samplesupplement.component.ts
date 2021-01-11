@@ -4,9 +4,10 @@ import { XMessageService, XTableColumn } from '@ng-nest/ui';
 import * as moment from 'moment';
 import * as printJS from 'print-js';
 import { IndexService } from 'src/layout/index/index.service';
-import { BusinessProject, CommonType } from 'src/main/businessprocess/evirmentheath/businessproject/businessproject.service';
+import { BusinessProject, CommonType, SealService } from 'src/main/businessprocess/evirmentheath/businessproject/businessproject.service';
 import { OutputadditionallistComponent } from 'src/main/businessprocess/outputadditionallist/outputadditionallist.component';
 import { FlowService } from 'src/main/flow/flowprocess/flowhandle.service'; 
+import { SampleDomainService } from 'src/main/qualification/qualification.service';
 import { Contact, ContactService } from 'src/services/ContactService';
 import { Sample, SampleService } from 'src/services/sample.service';
 import { AuditResultService } from 'src/services/transform.data.service';
@@ -20,6 +21,7 @@ import { UpdatesampleComponent } from './updatesample/updatesample.component';
   styleUrls: ['./samplesupplement.component.scss']
 })
 export class SamplesupplementComponent extends PageBase implements OnInit { 
+  processes:any[]=[];
   constructor(
      public indexService:IndexService
     ,private flowservice:FlowService 
@@ -27,8 +29,10 @@ export class SamplesupplementComponent extends PageBase implements OnInit {
     ,private contactservice:ContactService
     ,private actroute:ActivatedRoute 
     ,private router: Router
+    ,private domainservice:SampleDomainService
     ,private globalaudit:AuditResultService
     ,private msg:XMessageService
+    ,private sealService:SealService
     
     ) {
     super(indexService);
@@ -38,14 +42,19 @@ export class SamplesupplementComponent extends PageBase implements OnInit {
         actroute.params.subscribe(
         (x:any)=>
           {
-            
+            if(x.complete!=undefined)
+             this.disabled=true;
             this.contactid=x.contactid;
             this.taskid=x.taskid;
             this.getData();
+            this.sealService.getsampleprocess().subscribe(
+              (x)=>this.processes=x.list as CommonType[]
+            );
           }
         );
       }
   }
+  domaindata:CommonType[]=[];
   modifyvisible=false;
   taskid='';
   gettypelable(type:string,sample:any,other:string)
@@ -92,7 +101,7 @@ samplesource: string='';
                      z[m]= (this.modifisample.curentsample as any)[m];
                    }
                  }
-                 this.setsamplelabel(z);
+                 ProjectUtil.setsamplelabel(z,this.currentcontact,this.processes);
               }
             }
           )
@@ -142,9 +151,12 @@ samplesource: string='';
                this.seal= this.seal+this.currentcontact.seal[i].label+',';
                }
              this.samplesource=this.currentcontact.samplesource?.label+'';
+              this.domainservice.getList(1,20,{}).subscribe(
+                (x)=> this.domaindata=x.list as CommonType[]
+              );
       }
     }
-     this.printtable.setdata(this.projects,this.ispanding);
+     //this.printtable.setdata(this.projects,this.ispanding);
      
     var allprojects:any={id:ProjectUtil.JsNewGuid(),type:0,label:'所有项目',reportcount:0,domainlabel:'',pid:null,samples:[]};
     this.projects.map((z:any)=>
@@ -165,9 +177,10 @@ samplesource: string='';
    contactid="";
   ngOnInit(): void {
   }
+  disabled=false;
   submit()
   {
-   
+       
         this.flowservice.excutetask(
           this.taskid,
           {
@@ -179,23 +192,16 @@ samplesource: string='';
         ).subscribe(
           (z)=>
           {
+            this.save(false);
             this.msg.success("提交成功！");
+            this.disabled=true;
+            
           }
         ); 
   }
-  setsamplelabel(x:any)
-  {
-    x.storelabel=x.store?.label;
-    x.testtypelabel=x.testtype?.label;
-    x.statuslabel=x.status?.label;
-    x.processlabel=x.process?.label;
-    if(x.deleverdate !=null && x.deleverdate !=undefined)
-    x.deleverdatelabel=moment( x.deleverdate).format('YYYY.MM.DD');
-    if(x.deleverdate !=null && x.deleverdate !=undefined)
-    x.manudatelabel=moment( x.manudate).format('YYYY.MM.DD');
-  }
+  pagesize=10;
   @ViewChild("printtable")printtable:OutputadditionallistComponent;
-  save()
+  save(isprint:boolean)
   {
     let samples:Sample[]=[];
     var projectss:any[]=[];
@@ -205,17 +211,45 @@ samplesource: string='';
         if(x.type !=0)
         {
           projectss.push(x);
-        }
-        x.samples?.map((z:any)=>samples.push(z));
+       //样品进行编号
+        var i=1; 
+       var firstnumber= Number(x.projectnumber.substring(x.projectnumber.length-5)); 
+       var domain= 
+       this.domaindata.find((q)=>q.id==x.domain.id);  
+      var date= moment().format('YYYY-MM-DD');
+      var month=moment().format('MM');
+      var day=moment().format('DD');
+       var leng=x.samples?.length;
+       x.samples?.map((z:any)=>
+          {
+
+            z.sampledate=date; 
+             
+             if(domain !=undefined&&domain!=null)
+             {
+               z.samplenumber=firstnumber+'-'+month+''+day+''+domain.code
+               +''+i; 
+             }
+           samples.push(z);
+           i=i+1;
+          }
+        );
       }
+    }
     );
     if(samples.length>0)
     {
     this.sampleservice.supplimentupdatesamples(samples).subscribe(
       (x)=>
       { 
-        this.printtable.setdata(projectss,this.ispanding);
-        this.msg.success("保存成功！");
+        if(isprint)
+        {
+        this.printtable.setdata(projectss,this.ispanding,this.pagesize); 
+        setTimeout(() => {
+          printJS({ printable: 'printtable', type: 'html',maxWidth:'98%',targetStyles:['*'],style:'@media print{@page {size:landscape}}'});
+        }, 20);
+      }
+       
       }
       );
     }
@@ -240,7 +274,7 @@ samplesource: string='';
              y.executestandard=this.modifisample.curentsample.executestandard;
              y.status=this.modifisample.curentsample.status;
              y.process=this.modifisample.curentsample.process;
-             this.setsamplelabel(y);
+             ProjectUtil.setsamplelabel(y,this.currentcontact,this.processes);
            }
          );
           
@@ -255,15 +289,16 @@ samplesource: string='';
      (
       (x:any)=>
       { 
-        this.setsamplelabel(x);
+        ProjectUtil.setsamplelabel(x,this.currentcontact,this.processes);
         this.sampledata.push(x);
+        
       }
-     );   
+     );
+     this.total=this.sampledata.length;   
   }
   genu()
-  { 
-    //console.log(document.getElementById("printtable")?.innerHTML);
-    printJS({ printable: 'printtable', type: 'html',maxWidth:'98%',targetStyles:['*'],style:'@media print{@page {size:landscape}}'});
+  {   
+    this.save(true);
   }
   columns: XTableColumn[] = [ 
     { id: 'actions', label: '操作', width: 100 }, 

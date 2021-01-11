@@ -261,6 +261,16 @@ export const layoutRoutes: Routes = [
   }
   
 },
+// 样品接收
+{
+  path: 'samplereceive',
+  loadChildren: () => import('../main/collectionreceive/samplereceive/samplereceive.module').then((x) => x.SamplereceiveModule),
+  canLoad: [AuthGuard],
+  data: {
+    animation: 'samplereceive'
+  }
+  
+},
   // 示例功能
   // { path: 'examples', loadChildren: 'src/main/examples/example.module#ExampleModule', canLoad: [AuthGuard] },
   // // 工作型首页

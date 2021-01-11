@@ -41,7 +41,7 @@ public class Sample {
 	}
 	String manuno;
 	String  remark;
-	int expiredday;
+ 
 	double price;
 	 double externprice;
 	int domainid;
@@ -231,13 +231,27 @@ public class Sample {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	public int getExpiredday() {
-		return expiredday;
+	public String getAvilabletime() {
+		return avilabletime;
 	}
-	public void setExpiredday(int expiredday) {
-		this.expiredday = expiredday;
+	public void setAvilabletime(String avilabletime) {
+		this.avilabletime = avilabletime;
 	}
-	
+	public String getLeftsamplequality() {
+		return leftsamplequality;
+	}
+	public void setLeftsamplequality(String leftsamplequality) {
+		this.leftsamplequality = leftsamplequality;
+	}
+	public Date getExpireddate() {
+		return expireddate;
+	}
+	public void setExpireddate(Date expireddate) {
+		this.expireddate = expireddate;
+	}
+	String avilabletime;//	 
+	String leftsamplequality; 
+	Date expireddate;	  
 	public String getTestproject() {
 		return testproject;
 	}

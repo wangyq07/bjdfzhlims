@@ -67,6 +67,7 @@ export class QualificationServicebyid extends RepositoryService<Qualification> {
 }
 
 export interface Qualification extends XId { 
+  qualificationid?:number;
   firstid?:string|number;
   secondid?:string|number;
   firstname?:string|number;

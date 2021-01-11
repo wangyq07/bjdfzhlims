@@ -5,10 +5,11 @@
 <div style="overflow: auto;"> 
    <x-row style="height: 15px;"></x-row>
 <x-row>
-   <x-col span=2> <x-button icon="ado-check" type="primary" plain (click)="submit()">提交</x-button></x-col>
-   <x-col span=2> <x-button icon="ado-save" type="primary" plain (click)="save()">保存</x-button></x-col>
+   <x-col span=2> <x-button [disabled]="disabled" icon="ado-check" type="primary" plain (click)="!disabled&&submit()">提交</x-button></x-col>
+    
    <x-col span=2> <x-button icon="ado-save" type="primary" plain (click)="genu()">生成附页</x-button></x-col>
-</x-row>
+   <x-col span=3><x-input-number [(ngModel)]="pagesize" label="每页行数" direction="row"></x-input-number></x-col>
+  </x-row>
 <x-row style="height: 20px;"></x-row>
         <x-row>
           <x-col span=12>委托客户:{{delegatecustomer}}</x-col><x-col span=6>付款客户:{{paycustomer}}</x-col><x-col span=6>受检客户:{{testcustomer}}</x-col>
@@ -61,11 +62,11 @@
 </div>
 <ng-template #contactTpl let-column="$column" let-row="$row">
   <div class="au-table-actions">  
-      <x-link   icon="fto-edit" (click)="projectclick(row)" title="修改"></x-link>  
+      <x-link   icon="fto-edit" [disabled]="disabled" (click)="!disabled&&projectclick(row)" title="修改"></x-link>  
   </div> 
 </ng-template>
 <ng-template #headerTpl let-column="$column" >
   <div class="au-table-actions">  
-      <x-button  icon="far-copy" (click)="copydata()" label="复制"  style="width:80" ></x-button>  
+      <x-button  icon="far-copy" [disabled]="disabled" (click)="!disabled&&copydata()" label="复制"  style="width:80" ></x-button>  
   </div> 
 </ng-template>

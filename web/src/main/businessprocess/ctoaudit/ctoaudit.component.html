@@ -3,7 +3,7 @@
     <app-modifyqualification style="width:100%;height: 100%;" #modifiqual></app-modifyqualification>
 </x-dialog>
 <x-row>
-    <x-col span=8 style="display: inline;"> 
+    <!--<x-col span=8 style="display: inline;"> 
       <div   class="au-panel au-content" au-adaption [outerHeight]="50"> 
         <x-table [columns]="columns"
         #tablecom
@@ -20,12 +20,12 @@
         > 
         </x-table>
       </div>
-    </x-col>
-    <x-col span=16>
+    </x-col>-->
+    <x-col span=24>
       <div   class="au-panel au-content" au-adaption [outerHeight]="50"> 
       <x-row style="height: 20px;"></x-row>
       <x-row>
-        <x-col span=5><x-button icon="ado-check" style="color: green;" plain type="primary" (click)="acction(1)">提交</x-button></x-col>
+        <x-col span=5><x-button [disabled]="submitdisable" icon="ado-check" style="color: green;" plain type="primary" (click)="acction(1)">提交</x-button></x-col>
        
         </x-row>
         <x-row style="height: 20px;"></x-row>

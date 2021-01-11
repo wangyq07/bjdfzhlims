@@ -15,6 +15,13 @@ export class QualificationMethodService extends RepositoryService<Qualification>
             , this.option.controller?.servicetype); 
     
   }
+  getqualificationmethodprojecttest(projectid:number,standid:number)
+  { 
+    return this.http.post(`${this.option.controller?.name}/getqualificationmethodprojecttest`
+            , {testprojectid:projectid,standardid:standid}
+            , this.option.controller?.servicetype); 
+    
+  }
   getqualificationmethodbysearchkey(projectname:string,methodname:string)
   { 
     return this.http.post(`${this.option.controller?.name}/getqualificationmethodbysearchkey`

@@ -127,23 +127,37 @@ import * as moment from 'moment';
                     {
                       projectid:x.id,
                       sampleid:y.id,
-                      projectname:x.projectnumber, 
+                      projectname:x.projectnumber,
+                      reportcount:x.reportcount,
+                      domain:x.domain.label, 
+                      sampleprice:y.price,
+                      extern:z.isextern==0?'否':'是',
                       samplename:y.samplename,
                       brand:y.brand, 
-                      samplespec:y.samplespect,
+                      samplespec:y.samplespec,
                       samplequality:y.samplequality,
                       manudate:moment(y.manudate).format('YYYY.MM.DD'),
                       executegrade:y.executegrade,
                       specialcondition:y.specialcondition,
-                      wrapherproperties:y.wrapherproperties+','+y.status.label,
+                      wrapherproperties:y.wrapherproperties+','+(y.status !=undefined?y.status.label:''),
                       judge:judgement,
                       deleverdate:moment(y.deleverdate).format('YYYY.MM.DD'),
                       testproject:z.testproject,
                       standardname:z.standardname,
                       roleid:z.roleid,
                       userid:z.userid,
+                      testprojectid:z.testprojectid,
+                      standardid:z.standardid,
                       executestandard:y.executestandard,
-
+                      qualificationid:z.qualificationid,
+                      testcount:z.testcount,
+                      beforeuserid:z.userid,
+                      beforeroleid:z.roleid,
+                      beforequalificationid:z.qualificationid,
+                      methodname:z.methodname,
+                      methodid:z.methodid,
+                      price:z.price,
+                      realprice:z.realprice
                     }
                   
                   ); 
@@ -182,14 +196,100 @@ import * as moment from 'moment';
      );
      return data;
   }
-  
+  static SectionToChinese(section:number){
+    var strIns = '', chnStr = '';
+    var unitPos = 0;
+    var zero = true;
+    while(section > 0){
+      var v = section % 10;
+      if(v === 0){
+        if(!zero){
+          zero = true;
+          chnStr = ProjectUtil.chnNumChar[v] + chnStr;
+        }
+      }else{
+        zero = false;
+        strIns = ProjectUtil.chnNumChar[v];
+        strIns += ProjectUtil.chnUnitChar[unitPos];
+        chnStr = strIns + chnStr;
+      }
+      unitPos++;
+      section = Math.floor(section / 10);
+    }
+    return chnStr;
+  }
+   static chnNumChar:any[] = ["零","一","二","三","四","五","六","七","八","九"];
+   static chnUnitSection:any[] = ["","万","亿","万亿","亿亿"];
+   static chnUnitChar:any[] = ["","十","百","千"];
+ static NumberToChinese(num:number){
+    var unitPos = 0;
+    var strIns = '', chnStr = '';
+    var needZero = false;
+   
+    if(num === 0){
+      return ProjectUtil.chnNumChar[0];
+    }
+   
+    while(num > 0){
+      var section = num % 10000;
+      if(needZero){
+        chnStr = ProjectUtil.chnNumChar[0] + chnStr;
+      }
+      strIns = ProjectUtil.SectionToChinese(section);
+      strIns += (section !== 0) ? ProjectUtil.chnUnitSection[unitPos] : ProjectUtil.chnUnitSection[0];
+      chnStr = strIns + chnStr;
+      needZero = (section < 1000) && (section > 0);
+      num = Math.floor(num / 10000);
+      unitPos++;
+    } 
+    return chnStr;
+  }
+  static setsamplelabel(x:any,contact:any,processes:any[])
+ {
+   x.storelabel=x.store?.label;
+   x.testtypelabel=x.testtype?.label;
+   x.statuslabel=x.status?.label; 
+  var contactCustomer = contact.contactcustomers?.find((x:any)=>x.customertype=3); 
+  if(contactCustomer !=undefined)
+  {
+    x.manuuser=contactCustomer.customername+'';
+    x.manuaddr=contactCustomer.customeraddress+'';
+  }
+   if(contact!=undefined&&contact.processid!=undefined)
+   {
+     var process= processes.find((x)=>x.id==contact.processid);
+     if(process !=undefined)
+     x.processlabel=process.label;
+   }
+   if(x.deleverdate !=null && x.deleverdate !=undefined)
+   {
+      x.deleverdatelabel=moment( x.deleverdate).format('YYYY.MM.DD');
+      x.deleverdate=new Date(moment( x.deleverdate).format('YYYY-MM-DD'));
+   }
+   if(x.manudate !=null && x.manudate !=undefined)
+   {
+      x.manudatelabel=moment( x.manudate).format('YYYY.MM.DD');
+      x.manudate=new Date(moment( x.manudate).format('YYYY-MM-DD'));
+   }
+   if(x.sampledate !=null&&x.sampledate !=undefined)
+   {
+     x.sampledatelabel=moment( x.sampledate).format('YYYY.MM.DD');
+   }
+   if(x.expireddate !=null&&x.expireddate !=undefined)
+   {
+    x.expireddate=new Date(moment( x.sampledate).format('YYYY-MM-DD'));
+   }
+ }
 }
+
 export interface AdditionalData
 {
   projectid?:string;
   sampleid?:string;
   projectindex?:number;
   sampleindex?:number;
+  sampleprice?:number;
+  extern?:number;
   projectrowspan?:number;
   samplerowspan?:number;
   projectname?:string; 
@@ -206,8 +306,21 @@ export interface AdditionalData
   testproject?:string;
   standardname?:string;  
   executestandard?:string;
+  standardid?:number;
+  testprojectid?:number;
   roleid?:string;
   userid?:string;
+  methodid?:string;
+  methodname?:string;
   testprojectindex?:number;
   testprojecrowspan?:number;
+  qualificationid?:number;
+  testcount?:number;
+  price?:number;
+  realprice?:number;
+  reportcount?:number;
+  domain?:string;
+  beforeuserid?:string;
+  beforeroleid?:string;
+  beforequalificationid?:number;
 }

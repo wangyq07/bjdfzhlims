@@ -1,7 +1,7 @@
- 
+ <span *ngFor="let da of  pagedatas" style="height: 190mm;width:297mm;display:inline-block">
 <table  style="width: 100%;height:100%" border="1" cellspacing="0">
     <caption>北京东方纵横产品检测有限公司
-        委托检测协议书附页（一）
+        委托检测协议书附页（{{da.pagenumber}}）
     </caption>
      <thead>
         <td align="center" style="width:8%;">项目号</td>
@@ -20,7 +20,7 @@
         <td align="center" style="width:30%">检测依据</td> 
      </thead>
      <tbody>
-       <tr *ngFor="let ad of data; let i=index">
+       <tr *ngFor="let ad of da.data; let i=index">
         <td [attr.rowspan]="ad.projectrowspan" *ngIf="ad.projectindex==i" >{{ad.projectname}}</td>
         <td [attr.rowspan]="ad.samplerowspan" *ngIf="ad.sampleindex==i">{{ad.samplename}}</td>
         <td [attr.rowspan]="ad.samplerowspan" *ngIf="ad.sampleindex==i">{{ad.brand}}</td>
@@ -33,9 +33,10 @@
         <td [attr.rowspan]="ad.samplerowspan" *ngIf="ad.sampleindex==i">{{ad.judge}}</td>
         <td [attr.rowspan]="ad.samplerowspan" *ngIf="ad.sampleindex==i">{{ad.deleverdate}}</td>
         <td [attr.rowspan]="ad.samplerowspan" *ngIf="ad.sampleindex==i">{{ad.specialcondition}}</td>
-        <td [attr.rowspan]="ad.testprojecrowspan" *ngIf="ad.testprojectindex==i" style="border-bottom: 0ch;">{{ad.testproject}}</td>
-        <td [attr.rowspan]="ad.testprojecrowspan" *ngIf="ad.testprojectindex==i" style="border-bottom: 0ch;">{{ad.standardname}}</td> 
+        <td style="border-bottom: 0ch;">{{ad.testproject}}</td>
+        <td style="border-bottom: 0ch;">{{ad.standardname}}</td> 
        </tr>
      </tbody> 
 </table>
+</span>
  

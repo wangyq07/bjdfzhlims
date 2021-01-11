@@ -1,12 +1,14 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { XQuery, XSort, XTableColumn, XTableComponent } from '@ng-nest/ui';
+import { XMessageService, XQuery, XSort, XTableColumn, XTableComponent } from '@ng-nest/ui';
+ 
 import { IndexService } from 'src/layout/index/index.service';
 import { FlowService, Task } from 'src/main/flow/flowprocess/flowhandle.service';
 import { RoleAuditSettingService } from 'src/main/system/roleauditset/roleautidtset-service';
 import { Contact, ContactService } from 'src/services/ContactService';
 import { AuditResultService } from 'src/services/transform.data.service';
 import { PageBase } from 'src/share/base/base-page';
+import { ProjectUtil } from 'src/share/utilclass';
 
 @Component({
   selector: 'app-marketaudit',
@@ -29,15 +31,16 @@ export class MarketauditComponent  extends PageBase implements OnInit,AfterViewI
     { id: 'from', label: '上一节点', width: 100, sort: true }
   ];
   taskid="";
+  currenttask:Task={};
   acction(audit:number)
   {
     this.roleauditservice.getauditvariable(this.indexService.auth.user.roles,audit,this.auditaddvice).subscribe
     (
       (x)=>
       {
-        if(this.tablecom.activatedRow!=null)
+        if(this.currenttask!=null)
         {
-          var selectrow=this.tablecom.activatedRow as Task;
+          var selectrow=this.currenttask;
           if(selectrow !=undefined)
           {
           x.username=this.indexService.auth.user.name;
@@ -48,10 +51,12 @@ export class MarketauditComponent  extends PageBase implements OnInit,AfterViewI
           this.flowservice.excutetask(selectrow.taskid+'',x).subscribe
           (
             (x)=>
-            {
-               
-              this.getData();
+            { 
+              //this.getData();
               this.globalaudit.sendAuditResult("成功");
+              this.msg.success('成功');
+              this.auditdisabled=true;
+              this.cleardata();
             }
           );
          }
@@ -66,18 +71,24 @@ export class MarketauditComponent  extends PageBase implements OnInit,AfterViewI
     private actroute:ActivatedRoute ,
     private router: Router
     ,private globalaudit:AuditResultService
+    ,private msg:XMessageService
     ) { super(indexService); 
-      if(actroute==undefined)
-      {
-        this.getData();
-      }
-      else
+      if(actroute !=undefined) 
       {
         actroute.params.subscribe(
         (x:any)=>
           {
-            this.taskid=x.taskid;
-            this.getData();
+            if(x.complete ==undefined)
+            {
+              this.taskid=x.taskid;
+              this.getData();
+            }
+            else
+            {
+              this.cleardata();
+              this.getcontactdata(x.contactid);
+              this.auditdisabled=true; 
+            }
           }
         );
       }
@@ -119,6 +130,7 @@ showtablecel:string="none";//"table-cell";
   ngOnInit(): void {
     
   }
+  auditdisabled=false;
   getroundvalue(testfee:number,standfee:number)
   {
     var discount=Math.round(testfee/standfee*100)/100;
@@ -129,8 +141,9 @@ showtablecel:string="none";//"table-cell";
     }
     return discount;
   }
-  setproject(tsk:Task)
+  cleardata()
   {
+    this.sampledata=[];
     this.projects=[];
     this.servicetype="";
     this.seal='';
@@ -144,61 +157,71 @@ showtablecel:string="none";//"table-cell";
     this.discount=0;
     this.externfee=0;
     this.businessfee=0;
-     this.contactservice.getcontactproject(tsk.contactid+'').subscribe(
-       (x)=>
-       { 
-         console.log(x);
-        this.CurrentContact=x.contact;  
-        this.projects=x.projects as any[];
-         if(this.CurrentContact !=null)
-         { 
-         if(this.CurrentContact.contactcustomers !=null)
-           {
-             this.delegatecustomer='';
-             this.testcustomer='';
-             this.paycustomer='';
-             var users=this.CurrentContact.contactcustomers.filter((x)=>x.customertype==1);
-              if(users.length>0)
-              {
-                 for(var i=0;i<users.length;i++)
-                 {
-                   if(i !=0)
-                   {
-                     this.delegatecustomer =this.delegatecustomer+',';
-                   }
-                   this.delegatecustomer=this.delegatecustomer+users[i].customername;
-                 }
-              }
-             var user=this.CurrentContact.contactcustomers.find((x)=>x.customertype==2);
-             this.paycustomer=user?.customername+'';
-                user=this.CurrentContact.contactcustomers.find((x)=>x.customertype==3);
-              this.testcustomer= user?.customername+'';
-              this.servicetype="";
-               this.servicetype=this.CurrentContact.service?.label+'';
-               this.ispanding=this.CurrentContact.isjudgement==1?'是':'否'; 
-               this.seal='';//
-               if(this.CurrentContact.seal!=undefined)
-               {
-               for(var i=0;i<this.CurrentContact.seal.length;i++)
-               this.seal= this.seal+this.CurrentContact.seal[i].label+',';
+  }
+  getcontactdata(contactid:string)
+  {
+    this.contactservice.getcontactproject( contactid).subscribe(
+      (x)=>
+      { 
+        
+       this.CurrentContact=x.contact;  
+       this.projects=x.projects as any[];
+        if(this.CurrentContact !=null)
+        { 
+        if(this.CurrentContact.contactcustomers !=null)
+          {
+            this.delegatecustomer='';
+            this.testcustomer='';
+            this.paycustomer='';
+            var users=this.CurrentContact.contactcustomers.filter((x)=>x.customertype==1);
+             if(users.length>0)
+             {
+                for(var i=0;i<users.length;i++)
+                {
+                  if(i !=0)
+                  {
+                    this.delegatecustomer =this.delegatecustomer+',';
+                  }
+                  this.delegatecustomer=this.delegatecustomer+users[i].customername;
+                }
              }
-              this.samplesource=this.CurrentContact.samplesource?.label+'';
-              this.businessfee=Number(this.CurrentContact.businessfee);
-               this.collectionfee=Number(this.CurrentContact.collectionfee); 
-               this.testfee=Number(this.CurrentContact.testfee); 
-               this.standfee = Number(this.CurrentContact.standardfee);  
-               this.discount=Number(this.CurrentContact.discount);
-               this.totalfee= Number(this.CurrentContact.totalfee);
-               this.externfee=Number(this.CurrentContact.externfee);
-           }
-         }
-       }
-     );
+            var user=this.CurrentContact.contactcustomers.find((x)=>x.customertype==2);
+            this.paycustomer=user?.customername+'';
+               user=this.CurrentContact.contactcustomers.find((x)=>x.customertype==3);
+             this.testcustomer= user?.customername+'';
+             this.servicetype="";
+              this.servicetype=this.CurrentContact.service?.label+'';
+              this.ispanding=this.CurrentContact.isjudgement==1?'是':'否'; 
+              this.seal='';//
+              if(this.CurrentContact.seal!=undefined)
+              {
+              for(var i=0;i<this.CurrentContact.seal.length;i++)
+              this.seal= this.seal+this.CurrentContact.seal[i].label+',';
+            }
+             this.samplesource=this.CurrentContact.samplesource?.label+'';
+             this.businessfee=Number(this.CurrentContact.businessfee);
+              this.collectionfee=Number(this.CurrentContact.collectionfee); 
+              this.testfee=Number(this.CurrentContact.testfee); 
+              this.standfee = Number(this.CurrentContact.standardfee);  
+              this.discount=Number(this.CurrentContact.discount);
+              this.totalfee= Number(this.CurrentContact.totalfee);
+              this.externfee=Number(this.CurrentContact.externfee);
+              this.sampledata=ProjectUtil.getMareData(this.projects,this.ispanding);
+          }
+        }
+      }
+    );
+  }
+  setproject(tsk:Task)
+  {
+     this.currenttask=tsk;
+     this.cleardata();
+     this.getcontactdata(tsk.contactid+'');
    
     
     }
      
-   
+    sampledata:any[]=[];
  
   CurrentContact:Contact={};
   activatedRow(row:Task)
@@ -218,20 +241,20 @@ showtablecel:string="none";//"table-cell";
             var findex=this.data.findIndex((x)=>x.taskid==this.taskid);
             if(findex!=-1)
             {
-              this.tablecom.activatedRow=   this.data[findex];
+              //this.tablecom.activatedRow=   this.data[findex];
               this.setproject(this.data[findex]);
             }
-            else if(this.data.length>0)
+           /* else if(this.data.length>0)
             {
               this.tablecom.activatedRow=   this.data[0];
               this.setproject(this.data[0]);
-            }
+            }*/
         }
-        else if(this.data.length>0)
+        /*else if(this.data.length>0)
         {
          this.tablecom.activatedRow=   this.data[0];
          this.setproject(this.data[0]);
-        }
+        }*/
     }
     );
   }

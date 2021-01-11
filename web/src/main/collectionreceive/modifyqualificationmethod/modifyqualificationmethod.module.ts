@@ -28,6 +28,7 @@ import { AddmethodqualificationComponent } from './addmethodqualification/addmet
     XSelectModule,
     XDialogModule,
     ModifyqualificationmethodRoutingModule
-  ]
+  ],
+  exports:[AddmethodqualificationComponent]
 })
 export class ModifyqualificationmethodModule { }

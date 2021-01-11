@@ -7,7 +7,7 @@
 <result column="code" property="code" /> 
 </resultMap>  
   <select id="getdomains" parameterType="integer" resultMap="CommonTypeMap">
-    select id,label from t_sample_domain
+    select id,label,code from t_sample_domain
  </select> 
  <select id="getseals" parameterType="integer" resultMap="CommonTypeMap">
     select id,sealname label from t_qualification_seal

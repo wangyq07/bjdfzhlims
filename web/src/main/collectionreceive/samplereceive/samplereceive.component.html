@@ -1,0 +1,77 @@
+ 
+    <x-row style="height: 15px;"></x-row>
+ <x-row>
+   <x-col span="2"><x-button icon="ado-check" type="primary" plain (click)="submit()">提交</x-button></x-col>
+    <x-col span=4> <x-button icon="ado-save" type="primary" plain (click)="save(true)" >样品登记表/样品处置记录</x-button></x-col>
+    <x-col span=3><x-input-number [(ngModel)]="pagesize" label="每页行数" direction="row"></x-input-number></x-col>
+ </x-row>
+ <x-row style="height: 20px;"></x-row>
+         <x-row>
+           <x-col span=12>委托客户:{{delegatecustomer}}</x-col><x-col span=6>付款客户:{{paycustomer}}</x-col><x-col span=6>受检客户:{{testcustomer}}</x-col>
+         </x-row>
+         <x-row style="height: 20px;"></x-row>
+         <x-row>
+         <x-col span=4>样品来源:{{samplesource}}</x-col>
+         <x-col span=4>是否判定:{{ispanding}}</x-col>
+         <x-col span=4>资质盖章:{{seal}}</x-col>
+         <x-col span=4>服务类型:{{servicetype}}</x-col>
+         </x-row> 
+ <x-row style="height: 30px;"></x-row>
+ <x-row>
+    <x-col span=5>
+        <div style="overflow:scroll;height: 680px;"> 
+           <h4>项目</h4>
+           <x-tree
+             #treeCom
+             au-adaption 
+             [data]="projects" 
+             [nodeHeight]="1.875"
+             (activatedChange)="action($event)"
+           >
+           </x-tree>
+          </div>
+       </x-col>
+    <x-col span='19'>
+    <x-table
+    #samplelist
+    [data]="sampledata"
+    [columns]="columns" 
+    [(index)]="index"
+    [(size)]="size"
+    [total]="total"  
+    [query]="query"
+    [adaptionHeight]="240"
+    [bodyColumnTpl]="{ editexpired: editAvilabletimeTpl
+                        ,editleftsample:leftsampleTpl 
+                        ,editexpireddate:expireddateTpl 
+                      }"
+    [headColumnTpl]="{actions: headerTpl}" 
+    virtualScroll
+    (activatedRowChange)="activechange($event)" 
+    (indexChange)="IndexChange($event)"
+    loading 
+    >
+  </x-table>
+</x-col>
+</x-row>
+<app-registerfoodsample #printtable id='printtable' style="height:100%;width:100%"></app-registerfoodsample>
+<ng-template #editAvilabletimeTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions">  
+        <x-input [disabled]="disabled" [(ngModel)]="row.avilabletime" ></x-input>  
+    </div> 
+  </ng-template>
+  <ng-template #leftsampleTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions">  
+        <x-input [disabled]="disabled" [(ngModel)]="row.leftsamplequality" ></x-input>  
+    </div> 
+  </ng-template>
+  <ng-template #expireddateTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions">  
+        <x-date-picker [disabled]="disabled" [(ngModel)]="row.expireddate"  ></x-date-picker>  
+    </div> 
+  </ng-template>
+  <ng-template #headerTpl let-column="$column" >
+    <div class="au-table-actions">  
+        <x-button  icon="far-copy" [disabled]="disabled" (click)="!disabled&&copydata()" label="复制"  style="width:80" ></x-button>  
+    </div> 
+  </ng-template>

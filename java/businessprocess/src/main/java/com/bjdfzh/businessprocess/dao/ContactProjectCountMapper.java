@@ -5,5 +5,5 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bjdfzh.businessprocess.entity.ContactProjectCount;
 @Transactional
 public interface ContactProjectCountMapper {
-	ContactProjectCount getprojectmaxcount();
+	ContactProjectCount getprojectmaxcount(String begindate,String enddate);
 }

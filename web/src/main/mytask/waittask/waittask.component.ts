@@ -57,7 +57,7 @@ export class WaittaskComponent  extends PageBase implements OnInit,AfterViewInit
        this.getData();
     }
   ngAfterViewInit(): void {
-    console.log(this.indexService.auth.user); 
+    
     if(this.indexService.auth.user.roles!=undefined)
     this.getData(); 
   }

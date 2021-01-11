@@ -178,11 +178,17 @@ export class ModifyqualificationmethodComponent implements OnInit {
     {
       case 1:
         if(item.beforemethodname!=item.methodname)
-        this.modifyrows.push(item);
+        {
+           this.modifyrows.push(item);
+           item.beforemethodname=item.methodname;
+        }
       break;
       case 2:
         if(item.beforeroleid!=item.roleid)
+        {
         this.modifyrows.push(item);
+        item.beforeroleid=item.roleid;
+        }
         break;
       default:
         break;

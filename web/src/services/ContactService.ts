@@ -24,6 +24,10 @@ export class ContactService extends RepositoryService<Contact> {
   {
 	return this.http.post(`${this.option.controller?.name}/updatecontacttest`,modifytest,this.option.controller?.servicetype);
   }
+  updateprojectnumer(conid:string,standardf:number)
+  {
+	return this.http.post(`contactprojects/updateprojectnumer`,{contactid:conid,standardfee:standardf},this.option.controller?.servicetype);
+  }
 }
 
 export interface Contact extends Id { 

@@ -156,7 +156,7 @@ public class ContactController {
 	ProjectNumberHandle projectNumberHandle;
 	@RequestMapping(value ="contactprojects/updateprojectnumer",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public void updateprojectnumer (
+	public JSONObject updateprojectnumer (
 			@RequestBody JSONObject Params
 		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
 				  
@@ -171,6 +171,10 @@ public class ContactController {
 	   List<ContactProject> projects=jb.getJSONArray("projects").toJavaList(ContactProject.class);
 		 contactservice.updatecontactstandardfee(contact); 
 		 projectNumberHandle.HandleProject(contact, projects); 
+		 JSONObject jo=new JSONObject();
+		 jo.put("contact", contact);
+		 jo.put("projects", projects);
+		 return jo;
 	 
 	}
 	@Autowired

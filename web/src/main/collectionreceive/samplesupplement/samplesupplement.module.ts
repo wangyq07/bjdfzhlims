@@ -4,7 +4,7 @@ import { SamplesupplementRoutingModule } from './samplesupplement-route';
 import { SamplesupplementComponent } from './samplesupplement.component';
 import { NgNestModule } from 'src/share/ng-nest.module';
 import { ShareModule } from 'src/share/share.module';
-import { XButtonModule, XDatePickerModule, XDialogModule, XInputModule, XLayoutModule, XSelectModule } from '@ng-nest/ui';
+import { XButtonModule, XDatePickerModule, XDialogModule, XInputModule, XInputNumber, XInputNumberModule, XLayoutModule, XSelectModule } from '@ng-nest/ui';
 import { UpdatesampleComponent } from './updatesample/updatesample.component';
 import { OutputadditionallistModule } from 'src/main/businessprocess/outputadditionallist/outputadditionallist.module';
 
@@ -24,6 +24,7 @@ import { OutputadditionallistModule } from 'src/main/businessprocess/outputaddit
     ,XDatePickerModule
     ,OutputadditionallistModule
     ,SamplesupplementRoutingModule
+    ,XInputNumberModule
   ]
 })
 export class SamplesupplementModule { }

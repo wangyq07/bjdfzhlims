@@ -1,7 +1,10 @@
 package com.bjdfzh.businessprocess.dao;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -27,6 +30,37 @@ public class ProjectNumberHandle {
   /*
    * 处理项目编号，考虑并发信号量问题，保证每次只能有一个进程处理项目号
    */
+  Date getFirstDayDateOfYear(final Date date) {
+
+      final Calendar cal = Calendar.getInstance();
+
+      cal.setTime(date);
+
+      final int last = cal.getActualMinimum(Calendar.DAY_OF_YEAR);
+
+      cal.set(Calendar.DAY_OF_YEAR, last);
+
+      return cal.getTime();
+
+  }
+  Date getLastDayOfYear(final Date date) {
+
+      final Calendar cal = Calendar.getInstance();
+
+      cal.setTime(date);
+
+      final int last = cal.getActualMaximum(Calendar.DAY_OF_YEAR);
+
+      cal.set(Calendar.DAY_OF_YEAR, last);
+
+      return cal.getTime();
+
+  }
+  String getDateString(Date date)
+  {
+	  DateFormat df =new SimpleDateFormat("yyyy-MM-dd");
+	  return df.format(date);
+  }
   @Value("${remoteurls.modifyflowprojectno}")
   String URL;
 	 private  Semaphore semaphore = new Semaphore(1); 
@@ -35,8 +69,12 @@ public class ProjectNumberHandle {
 		try {
 			semaphore.acquire();
 			String isCMA=contact.getSeal().stream().anyMatch(c->c.getId()==1)?"":"-B";
-			ContactProjectCount contactmax=getcountService.getprojectmaxcount(); 
 			projects.sort((c1,c2)->c1.getCreatedate().compareTo(c2.getCreatedate()));
+			 if(projects.size()>0)
+			 {
+				 Date crdate=projects.get(0).getCreatedate();
+			ContactProjectCount contactmax=getcountService.getprojectmaxcount(getDateString(getFirstDayDateOfYear(crdate)),getDateString(getLastDayOfYear(crdate))); 
+			
 			List<ContactProject> setprojects=new ArrayList<ContactProject>();
 			for(int i=0;i<projects.size();i++)
 			{
@@ -53,7 +91,7 @@ public class ProjectNumberHandle {
 			if(setprojects.size()>0)
 			contactService.updateprpjectnumbers(setprojects); //更新项目号
 			 
-			 
+			 }
 			 
 		} catch (InterruptedException e) {
 			// TODO 自动生成的 catch 块

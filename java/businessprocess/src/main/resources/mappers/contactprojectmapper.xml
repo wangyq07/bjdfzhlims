@@ -29,8 +29,7 @@
 	<result column="manufactoryphone" property="manufactoryphone" />
 	<result column="manudate" property="manudate" />
 	<result column="manuno" property="manuno" />
-	<result column="remark" property="remark" />
-	<result column="expiredday" property="expiredday" />
+	<result column="remark" property="remark" /> 
 	<result column="price" property="price" />
 	<result column="externprice" property="externprice" /> 
 	<result column="stestproject" property="testproject" /> 
@@ -46,6 +45,9 @@
     <result column="deleverdate" property="deleverdate"/>
 	<result column="specialcondition" property="specialcondition" />
     <result column="standardfee" property="standardfee" />
+    <result column="avilabletime" property="avilabletime" /> 	 
+	<result column="leftsamplequality" property="leftsamplequality" />
+	<result column="expireddate" property="expireddate" />
       <association    property="store" javaType="com.bjdfzh.userprivilage.entity.CommonType" >
       <id column="storeid" property="id"/>
       <result column="storename" property="label"/>
@@ -79,6 +81,8 @@
 		 <result column="limitmin" property="limitmin"/>
 		 <result column="roleid" property="roleid"/>
 		 <result column="userid" property="userid"/>
+		 <result column="testprojectid" property="testprojectid"/>
+		 <result column="standardid" property="standardid"/>
     </collection>
   </collection> 
 </resultMap>
@@ -95,6 +99,8 @@
     ,ts.sampleid 
     ,ts.standardfee
     ,tstand.standardname
+    ,tqf.standardid
+    ,tqf.testprojectid
     ,ts.deleverdate
 		,ts.specialcondition
 		,ts.samplename
@@ -111,7 +117,9 @@
 		,ts.manudate
 		,ts.manuno
 		,ts.remark
-		,ts.expiredday
+		,ts.avilabletime 
+		 ,ts.leftsamplequality 
+		 ,ts.expireddate 
 		,ts.price
 		,ts.externprice
 		,ts.processid,ts.processtype,ts.testtypeother
@@ -159,7 +167,9 @@
 		,manudate
 		,manuno
 		,ts.remark
-		,expiredday
+		,avilabletime 
+		 ,leftsamplequality 
+		 ,expireddate 
 		,price
 		,tm.testproject
 		,tm.methodname
@@ -251,6 +261,8 @@
     ,ts.sampleid 
     ,ts.standardfee
     ,tstand.standardname
+    ,tqf.standardid
+    ,tqf.testprojectid
     ,ts.deleverdate
 		,ts.specialcondition
 		,ts.samplename
@@ -267,7 +279,9 @@
 		,ts.manudate
 		,ts.manuno
 		,ts.remark
-		,ts.expiredday
+		,ts.avilabletime 
+		 ,ts.leftsamplequality 
+		 ,ts.expireddate 
 		,ts.price
 		,ts.externprice
 		,ts.processid,ts.processtype,ts.testtypeother
@@ -309,13 +323,15 @@
 		,sampledate
 		,manufactory
 		,manufactoryaddress
+		,avilabletime 
+		 ,leftsamplequality 
+		 ,expireddate 
 		,purty
 		,brand
 		,manufactoryphone
 		,manudate
 		,manuno
-		,ts.remark
-		,expiredday
+		,ts.remark 
 		,price
 		,tm.testproject
 		,tm.methodname

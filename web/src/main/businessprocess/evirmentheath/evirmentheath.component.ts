@@ -70,8 +70,7 @@ export class EvirmentheathComponent extends PageBase implements OnInit,AfterCont
         
             console.log(contact);
               if(findex==-1||findex==undefined)
-              {
-                console.log("32");
+              { 
                 contact.contactcustomers=[
                   {contactid:contact.id+'',customername:this.contactlist.customer.customername,
                     customerid:this.contactlist.customer.id,customertype:1},
@@ -111,7 +110,7 @@ export class EvirmentheathComponent extends PageBase implements OnInit,AfterCont
     projects.map(
       (x)=>
       {
-        reportfee =reportfee+(Number(x.reportcount)-2)*50;
+        reportfee =reportfee+(Number(x.reportcount)>2? (Number(x.reportcount)-2)*50:0);
         x.samples?.map(
           (y)=>
           {
@@ -136,6 +135,7 @@ export class EvirmentheathComponent extends PageBase implements OnInit,AfterCont
    this.contactlist.currentContact.ugency=this.contactlist.currentContact.service?.label; 
     if(!this.businessprojectlist.contactdisabled)
     {
+      console.log(this.contactlist.currentContact);
        this.contactService.updatecontactinfo( this.contactlist.currentContact).subscribe
        ((x)=>console.log(x));
     }

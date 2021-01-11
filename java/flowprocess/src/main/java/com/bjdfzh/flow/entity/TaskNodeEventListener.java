@@ -63,7 +63,7 @@ public class TaskNodeEventListener implements ExecutionListener,TaskListener {
 				 System.out.print(varibles.get("username"));
 			 }
 			 
-			 JSONObject jo=new JSONObject();
+			/* JSONObject jo=new JSONObject();
 			 VariableInstance vicontactid=varibles.get("contactid"),
 					 vistandfee=varibles.get("standardfee"),
 			   vitoken=varibles.get("token") 
@@ -74,7 +74,7 @@ public class TaskNodeEventListener implements ExecutionListener,TaskListener {
 			  jo.put("contactid", vicontactid.getTextValue());
 			  jo.put("standardfee",o);
 			  HttpClientUtil.PostDataBody(jo, vitoken.getTextValue(), viprojectupdate.getTextValue());
-			 }
+			 }*/
 			 }
 		 }
 		 break;

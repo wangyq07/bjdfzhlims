@@ -4,11 +4,13 @@ import {  XMessageService, XTreeComponent, XTreeNode } from '@ng-nest/ui';
 import { IndexService } from 'src/layout/index/index.service';
 import { BusinessProject } from 'src/main/businessprocess/evirmentheath/businessproject/businessproject.service';
 import { FlowService } from 'src/main/flow/flowprocess/flowhandle.service';
+import { Qualification } from 'src/main/qualification/qualification.service';
 import { ContactService, ContactTestProject } from 'src/services/ContactService';
 import { Sample, SampleService } from 'src/services/sample.service';
 import { AuditResultService } from 'src/services/transform.data.service';
 import { PageBase } from 'src/share/base/base-page';
 import { ProjectUtil } from 'src/share/utilclass';
+import { ModifytaskdispatchComponent } from './modifytaskdispatch/modifytaskdispatch.component';
 import { DispatchRoleTaskService, RoleTestProject } from './taskdispatch.service';
 
 @Component({
@@ -43,14 +45,14 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
         );
       }
   }
-  submit()
+  datechange(item:any,ev:any)
   {
-   this.service.addRoleTaskDispatch(this.contactid,this.treeData).subscribe(
-     (x)=>
-     {
-       this.msg.success("分配成功");
-     }
-   );
+    console.log(item);
+    console.log(ev);
+  }
+  submit()
+  { 
+    
   }
   
    taskid="";
@@ -266,9 +268,52 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
     );
     
   }
+  editvisible=false;
+  @ViewChild("modifytask")modifytask:ModifytaskdispatchComponent;
+  currentrow:any;
   projectclick(item:any)
   {
-    
+    if(item !=undefined)
+    {
+      this.currentrow=item;
+      this.editvisible=true; 
+      this.modifytask.gettableallData(item.testprojectid,item.standardid);
+    }
+  }
+   rolename='';
+  modifyquali:any[]=[]; 
+  SaveModify(item:Qualification)
+  {
+    if(item !=undefined)
+    {
+      if(item.qualificationid !=this.currentrow.qualificationid)
+      {
+       var ffindex= this.modifyquali.findIndex((x)=>x==this.currentrow.sampleid);
+       if(ffindex==-1)
+       {
+        this.modifyquali.push( this.currentrow.sampleid );
+                              this.currentrow.qualificationid=item.qualificationid;
+       }
+      }
+      this.data.map(
+        (x)=>
+        {
+          if(x.qualificationid==item.qualificationid)
+          {
+            x.testprojectid=item.testprojectid;
+            x.testproject=item.testproject;
+            x.standardid=item.standardid;
+            x.methodname=item.methodname;
+            x.methodid=item.methodid;
+             
+            x.roleid=item.roleid;
+            x.userid=item.userid;
+          }
+        }
+      )
+      
+    }
+    this.editvisible=false;
   }
   roles:RoleTestProject[]=[];
   data:any[]=[];
@@ -312,7 +357,18 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
   @ViewChild("projecttreeCom")projecttreeCom:XTreeComponent;
   @ViewChild("treeCom")treeCom:XTreeComponent;
    contactid="";
+   rowchange(item:any)
+  {
+    if(item !=undefined)
+    {
+      var ffindex=this.roles.findIndex((x)=>x.id==item);
+      if(ffindex !=-1)
+         return this.roles[ffindex].label;
+    }
+    return "";
+  }
 }
+
 export interface TaskDispatch extends XTreeNode
 {
  pid?:string;

@@ -227,6 +227,7 @@ export class ContactComponent extends PageBase implements OnInit {
          (x)=> {
                  var cntact=x.contact as Contact;
                  cntact.id=ProjectUtil.GetRandomStr(true,6,10);
+                 cntact.contactstatus=0;
                  cntact.contactcustomers?.map(
                    (d)=>
                    {

@@ -1,0 +1,44 @@
+<x-dialog [(visible)]="addvisible" #Seldialog width="35%" height="25%" placement="top"
+[showConfirm]="false" [showCancel]="false" [backdropClose]="false" [hasBackdrop]="false">  
+<app-addmethodqualification #addqualificaitonmethod style="height:100%;width:100%"  (datachange)="datachange($event)" ></app-addmethodqualification>
+</x-dialog> 
+<x-row>
+<x-col span=2><x-button icon="fto-plus" (click)="add('add')">添加</x-button></x-col>
+<x-col span=2><x-button icon="fto-save" (click)="save()">确定</x-button></x-col>
+</x-row>
+<x-row style="height: 30px;"></x-row>
+<x-row>
+    <x-col span=24>
+<x-table
+  #qualtable
+  [columns]="tablecolumns" 
+  [data]="tabledata" 
+  [(size)]="tablesize"
+  [total]="tabletotal"
+  [(index)]="tableindex"
+  [query]="tablequery"  
+  (indexChange)="indexChange($event)"
+  [bodyColumnTpl]="{ actions: actionsTpl,role:selectroleTpl,editmethodname:editmethodTpl }"
+  (sortChange)="sortChange($event)"  
+  [virtualScroll]="true"
+  scrollYWidth="50"
+  loading
+  adaptionHeight="420"
+  (activatedRowChange)="tablerowchange($event)"
+  ></x-table> </x-col>
+</x-row>
+  <ng-template #actionsTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions">  
+      <x-link [disabled]="disabled" icon="fto-trash-2" (click)="!disabled&&  add('delete', row)" title="删除"></x-link>
+    </div>
+  </ng-template> 
+  <ng-template #selectroleTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions"> 
+      <x-select [disabled]="disabled"  [data]="roles" [(ngModel)]="row.roleid"  (ngModelChange)="rowchange(2,row)" ></x-select> 
+    </div>
+  </ng-template>
+  <ng-template #editmethodTpl let-column="$column" let-row="$row">
+    <div class="au-table-actions"> 
+      <x-input [disabled]="disabled"    [(ngModel)]="row.methodname"  (ngModelChange)="rowchange(1,row)" ></x-input> 
+    </div>
+  </ng-template>

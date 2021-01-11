@@ -80,6 +80,20 @@ public class ContactTestProject {
 	}
 	String methodname;
 	double price;
+	int standardid;
+	int testprojectid;
+	public int getStandardid() {
+		return standardid;
+	}
+	public void setStandardid(int standardid) {
+		this.standardid = standardid;
+	}
+	public int getTestprojectid() {
+		return testprojectid;
+	}
+	public void setTestprojectid(int testprojectid) {
+		this.testprojectid = testprojectid;
+	}
 	String standardname;
 	String roleid;
 	String userid;

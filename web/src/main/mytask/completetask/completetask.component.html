@@ -8,6 +8,7 @@
     [total]="total" 
     (indexChange)="indexChange($event)"
     (sortChange)="sortChange($event)"
+    [bodyColumnTpl]="{ actions: actionsTpl }"
     [virtualScroll]="true"  
     (activatedRowChange)="activatedRow($event)"
     [bodyHeight]="750"
@@ -21,5 +22,10 @@
     </div>
 </x-col>
 </x-row>
+<ng-template #actionsTpl let-column="$column" let-row="$row">
+  <div class="au-table-actions">
+    <x-link [disabled]="!auth['info']" icon="fto-eye" style="color:green;" (click)="auth['info'] && action('info', row)" title="提交"></x-link> 
+  </div>
+</ng-template>
 
  

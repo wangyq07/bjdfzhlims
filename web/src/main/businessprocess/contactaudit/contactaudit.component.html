@@ -1,6 +1,6 @@
 
  <x-row>
-  <x-col span=8 style="display: inline;"> 
+  <!--<x-col span=8 style="display: inline;"> 
     <div   class="au-panel au-content" au-adaption [outerHeight]="50"> 
       <x-table [columns]="columns"
       #tablecom
@@ -17,12 +17,12 @@
       > 
       </x-table>
     </div>
-  </x-col>
-  <x-col span=16>
+  </x-col>-->
+  <x-col span=24>
     <div   class="au-panel au-content" au-adaption [outerHeight]="50"> 
     <x-row style="height: 20px;"></x-row>
     <x-row>
-      <x-col span=5><x-button icon="ado-check" style="color: green;" plain type="primary" (click)="acction(1)">提交</x-button></x-col>  
+      <x-col span=5><x-button icon="ado-check" [disabled]="submitdisable" style="color: green;" plain type="primary" (click)="acction(1)">提交</x-button></x-col>  
       <x-col span=5><x-button icon="ado-check" style="color: green;" plain type="primary" (click)="genera(1)">生成协议书</x-button></x-col>  
       </x-row>
       <x-row style="height: 20px;"></x-row>
@@ -45,7 +45,7 @@
       </x-row>
       <x-row>
         <x-col span=4>成交价格:{{testfee}}</x-col>
-              <x-col span=4> <x-input label="标准检测费" direction="row" [(ngModel)]="standfee"></x-input></x-col>
+              <x-col span=4>标准检测费:{{standfee}}</x-col>
               <x-col span=4>折扣:{{getroundvalue(testfee,standfee)}}</x-col> 
       </x-row>
       <x-row style="height: 20px;"></x-row>
@@ -59,53 +59,23 @@
           <td  style=" width:10%; text-align: center;">领域</td>
           <td  style=" width:10%; text-align: center;">样品</td>
           <td [style.display]="showtablecel"   style="width:5%;text-align: center;">检测费</td>
-          <td  style=" width:10%; text-align: center">项目</td>
-          <td  style="width:40%;  text-align: center">标准</td>
+          <td  style=" width:10%; text-align: center">检测项目</td>
+          <td  style="width:40%;  text-align: center">检测标准</td>
+          <td  style=" width:5%; text-align: center">标准费用</td>
           <td  style=" width:5%; text-align: center">外包</td>
           <td  style=" width:5%; text-align: center">次数</td>
         </thead>
-        <tr *ngFor="let project of projects">
-          <td   style=" width:10%; text-align: center;">{{project.projectnumber}}</td> 
-          <td style="width:5%;  text-align: center;">{{project.reportcount}}</td>
-          <td style=" width:10%; text-align: center;">{{project.domain.label}}</td>
-          <td   [style.display]="showtablecel"  style="width: 10%; text-align: center">
-            <ng-container *ngFor="let sample of project.samples;">
-            {{sample.samplename}}<br>
-            </ng-container>
-          </td> 
-          <td   [style.display]="showtablecel"  style="width: 5%; text-align: center">
-            <ng-container *ngFor="let sample of project.samples;">
-            {{sample.price}}<br>
-            </ng-container>
-          </td>
-           <td  style=" width:10%; text-align: center">
-            <ng-container *ngFor="let sample of project.samples;"> 
-            <ng-container *ngFor="let t of sample.testprojects;">
-            {{t.testproject}}<br>
-          </ng-container> 
-          </ng-container>
-          </td>
-          <td  style=" width:40%; text-align: center">
-            <ng-container *ngFor="let sample of project.samples;"> 
-            <ng-container *ngFor="let f of sample.testprojects;">
-            {{f.standardname}}<br>
-          </ng-container> 
-        </ng-container>
-          </td>
-          <td  style="width:5%;  text-align: center">
-            <ng-container *ngFor="let sample of project.samples;"> 
-              <ng-container *ngFor="let d of sample.testprojects;">
-            {{d.isextern}}<br>
-          </ng-container> 
-        </ng-container>
-          </td>
-          <td  style=" width:5%; text-align: center">
-            <ng-container *ngFor="let sample of project.samples;"> 
-              <ng-container *ngFor="let e of sample.testprojects;">
-            {{e.testcount}}<br>
-          </ng-container> 
-          </ng-container>
-          </td>
+        <tr *ngFor="let item of sampledata; let i=index">
+          <td [attr.rowspan]="item.projectrowspan" *ngIf="item.projectindex==i" >{{item.projectname}}</td>
+          <td [attr.rowspan]="item.projectrowspan" *ngIf="item.projectindex==i">{{item.reportcount}}</td> 
+          <td [attr.rowspan]="item.projectrowspan" *ngIf="item.projectindex==i">{{item.domain}}</td> 
+          <td [attr.rowspan]="item.samplerowspan" *ngIf="item.sampleindex==i">{{item.samplename}}</td> 
+          <td [attr.rowspan]="item.samplerowspan" *ngIf="item.sampleindex==i">{{item.sampleprice}}</td> 
+          <td >{{item.testproject}}</td> 
+          <td>{{item.standardname}}</td>
+          <td>{{item.price}}</td>  
+          <td>{{item.extern}}</td> 
+          <td>{{item.testcount}}</td>  
         </tr> 
       </table> 
        </x-col>

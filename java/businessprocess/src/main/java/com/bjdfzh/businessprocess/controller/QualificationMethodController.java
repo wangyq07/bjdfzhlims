@@ -48,6 +48,23 @@ public class QualificationMethodController {
 		 retobject.put("query", Params);
 	    return retobject; 
 	}
+	@RequestMapping(value ="getqualificationmethodprojecttest",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public JSONObject getqualificationmethodprojecttest (
+			@RequestBody JSONObject Params
+		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
+				  
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		} 
+		 List<QualificationMethod> quals=qualificationmethodservice.getqualificationmethodbytest(Params.getIntValue("testprojectid"),Params.getIntValue("standardid"));
+		 JSONObject retobject=new JSONObject();
+		 retobject.put("list", quals);
+		 retobject.put("total", quals.size());
+		 retobject.put("query", Params);
+	    return retobject; 
+	}
 	 @RequestMapping(value ="getqualificationmethodbysearchkey"
 			,method = {RequestMethod.POST,RequestMethod.GET}
 	,produces = "application/json;charset=UTF-8")

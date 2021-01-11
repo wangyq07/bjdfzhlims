@@ -17,7 +17,7 @@ export class CompletetaskComponent extends PageBase implements OnInit,AfterViewI
   query: XQuery = {};
   data:Task[];
   columns: XTableColumn[] = [
-    { id: 'index', label: '序号', width: 80, type: 'index' }, 
+    { id: 'actions', label: '操作', width: 80 }, 
     { id: 'name', label: '任务', width: 100, sort: true }, 
     { id: 'customername', label: '客户', width: 150, sort: true },
     {id:'endTime',label:'完成时间', width: 200, sort: true},
@@ -44,7 +44,9 @@ export class CompletetaskComponent extends PageBase implements OnInit,AfterViewI
   }
   action(info:string,row:Task)
   { 
-       let params={projectid:row.contactid,taskid:row.taskid};
+     
+       let params={contactid:row.contactid,taskid:row.taskid,complete:1};
+    
        this.router.navigate([`${row.router}`,params]);
   }
 browsediagram(row:Task)
@@ -74,7 +76,7 @@ getData() {
   );
 }
 }
-
+ 
 indexChange(index: number) {
   this.index = index;
  

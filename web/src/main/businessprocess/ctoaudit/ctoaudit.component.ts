@@ -33,15 +33,16 @@ export class CtoauditComponent extends PageBase implements OnInit,AfterViewInit 
     { id: 'from', label: '上一节点', width: 100, sort: true }
   ];
   taskid="";
+  currenttask:Task;
   acction(audit:number)
   {
     this.roleauditservice.getauditvariable(this.indexService.auth.user.roles,audit,this.auditaddvice).subscribe
     (
       (x)=>
       {
-        if(this.tablecom.activatedRow!=null)
+        if(this.currenttask!=null)
         {
-          var selectrow=this.tablecom.activatedRow as Task;
+          var selectrow=this.currenttask;
           if(selectrow !=undefined)
           {
           x.username=this.indexService.auth.user.name;
@@ -62,10 +63,20 @@ export class CtoauditComponent extends PageBase implements OnInit,AfterViewInit 
                   (d:any)=>
                   {
                      this.msg.success("提交成功");
-                     this.getData();
+                     //this.getData();
+                     this.submitdisable=true;
+                     this.setclear();
                      this.globalaudit.sendAuditResult("成功");
                   }
                 );
+              }
+              else
+              {
+                this.msg.success("提交成功");
+                     //this.getData();
+                     this.submitdisable=true;
+                     this.setclear();
+                     this.globalaudit.sendAuditResult("成功");
               }
             }
           );
@@ -74,6 +85,7 @@ export class CtoauditComponent extends PageBase implements OnInit,AfterViewInit 
       }
     );
   }
+  submitdisable=false;
   modifyvisible=false;
   currentitem:ContactTestProject;
   currentsample:Sample;
@@ -201,11 +213,11 @@ showtablecel:string="none";//"table-cell";
   }
   setproject(tsk:Task)
   {
-    
+    this.currenttask=tsk;
      this.contactservice.getcontactproject(tsk.contactid+'').subscribe(
        (x)=>
        { 
-         console.log(x);
+          
         this.CurrentContact=x.contact;  
         this.projects=x.projects as any[];
          if(this.CurrentContact !=null)
@@ -277,20 +289,20 @@ showtablecel:string="none";//"table-cell";
             var findex=this.data.findIndex((x)=>x.taskid==this.taskid);
             if(findex!=-1)
             {
-              this.tablecom.activatedRow=   this.data[findex];
+              //this.tablecom.activatedRow=   this.data[findex];
               this.setproject(this.data[findex]);
             }
-            else if(this.data.length>0)
+            /*else if(this.data.length>0)
             {
-              this.tablecom.activatedRow=   this.data[0];
+              //this.tablecom.activatedRow=   this.data[0];
               this.setproject(this.data[0]);
-            }
+            }*/
         }
-        else if(this.data.length>0)
+        /*else if(this.data.length>0)
         {
          this.tablecom.activatedRow=   this.data[0];
          this.setproject(this.data[0]);
-        }
+        }*/
     }
     );
   }

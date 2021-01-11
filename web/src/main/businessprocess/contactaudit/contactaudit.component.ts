@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { XQuery, XSort, XTableColumn, XTableComponent } from '@ng-nest/ui';
+import { XMessageService, XQuery, XSort, XTableColumn, XTableComponent } from '@ng-nest/ui';
 import { IndexService } from 'src/layout/index/index.service';
 import { FlowService, Task } from 'src/main/flow/flowprocess/flowhandle.service';
 import { RoleAuditSettingService } from 'src/main/system/roleauditset/roleautidtset-service';
@@ -9,6 +9,7 @@ import { AuditResultService } from 'src/services/transform.data.service';
 import { PageBase } from 'src/share/base/base-page';  
 import * as printJS from 'print-js';
 import { OutputlistComponent } from '../outputlist/outputlist.component';
+import { ProjectUtil } from 'src/share/utilclass';
 @Component({
   selector: 'app-contactaudit',
   templateUrl: './contactaudit.component.html',
@@ -16,6 +17,7 @@ import { OutputlistComponent } from '../outputlist/outputlist.component';
 })
 export class ContactauditComponent extends PageBase implements OnInit,AfterViewInit {
   index=1;
+  submitdisable=false;
   size=10000;
   total=0;
   query: XQuery = {};
@@ -36,9 +38,8 @@ export class ContactauditComponent extends PageBase implements OnInit,AfterViewI
     (
       (x)=>
       {
-        if(this.tablecom.activatedRow!=null)
-        {
-          var selectrow=this.tablecom.activatedRow as Task;
+        
+          var selectrow=this.currenttask;
           if(selectrow !=undefined)
           {
           x.username=this.indexService.auth.user.name;
@@ -53,13 +54,16 @@ export class ContactauditComponent extends PageBase implements OnInit,AfterViewI
             (x)=>
             {
                
-              this.getData();
-              this.globalaudit.sendAuditResult("成功");
+              this.cleardata();
+              this.msg.success("提交成功");
+              this.submitdisable=true;
+              //this.globalaudit.sendAuditResult("成功");
+              
             }
           );
          }
         }
-      }
+      
     );
   }
   constructor(public indexService: IndexService, 
@@ -69,6 +73,7 @@ export class ContactauditComponent extends PageBase implements OnInit,AfterViewI
     private actroute:ActivatedRoute ,
     private router: Router
     ,private globalaudit:AuditResultService
+    ,private msg:XMessageService
     ) { super(indexService); 
       if(actroute==undefined)
       {
@@ -79,12 +84,21 @@ export class ContactauditComponent extends PageBase implements OnInit,AfterViewI
         actroute.params.subscribe(
         (x:any)=>
           {
+            
+            if(x.complete !=undefined)
+            {
+              this.submitdisable=true;
+              this.getCurrentdata(x.contactid);
+            }
+            else
+            {
             this.taskid=x.taskid;
             this.getData();
+            }
           }
         );
       }
-       console.log(indexService);
+        
        for(var i=0;i<  indexService.auth.user.organizations.length;i++)
        {
          if(indexService.auth.user.organizations[i].checkprice==1)
@@ -132,8 +146,9 @@ showtablecel:string="none";//"table-cell";
     }
     return discount;
   }
-  setproject(tsk:Task)
+  cleardata()
   {
+    
     this.projects=[];
     this.servicetype="";
     this.seal='';
@@ -147,71 +162,96 @@ showtablecel:string="none";//"table-cell";
     this.discount=0;
     this.externfee=0;
     this.businessfee=0;
-     this.contactservice.getcontactproject(tsk.contactid+'').subscribe(
-       (x)=>
-       { 
-          
-        this.CurrentContact=x.contact;  
-        this.projects=x.projects as any[];
-        this.iframe.setprojects(this.projects,this.CurrentContact); 
-         if(this.CurrentContact !=null)
-         { 
-         if(this.CurrentContact.contactcustomers !=null)
-           {
-             this.delegatecustomer='';
-             this.testcustomer='';
-             this.paycustomer='';
-             var users=this.CurrentContact.contactcustomers.filter((x)=>x.customertype==1);
-              if(users.length>0)
-              {
-                 for(var i=0;i<users.length;i++)
-                 {
-                   if(i !=0)
-                   {
-                     this.delegatecustomer =this.delegatecustomer+',';
-                   }
-                   this.delegatecustomer=this.delegatecustomer+users[i].customername;
-                 }
-              }
-             var user=this.CurrentContact.contactcustomers.find((x)=>x.customertype==2);
-             this.paycustomer=user?.customername+'';
-                user=this.CurrentContact.contactcustomers.find((x)=>x.customertype==3);
-              this.testcustomer= user?.customername+'';
-              this.servicetype="";
-               this.servicetype=this.CurrentContact.service?.label+'';
-               this.ispanding=this.CurrentContact.isjudgement==1?'是':'否'; 
-               this.seal='';//
-               if(this.CurrentContact.seal!=undefined)
-               {
-               for(var i=0;i<this.CurrentContact.seal.length;i++)
-               this.seal= this.seal+this.CurrentContact.seal[i].label+',';
+    this.sampledata=[];
+  }
+  getCurrentdata(contactid:string)
+  {
+    this.contactservice.getcontactproject( contactid).subscribe(
+      (x)=>
+      { 
+         
+       this.CurrentContact=x.contact;  
+       this.projects=x.projects as any[];
+       this.iframe.setprojects(this.projects,this.CurrentContact); 
+        if(this.CurrentContact !=null)
+        { 
+        if(this.CurrentContact.contactcustomers !=null)
+          {
+            this.delegatecustomer='';
+            this.testcustomer='';
+            this.paycustomer='';
+            var users=this.CurrentContact.contactcustomers.filter((x)=>x.customertype==1);
+             if(users.length>0)
+             {
+                for(var i=0;i<users.length;i++)
+                {
+                  if(i !=0)
+                  {
+                    this.delegatecustomer =this.delegatecustomer+',';
+                  }
+                  this.delegatecustomer=this.delegatecustomer+users[i].customername;
+                }
              }
-              this.samplesource=this.CurrentContact.samplesource?.label+'';
-              this.businessfee=Number(this.CurrentContact.businessfee);
-               this.collectionfee=Number(this.CurrentContact.collectionfee); 
-               this.testfee=Number(this.CurrentContact.testfee); 
-               this.standfee = Number(this.CurrentContact.standardfee);  
-               this.discount=Number(this.CurrentContact.discount);
-               this.totalfee= Number(this.CurrentContact.totalfee);
-               this.externfee=Number(this.CurrentContact.externfee);
-           }
-         }
-       }
-     );
-   
-    
+            var user=this.CurrentContact.contactcustomers.find((x)=>x.customertype==2);
+            this.paycustomer=user?.customername+'';
+               user=this.CurrentContact.contactcustomers.find((x)=>x.customertype==3);
+             this.testcustomer= user?.customername+'';
+             this.servicetype="";
+              this.servicetype=this.CurrentContact.service?.label+'';
+              this.ispanding=this.CurrentContact.isjudgement==1?'是':'否'; 
+              this.seal='';//
+              if(this.CurrentContact.seal!=undefined)
+              {
+              for(var i=0;i<this.CurrentContact.seal.length;i++)
+              this.seal= this.seal+this.CurrentContact.seal[i].label+',';
+            }
+             this.samplesource=this.CurrentContact.samplesource?.label+'';
+             this.businessfee=Number(this.CurrentContact.businessfee);
+              this.collectionfee=Number(this.CurrentContact.collectionfee); 
+              this.testfee=Number(this.CurrentContact.testfee); 
+              this.standfee = Number(this.CurrentContact.standardfee);  
+              this.discount=Number(this.CurrentContact.discount);
+              this.totalfee= Number(this.CurrentContact.totalfee);
+              this.externfee=Number(this.CurrentContact.externfee);
+          }
+        }
+        
+        this.sampledata=ProjectUtil.getMareData(this.projects,this.ispanding);
+        
+      }
+    );
+  }
+  currenttask:Task={};
+  setproject(tsk:Task)
+  {
+    this.currenttask=tsk;
+    this.cleardata();
+     this.getCurrentdata(tsk.contactid+'');  
     }
      
     @ViewChild('iframeprint') iframe: OutputlistComponent;
     genera(typ:number)
     {
-       
-      printJS({ printable: 'iframeprint', type: 'html',style:'@media print{@page {size:portrait}}' });
+      this.contactservice.updateprojectnumer(this.CurrentContact.id+'',this.standfee).subscribe(
+        (x)=>
+        {
+          this.sampledata=ProjectUtil.getMareData(x.projects,this.ispanding);
+        this.iframe.setprojects(x.projects,x.contact); 
+        setTimeout(() => {
+          printJS({ printable: 'iframeprint', type: 'html',maxWidth:'98%',targetStyles:['*'],style:'@media print{@page {size:portrait}}' });
+          
+        }, x.projects.length*10);
+        
+        });
       
     }
     sendcomplete()
     {
-      printJS("iframeprint","html");   
+     
+
+        printJS("iframeprint","html"); 
+      
+      
     }
   CurrentContact:Contact={};
   activatedRow(row:Task)
@@ -231,10 +271,11 @@ showtablecel:string="none";//"table-cell";
             var findex=this.data.findIndex((x)=>x.taskid==this.taskid);
             if(findex!=-1)
             {
-              this.tablecom.activatedRow=   this.data[findex];
+              //this.tablecom.activatedRow=   this.data[findex];
               this.setproject(this.data[findex]);
             }
-            else if(this.data.length>0)
+          }
+            /*else if(this.data.length>0)
             {
               this.tablecom.activatedRow=   this.data[0];
               this.setproject(this.data[0]);
@@ -244,7 +285,7 @@ showtablecel:string="none";//"table-cell";
         {
          this.tablecom.activatedRow=   this.data[0];
          this.setproject(this.data[0]);
-        }
+        }*/
     }
     );
   }
@@ -254,7 +295,7 @@ showtablecel:string="none";//"table-cell";
     this.index = index; 
     this.getData();
   }
-  
+  sampledata:any[]=[];
   sortChange(sort: XSort[]) {
     this.query.sort = sort; 
     this.getData();

@@ -240,17 +240,14 @@ public class FlowProcessController {
 	   Task t= taskService.createTaskQuery().taskId(formparm.getString("taskid")).singleResult();
 		if(t !=null)
 		{
-	    //t.setFormKey(formparm.getJSONObject("formkey").toJSONString());
-		 //t.setAssignee(formparm.getJSONObject("formkey").getString("username"));
+	   
 			JSONObject jb=formparm.getJSONObject("formkey");
 			if(jb !=null)
 			{
 			    
 				jb.put("token", headers);
 				jb.put("updataprojecturl", this.modifyprojectno );
-				/*jb.put("websocketurl", Url);
-				jb.put("socketsubscrible", SubScrible);
-				jb.put("socketsend", send);*/
+			 
 			} 
 		taskService.setVariablesLocal(formparm.getString("taskid"), jb);
 	    taskService.complete(formparm.getString("taskid"));
@@ -452,6 +449,7 @@ public class FlowProcessController {
 		 */
 		logger.info("返回集合:{}", resultList.toString());
 		//request.setAttribute("resultList", resultList);
+		resultList.sort((c1,c2)-> c2.get("createtime").toString().compareTo(c1.get("createtime").toString()));
 		jb.put("list", resultList);
 		jb.put("Msg", "获取成功");
 		jb.put("length", resultList.size());
