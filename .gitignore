@@ -1,5 +1,6 @@
 web/node_modules/
 web/dist/
+java/web/src/main/resources/static/
 deploy/
 *.jar
 *.zip
