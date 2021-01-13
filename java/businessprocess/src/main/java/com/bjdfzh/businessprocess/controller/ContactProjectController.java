@@ -163,4 +163,27 @@ public class ContactProjectController {
 			 
 		}
 	}
+	@RequestMapping(value="contactprojects/addcontactprojectinfos",method= {RequestMethod.POST})
+	@ResponseBody
+	JSONObject addcontactprojectinfos(@RequestBody JSONObject Params
+		    ,@RequestHeader(name="Authorization") String headers
+		    ,HttpServletRequest request
+			) throws Exception {  
+				  
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		}
+		List<ContactProject> contactinfos=Params.getJSONArray("projects").toJavaList(ContactProject.class);
+		List<String> delids=new ArrayList<>();
+		for(ContactProject cp:contactinfos)
+		{
+			delids.add(String.format("'%s'", cp.getId()));
+		}
+		String ids=String.join(",", delids);
+		cprojectservice.deletesamplebyprojectinfos(ids);
+		cprojectservice.addcontactprojectinfos(contactinfos);
+		return Params;
+	}
+	
 }

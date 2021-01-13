@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable,EventEmitter, Output } from '@angular/core';
 import { StompService } from 'ng2-stomp-service';
 import { BehaviorSubject } from 'rxjs';
 import{testobj} from 'src/services/global.storege.service'
 import { User } from 'src/main/system/users/users.service';
+ 
 @Injectable({ providedIn: 'root' })
 export class transformService {
 
@@ -20,14 +21,16 @@ export class transformService {
 @Injectable({ providedIn: 'root' })
 export class AuditResultService {
 
-  private auditResultMessage = new BehaviorSubject<String>("");
-  auditResult = this.auditResultMessage.asObservable();
-
+  @Output() auditResultMessage = new EventEmitter<String>(); 
   constructor() { }
 
   sendAuditResult(msg: string) {
-    if(this.auditResult !=null)
-    this.auditResultMessage.next(msg);
+    console.log(msg);
+    console.log(this.auditResultMessage);
+     if(this.auditResultMessage!=null)
+     {
+      this.auditResultMessage.emit(msg); 
+     }
   }
   
 }

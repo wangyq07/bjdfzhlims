@@ -9,6 +9,9 @@
 <result column="projectstatus" property="projectstatus" />
  <result column="domain" property="domainlabel" />
  <result column="createdate" property="createdate"/>
+ <result column="dispatchtime" property="dispatchtime" />
+ <result column="dispatchroleid" property="dispatchroleid"/>
+ <result column="dispatchuserid" property="dispatchuserid" />
  <association property="domain" javaType="com.bjdfzh.userprivilage.entity.CommonType">
    <id column="domainid" property="id"/> 
    <result column="domain" property="label"/>
@@ -90,6 +93,9 @@
     select 
 		contactid
 		,t.projectid
+		,td.dispatchtime
+		,td.dispatchroleid
+		,td.dispatchuserid
 		,projectnumber 
 		,reportcount 
 		,domainid
@@ -143,6 +149,8 @@
 		,tqr.roleid
 		,tqr.userid
 	from t_business_project t 
+	left join t_business_project_dispatch td
+	on td.projectid=t.projectid 
 	left join t_sample_domain tsd
 	on tsd.id=t.domainid
 	left join (
@@ -252,6 +260,9 @@
     select 
 		contactid
 		,t.projectid
+		,td.dispatchtime
+		,td.dispatchroleid
+		,td.dispatchuserid
 		,projectnumber 
 		,reportcount 
 		,domainid
@@ -305,6 +316,8 @@
 		,tqr.roleid
 		,tqr.userid
 	from t_business_project t 
+	left join t_business_project_dispatch td
+	on td.projectid=t.projectid
 	left join t_sample_domain tsd
 	on tsd.id=t.domainid
 	left join (
@@ -410,7 +423,23 @@
 	on tstand.id=tqf.standardid
 		 where  t.projectid=#{id} and  t.projectstatus !=-1
     </select>
-     <insert id="addcontactprojects" parameterType="java.util.ArrayList">
+     <insert id="addcontactprojectinfos" parameterType="java.util.ArrayList">
+        insert t_business_project_dispatch(
+		     projectid 
+			,dispatchtime
+			,dispatchroleid
+			,dispatchuserid 
+		)values
+		<foreach collection="list" index="index" separator="," item="item">
+		(
+		 #{item.id}
+		,#{item.dispatchtime}
+		,#{item.dispatchroleid} 
+		,#{item.dispatchuserid}  
+		) 
+		 </foreach>
+    </insert>
+    <insert id="addcontactprojects" parameterType="java.util.ArrayList">
         insert t_business_project(
 		   contactid
 			,projectid
@@ -459,5 +488,8 @@
      </delete>
     <delete id="deletesamplebyproject" parameterType="string">
      delete from t_sample where projectid=#{id}
+    </delete>
+    <delete id="deletesamplebyprojectinfos" parameterType="string">
+     delete from t_business_project_dispatch where projectid in(${ids})
     </delete>
 </mapper>

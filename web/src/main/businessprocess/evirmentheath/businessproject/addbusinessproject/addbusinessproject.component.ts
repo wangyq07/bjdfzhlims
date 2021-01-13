@@ -72,7 +72,7 @@ export class AddbusinessprojectComponent implements OnInit {
   currentprojectcount:number=0;
   setinit(projectcount:number)
   { 
-   
+     
    this.currentprojectcount=projectcount;
        if(this.currentproject.samples !=undefined)
        {
@@ -85,7 +85,10 @@ export class AddbusinessprojectComponent implements OnInit {
            this.pays=[];
            this.inspects=[];
       if(this.currentcontact !=undefined)
-      {   
+      {
+         
+        if(this.currentcontact.processid==undefined)
+          this.currentcontact.processid=2;   
       if(this.currentcontact.contactcustomers !=undefined&&this.currentcontact.contactcustomers.length!=0)
       {
         this.currentcontact.contactcustomers.map(

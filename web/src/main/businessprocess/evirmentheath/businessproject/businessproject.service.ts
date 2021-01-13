@@ -8,9 +8,13 @@ export class ContactProjectService extends RepositoryService<BusinessProjects> {
   constructor(public http: HttpService) {
     super(http, { controller: { name: 'contactprojects',servicetype:"businessprocess" } });
   }
-   getprojects(contactid:string)
+  getprojects(contactid:string)
   {
        return this.http.post(`${this.option.controller?.name}/getprojects`,{id:contactid},this.option.controller?.servicetype);
+  }
+  addcontactprojectinfos(pjs:BusinessProject[])
+  {
+    return this.http.post(`${this.option.controller?.name}/addcontactprojectinfos`,{projects:pjs},this.option.controller?.servicetype);
   }
 }
 @Injectable({ providedIn: 'root' })
@@ -34,6 +38,10 @@ export interface BusinessProject extends XId
     domainlabel?:string; 
     mergereport?:number;
     createdate?:string|Date;
+    dispatchtime?:string|Date;
+    dispatchroleid?:string;
+    dispatchuserid?:string;
+
 }
 export interface ContactCustomer extends XId
 { 

@@ -150,6 +150,8 @@ export class BusinessprojectComponent extends PageBase implements OnInit {
         this.addbusiness.currentproject=project;
          this.currentproject=project;
         this.addbusiness.currentcontact=this.currentcontact;
+        /*if(this.currentcontact !=undefined&&this.currentcontact.processid==undefined)
+        this.currentcontact.processid=1;*/
         this.addbusiness.setinit(this.data.length); 
   }
   contactdisabled=false;

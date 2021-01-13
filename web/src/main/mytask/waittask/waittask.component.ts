@@ -38,9 +38,7 @@ export class WaittaskComponent  extends PageBase implements OnInit,AfterViewInit
     private activatedRoute: ActivatedRoute
     ,private globalaudit:AuditResultService
     ) { super(indexService); 
-      this.globalaudit.auditResult.subscribe(
-        (x)=>this.HandleAuditResult
-      );
+     
       activatedRoute.params.subscribe(
         (x)=>
         {
@@ -60,6 +58,10 @@ export class WaittaskComponent  extends PageBase implements OnInit,AfterViewInit
     
     if(this.indexService.auth.user.roles!=undefined)
     this.getData(); 
+    this.globalaudit.auditResultMessage.subscribe(
+      (msg:string)=>{  console.log(msg);
+        this.getData();}
+    );
   }
   @ViewChild('tableCom') tableCom: XTableComponent;
   ngOnInit(): void {
@@ -95,6 +97,7 @@ getData() {
     console.log(x);
     if(x.list !=undefined)
     [this.data, this.total] = [x.list as Task[], x.list.length];
+    this.data=[...this.data];
   }
   );
 }

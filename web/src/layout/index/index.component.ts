@@ -5,6 +5,7 @@ import { ConfigService } from 'src/services/config.service';
 import{HttpService} from 'src/services/http.service'; 
 import { XMessageBoxAction, XMessageBoxService } from '@ng-nest/ui';
 import { Router } from '@angular/router';
+import { FlowService } from 'src/main/flow/flowprocess/flowhandle.service';
 @Component({
   selector: 'app-index',
   templateUrl: './index.component.html',
@@ -18,6 +19,7 @@ export class IndexComponent implements OnInit,OnDestroy,AfterViewInit {
   
   constructor(private http:HttpService,private indexService: IndexService
             , private nav: NavService
+            ,private flowservice:FlowService
             ,private router: Router
             , private config: ConfigService
             ,private msg:XMessageBoxService 
@@ -28,18 +30,29 @@ export class IndexComponent implements OnInit,OnDestroy,AfterViewInit {
   
   ngAfterViewInit(): void { 
     this.indexService.connect();
-    var interval=setInterval(() => {  
+    /**/var interval=setInterval(() => {  
       if(this.indexService.stomp !=undefined&&this.indexService.auth.user.roles!=undefined 
         )
       {
-        this.indexService.stomp.send('/app/queue', {// 向服务器端发送请求数据
-          rolename:  this.indexService.auth.user.roles[0].id,
-          msg:'自发请求消息'
-        
-        });  
-      }
+        this.flowservice.getTaskListByRoleId(this.indexService.auth.user.roles).subscribe(
+          (x)=>
+          {
+            if(x!=undefined&&x.list!=undefined&&x.list.length>0)//当前角色有待办任务时发请求
+            { 
+              this.msg.confirm({
+                title: '新任务提示',
+                content: '有工作任务需要处理',
+                type: 'warning',
+                callback: (action: XMessageBoxAction) => {
+                  action === 'confirm' &&this.router.navigate(["index/waittask",{refresh:true}]);
+            }
+            });
+            }
+        }
+        );
+          } 
     }
-     , 1200000); 
+     , 300000); 
       
     
   }

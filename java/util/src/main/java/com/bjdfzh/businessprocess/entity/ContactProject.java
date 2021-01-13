@@ -66,7 +66,23 @@ public class ContactProject {
 	public void setDomainlabel(String domainlabel) {
 		this.domainlabel = domainlabel;
 	}
-	  
+	Date dispatchtime;
+	String dispatchroleid;
+	String dispatchuserid;
+	public Date getDispatchtime() {
+		return dispatchtime;
+	}
+	public void setDispatchtime(Date dispatchtime) {
+		this.dispatchtime = dispatchtime;
+	}
+	public String getDispatchroleid() {
+		return dispatchroleid;
+	}
+	public void setDispatchroleid(String dispatchroleid) {
+		this.dispatchroleid = dispatchroleid;
+	}
+	 
+	 
 	 Date createdate;
     public Date getCreatedate() {
 		return createdate;

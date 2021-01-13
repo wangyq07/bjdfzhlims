@@ -4,7 +4,7 @@
 </x-dialog>
     <x-row style="height: 15px;"></x-row>
  <x-row>
-     <x-button icon="ado-check" type="primary" plain (click)="submit()">提交</x-button>
+     <x-button icon="ado-check" type="primary" [disabled]="disabled" plain (click)="submit()">提交</x-button>
  </x-row>
  <x-row style="height: 20px;"></x-row>
          <x-row>
@@ -26,6 +26,7 @@
          <thead>
             <td align="center"  >项目号</td>
             <td align="center"  >样品名称</td> 
+            <td align="center"  >样品编号</td> 
             <td align="center"  >数量</td>  
             <td align="center"  >交付时间</td>
             <td align="center"  >特殊要求</td>
@@ -39,7 +40,9 @@
          <tbody>
            <tr *ngFor="let ad of data; let i=index">
             <td [attr.rowspan]="ad.projectrowspan" *ngIf="ad.projectindex==i" >{{ad.projectname}}</td>
+            
             <td [attr.rowspan]="ad.samplerowspan" *ngIf="ad.sampleindex==i">{{ad.samplename}}</td> 
+            <td [attr.rowspan]="ad.samplerowspan" *ngIf="ad.sampleindex==i">{{ad.samplenumber}}</td> 
             <td [attr.rowspan]="ad.samplerowspan" *ngIf="ad.sampleindex==i">{{ad.samplequality}}</td>  
             <td [attr.rowspan]="ad.samplerowspan" *ngIf="ad.sampleindex==i">{{ad.deleverdate}}</td>
             <td [attr.rowspan]="ad.samplerowspan" *ngIf="ad.sampleindex==i">{{ad.specialcondition}}</td>
@@ -47,8 +50,8 @@
             <td>{{ad.standardname}}</td> 
             <td >{{ad.methodname}}</td> 
             <td> {{rowchange(ad.roleid)}} </td> 
-            <td> <x-link   icon="fto-edit" (click)="projectclick(ad)" title="修改"></x-link></td> 
-            <td [attr.rowspan]="ad.projectrowspan" *ngIf="ad.projectindex==i" ><x-date-picker (ngModelChange)="datechange(ad,$event)"></x-date-picker></td>
+            <td> <x-link   icon="fto-edit" [disabled]="disabled" (click)="projectclick(ad)" title="修改"></x-link></td> 
+            <td [attr.rowspan]="ad.projectrowspan" *ngIf="ad.projectindex==i" ><x-date-picker [ngModel]="ad.dispatchtime" [disabled]="disabled" (ngModelChange)="datechange(ad,$event)"></x-date-picker></td>
           </tr>
          </tbody> 
     </table>  

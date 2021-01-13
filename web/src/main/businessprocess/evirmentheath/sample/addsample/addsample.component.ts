@@ -46,35 +46,8 @@ quaconfirm()
                             
                              });
                              
-    } 
-    this.service.getsamplestandardprice(tempdata).subscribe(
-      (x)=>
-      {
-        this.projectdata=[];
-        this.currentsample.standardfee =  x.price;
-         
-        x.formulars.map(
-          (y:any)=>
-          {
-            var formularprice=eval(y.formular);
-            var limitprice=(y.limitprice==0?formularprice:y.limitprice);
-             
-            this.currentsample.standardfee =this.currentsample.standardfee
-            //通过公式计算出费用
-            //,如果大于限价，则使用限价，打包价已经在后台计算完成
-                 + (formularprice<=limitprice?formularprice:limitprice);
-                 
-          }
-        ); 
-        tempdata.map(
-          (z)=>this.projectdata.push(z)
-        );
-      }
-    );
-    
-    
-    
-    
+    }  
+    this.setformmal(true,tempdata);
 } 
 qualitreeheight="300px";
 producthidden="inline";
@@ -270,10 +243,48 @@ return false;
         break;
    }
   }
+  setformmal(isrefilldata:boolean,tempdata:any[])
+  {
+    this.service.getsamplestandardprice(tempdata).subscribe(
+      (x)=>
+      {
+      
+        this.currentsample.standardfee =  x.price;
+         
+        x.formulars.map(
+          (y:any)=>
+          {
+            var formularprice=eval(y.formular);
+            var limitprice=(y.limitprice==0?formularprice:y.limitprice);
+             
+            this.currentsample.standardfee =this.currentsample.standardfee
+            //通过公式计算出费用
+            //,如果大于限价，则使用限价，打包价已经在后台计算完成
+                 + (formularprice<=limitprice?formularprice:limitprice);
+                 
+          }
+        ); 
+        if(isrefilldata)
+        {
+          this.projectdata=[];
+        tempdata.map(
+          (z)=>this.projectdata.push(z)
+        );
+      }
+      }
+    ); 
+  }
   deleteprojectmethod(id?:string,data?:any[])
   {
       var index= data?.findIndex((x)=>{return x.id===id});  
-       data?.splice(Number(index),1);    
+       if(index !=undefined&&index !=-1&&data !=undefined)
+       {
+         
+         
+       data.splice(Number(index),1); 
+       this.setformmal(false,data);
+       
+      }
   }
   setcurrent(type:string,cus:Sample)
   {

@@ -72,7 +72,7 @@ public class AuthController {
 		return null; //JSONObject.parseObject(JSONObject.toJSONString(service.getone(Params)));
     }
 	
-	@RequestMapping(value ="users/20/1",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@RequestMapping(value ="users/{Params.size}/{Params.index}",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public String GetUsers (
 			@RequestBody String Params
@@ -90,12 +90,23 @@ public class AuthController {
 			 if(jo !=null)
 				 OrgId=jo.getString("value");
 		 }
-		 JSONArray orgs=authService.getalluser(OrgId);  
+		 JSONArray orgs=authService.getalluser(OrgId);
+		 JSONArray retorgs=new JSONArray();
+		 int size=paramobj.getIntValue("size"),
+		 index=paramobj.getIntValue("index");
+		 for(int i=(index-1)*size;i<size*index;i++)
+		 {
+			 if(i>orgs.size()-1)
+			 {
+				 break;
+			 }
+			 retorgs.add(orgs.get(i));
+		 }
 		if(!JwtUtil.isExpire(headers))
 		{
 			throw new Exception("认证已经过期，请登录");
 		}
-	    return   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", orgs.toJSONString(),orgs.size(),Params);
+	    return   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", retorgs.toJSONString(),orgs.size(),Params);
    }
 	@RequestMapping(value ="users/{Params}",method = {RequestMethod.GET,RequestMethod.DELETE},produces = "application/json;charset=UTF-8")
     @ResponseBody

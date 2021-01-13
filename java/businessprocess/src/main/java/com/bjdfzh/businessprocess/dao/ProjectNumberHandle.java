@@ -107,7 +107,9 @@ public class ProjectNumberHandle {
 	{
 		JSONObject jb=new JSONObject();
 	    jb.put("contact", contactService.getcontactbyid(contactid))	;
-		jb.put("projects", contactProjectService.getcontactprojects(contactid));
+	   List<ContactProject> projects= contactProjectService.getcontactprojects(contactid);
+	   projects.sort((c1,c2)->c1.getCreatedate().compareTo(c2.getCreatedate()));
+		jb.put("projects", projects);
 		return jb;
 	}
 	String getHandleString(int number,int length)

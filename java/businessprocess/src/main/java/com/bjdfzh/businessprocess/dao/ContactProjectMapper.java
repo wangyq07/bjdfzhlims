@@ -17,4 +17,6 @@ List<ContactProject>	getcontactprojects(String contactid);
  void deletecontacttestbyproject(String id);
  void deletesamplebyproject(String id);
  void deletecustomer(String id);
+ void deletesamplebyprojectinfos(String ids);
+ void addcontactprojectinfos(List<ContactProject> contactinfos);
 }

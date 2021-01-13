@@ -9,6 +9,7 @@ import * as moment from   'moment'
 import { FlowService } from 'src/main/flow/flowprocess/flowhandle.service';
 import { RoleDiscountService } from 'src/main/system/rolediscount/rolediscount.service';
 import { BusinessProject, ContactProjectService } from '../businessproject/businessproject.service';
+import { AuditResultService } from 'src/services/transform.data.service';
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
@@ -19,6 +20,7 @@ export class ContactComponent extends PageBase implements OnInit {
               ,private contactservice:ContactService
               ,private msgBox: XMessageBoxService
                ,private msg:XMessageService
+               ,private globalaudit:AuditResultService
                ,private flowservice:FlowService
                ,private projectservice:ContactProjectService
                ,private rolediscountservice:RoleDiscountService
@@ -145,6 +147,7 @@ export class ContactComponent extends PageBase implements OnInit {
                                           {
                                              this.msg.success("提交成功");
                                              this.currentContact.contactstatus=1;
+                                             this.globalaudit.sendAuditResult("contact");
                                           }
                                         )
                                       }

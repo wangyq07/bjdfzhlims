@@ -142,10 +142,12 @@ import * as moment from 'moment';
                       wrapherproperties:y.wrapherproperties+','+(y.status !=undefined?y.status.label:''),
                       judge:judgement,
                       deleverdate:moment(y.deleverdate).format('YYYY.MM.DD'),
+                      dispatchtime:(x.dispatchtime!=undefined?new Date(moment(x.dispatchtime).format('YYYY-MM-DD')):undefined),
                       testproject:z.testproject,
                       standardname:z.standardname,
                       roleid:z.roleid,
                       userid:z.userid,
+                      samplenumber:y.samplenumber,
                       testprojectid:z.testprojectid,
                       standardid:z.standardid,
                       executestandard:y.executestandard,
@@ -279,6 +281,10 @@ import * as moment from 'moment';
    {
     x.expireddate=new Date(moment( x.sampledate).format('YYYY-MM-DD'));
    }
+   if(x.avilabletime !=null&&x.avilabletime !=undefined)
+   {
+    x.avilabletime=new Date(moment( x.avilabletime).format('YYYY-MM-DD'));
+   }
  }
 }
 
@@ -323,4 +329,6 @@ export interface AdditionalData
   beforeuserid?:string;
   beforeroleid?:string;
   beforequalificationid?:number;
+  dispatchtime?:string|Date;
+  samplenumber?:string;
 }

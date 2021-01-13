@@ -57,7 +57,7 @@ export class ContactauditComponent extends PageBase implements OnInit,AfterViewI
               this.cleardata();
               this.msg.success("提交成功");
               this.submitdisable=true;
-              //this.globalaudit.sendAuditResult("成功");
+               this.globalaudit.sendAuditResult("成功");
               
             }
           );

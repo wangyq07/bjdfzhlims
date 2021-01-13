@@ -218,19 +218,9 @@ samplesource: string='';
           (y)=>
           { 
             //拷贝特定字段，不能使用copy
-            y.samplequality=this.samplelist.activatedRow?.samplequality;
-            y.executegrade=this.samplelist.activatedRow?.executegrade;
-            y.specialcondition=this.samplelist.activatedRow?.specialcondition;  
-            y.wrapherproperties=this.samplelist.activatedRow?.wrapherproperties
-            y.manudate=this.samplelist.activatedRow?.manudate;
-            y.deleverdate= this.samplelist.activatedRow?.deleverdate;
-            y.samplespec=this.samplelist.activatedRow?.samplespec
-            y.brand=this.samplelist.activatedRow?.brand;
-            y.executestandard=this.samplelist.activatedRow?.executestandard;
-            y.status=this.samplelist.activatedRow?.status;
-            //y.process=this.samplelist.activatedRow?.process;
-            ProjectUtil.setsamplelabel(y,this.currentcontact,this.process);
-             
+            y.avilabletime=this.samplelist.activatedRow?.avilabletime;
+            y.expireddate=this.samplelist.activatedRow?.expireddate;
+            y.leftsamplequality=this.samplelist.activatedRow?.leftsamplequality;  
           }
         );
          
@@ -259,10 +249,10 @@ samplesource: string='';
    this.save(true);
  }
  columns: XTableColumn[] = [  
-   {id:'actions',width:80,sort:true},
-   { id: 'sampledatelabel', label: '样品接收日期', width: 150, sort: true },
-   { id: 'samplename', label: '样品名称', width: 150, sort: true }, 
-   { id: 'samplenumber', label: '样品编号', width: 150, sort: true }, 
+   {id:'actions',width:80,left:0, sort:true},
+   { id: 'sampledatelabel', left:80, label: '样品接收日期', width: 150, sort: true },
+   { id: 'samplename', left:230, label: '样品名称', width: 150, sort: true }, 
+   { id: 'samplenumber',left:380,  label: '样品编号', width: 150, sort: true }, 
    { id: 'brand', label: '商标', width: 150, sort: true }, 
    { id: 'samplespec', label: '净含量/规格', width: 150, sort: true } ,
    {id:'manuuser',label:'生产单位',width:150},

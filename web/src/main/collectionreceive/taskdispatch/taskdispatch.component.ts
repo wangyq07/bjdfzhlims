@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {  XMessageService, XTreeComponent, XTreeNode } from '@ng-nest/ui';
 import { IndexService } from 'src/layout/index/index.service';
-import { BusinessProject } from 'src/main/businessprocess/evirmentheath/businessproject/businessproject.service';
+import { BusinessProject, ContactProjectService } from 'src/main/businessprocess/evirmentheath/businessproject/businessproject.service';
 import { FlowService } from 'src/main/flow/flowprocess/flowhandle.service';
 import { Qualification } from 'src/main/qualification/qualification.service';
 import { ContactService, ContactTestProject } from 'src/services/ContactService';
@@ -25,6 +25,7 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
     ,private service:DispatchRoleTaskService
     ,private sampleservice:SampleService
     ,private contactservice:ContactService
+    ,private projectservice:ContactProjectService
     ,private actroute:ActivatedRoute 
     ,private router: Router
     ,private globalaudit:AuditResultService
@@ -37,9 +38,17 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
         actroute.params.subscribe(
         (x:any)=>
           { 
+            if(x.complete !=undefined)
+            {
+              this.disabled=true;
+              this.getprojectdata(x.contactid);
+            }
+            else
+            {
             this.contactid=x.contactid;
             this.taskid=x.taskid;
             this.getData();
+            }
              
           }
         );
@@ -47,14 +56,40 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
   }
   datechange(item:any,ev:any)
   {
-    console.log(item);
-    console.log(ev);
+    var project=  this.projects.find((x)=>x.id==item.projectid);
+    if(project !=null)
+    {
+      project.dispatchtime=ev;
+    }
   }
   submit()
   { 
+    this.projectservice.addcontactprojectinfos(this.projects)
+    .subscribe(
+      (x)=>
+      {
+        this.flowservice.excutetask(
+          this.taskid,
+          { 
+            userid:this.indexService.auth.user.id+''
+            ,username:this.indexService.auth.user.name 
+            ,contactid:this.currentcontact.id 
+          }
+        ).subscribe(
+          (z)=>
+          {
+            
+            this.msg.success("提交成功！");
+            this.disabled=true;
+            
+          }
+        ); 
+      }
+    )
     
   }
   
+  disabled=false;
    taskid="";
   ngOnInit(): void {
   }
@@ -204,19 +239,13 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
           break;
       }
     }
-
-  getData()
-  {
-    this.taskTreeData=[];
-    this.treeData=[];
-   this.service.getroletaskdispatchs(this.contactid).subscribe(
-     (p)=>
-     {
-      
-    this.contactservice.getcontactproject(this.contactid+'').subscribe(
+   getprojectdata(id:string)
+   {
+    this.contactservice.getcontactproject(id).subscribe(
       (x)=>
       {  
         this.currentcontact=x.contact;
+        console.log(x);
        this.projects=x.projects as any[];
        if(this.currentcontact !=null)
          { 
@@ -257,13 +286,24 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
                   this.roles=y;
                 }
               );
+              console.log(this.projects);
                this.data=ProjectUtil.getMareData(this.projects,this.ispanding);
-               
+               console.log(this.data);
       }
     }
      
   } 
     );
+   }
+  getData()
+  {
+    this.taskTreeData=[];
+    this.treeData=[];
+   this.service.getroletaskdispatchs(this.contactid).subscribe(
+     (p)=>
+     {
+      
+       this.getprojectdata(this.contactid);
   }
     );
     

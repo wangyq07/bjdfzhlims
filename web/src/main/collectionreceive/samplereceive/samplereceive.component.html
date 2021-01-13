@@ -1,7 +1,7 @@
  
     <x-row style="height: 15px;"></x-row>
  <x-row>
-   <x-col span="2"><x-button icon="ado-check" type="primary" plain (click)="submit()">提交</x-button></x-col>
+   <x-col span="2"><x-button icon="ado-check" [disabled]="disabled" type="primary" plain (click)="submit()">提交</x-button></x-col>
     <x-col span=4> <x-button icon="ado-save" type="primary" plain (click)="save(true)" >样品登记表/样品处置记录</x-button></x-col>
     <x-col span=3><x-input-number [(ngModel)]="pagesize" label="每页行数" direction="row"></x-input-number></x-col>
  </x-row>
@@ -57,7 +57,7 @@
 <app-registerfoodsample #printtable id='printtable' style="height:100%;width:100%"></app-registerfoodsample>
 <ng-template #editAvilabletimeTpl let-column="$column" let-row="$row">
     <div class="au-table-actions">  
-        <x-input [disabled]="disabled" [(ngModel)]="row.avilabletime" ></x-input>  
+        <x-date-picker [disabled]="disabled" [(ngModel)]="row.avilabletime" ></x-date-picker>  
     </div> 
   </ng-template>
   <ng-template #leftsampleTpl let-column="$column" let-row="$row">

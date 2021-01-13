@@ -45,13 +45,10 @@
     <parallelGateway id="parallelgateway1" name="Parallel Gateway"></parallelGateway>
     <sequenceFlow id="flow_task_dispatch" sourceRef="task_dispatch" targetRef="parallelgateway1"></sequenceFlow>
     <userTask id="task_chemical" name="化分组"></userTask>
-    <userTask id="task_food" name="食品"></userTask>
     <userTask id="task_microbiology" name="微生物"></userTask>
     <sequenceFlow id="flow_dispath_chem" sourceRef="parallelgateway1" targetRef="task_chemical"></sequenceFlow>
-    <sequenceFlow id="flow_food" sourceRef="parallelgateway1" targetRef="task_food"></sequenceFlow>
     <sequenceFlow id="flow_microbiology" sourceRef="parallelgateway1" targetRef="task_microbiology"></sequenceFlow>
     <parallelGateway id="parallelgateway2" name="Parallel Gateway"></parallelGateway>
-    <sequenceFlow id="flow44" sourceRef="task_food" targetRef="parallelgateway2"></sequenceFlow>
     <sequenceFlow id="flow45" sourceRef="task_microbiology" targetRef="parallelgateway2"></sequenceFlow>
     <sequenceFlow id="flow46" sourceRef="task_chemical" targetRef="parallelgateway2"></sequenceFlow>
     <userTask id="task_generalreport" name="报告生成"></userTask>
@@ -66,6 +63,7 @@
     </sequenceFlow>
     <sequenceFlow id="flow51" sourceRef="registerSample" targetRef="task_dispatch"></sequenceFlow>
     <sequenceFlow id="flow52" sourceRef="task_collection" targetRef="registerSample"></sequenceFlow>
+    <businessRuleTask id="businessruletask1" name="Business rule task"></businessRuleTask>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_LimsTestProcess">
     <bpmndi:BPMNPlane bpmnElement="LimsTestProcess" id="BPMNPlane_LimsTestProcess">
@@ -111,11 +109,8 @@
       <bpmndi:BPMNShape bpmnElement="task_chemical" id="BPMNShape_task_chemical">
         <omgdc:Bounds height="55.0" width="105.0" x="1650.0" y="51.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="task_food" id="BPMNShape_task_food">
-        <omgdc:Bounds height="55.0" width="105.0" x="1660.0" y="270.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="task_microbiology" id="BPMNShape_task_microbiology">
-        <omgdc:Bounds height="55.0" width="105.0" x="1670.0" y="147.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="1672.0" y="155.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="parallelgateway2" id="BPMNShape_parallelgateway2">
         <omgdc:Bounds height="40.0" width="40.0" x="1880.0" y="177.0"></omgdc:Bounds>
@@ -131,6 +126,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="registerSample" id="BPMNShape_registerSample">
         <omgdc:Bounds height="55.0" width="105.0" x="1228.0" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="businessruletask1" id="BPMNShape_businessruletask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="1620.0" y="290.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow_start" id="BPMNEdge_flow_start">
         <omgdi:waypoint x="36.0" y="177.0"></omgdi:waypoint>
@@ -209,20 +207,12 @@
         <omgdi:waypoint x="1567.0" y="154.0"></omgdi:waypoint>
         <omgdi:waypoint x="1702.0" y="106.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow_food" id="BPMNEdge_flow_food">
-        <omgdi:waypoint x="1567.0" y="194.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1712.0" y="270.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow_microbiology" id="BPMNEdge_flow_microbiology">
         <omgdi:waypoint x="1587.0" y="174.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1670.0" y="174.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow44" id="BPMNEdge_flow44">
-        <omgdi:waypoint x="1712.0" y="270.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1900.0" y="217.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1672.0" y="182.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow45" id="BPMNEdge_flow45">
-        <omgdi:waypoint x="1775.0" y="174.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1777.0" y="182.0"></omgdi:waypoint>
         <omgdi:waypoint x="1880.0" y="197.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow46" id="BPMNEdge_flow46">

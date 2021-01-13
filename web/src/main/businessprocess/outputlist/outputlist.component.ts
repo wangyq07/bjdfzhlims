@@ -23,6 +23,7 @@ payuser="";
 delegateadd="";
    setprojects(pjs:any[],contact:any) 
    {
+    this.delegatename="";
      this.projects=[];
     var users=contact.contactcustomers.filter((x:any)=>x.customertype==1);
     if(users.length>0)

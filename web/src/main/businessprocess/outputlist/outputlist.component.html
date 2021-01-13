@@ -1,69 +1,72 @@
-  <table style="height: 100%;width:100%;display:inline-block"   >
-      <tr style="height:305mm;width: 210mm;display:inline-block ">
-        <td colspan="4">
-            <table style="height:305mm;width:210mm;margin:0%"  >
-                <caption  style=" height:2%;font-size: 20;font-weight: bold;font-family:微软雅黑;width:210mm">
-                    北京东方纵横产品检测有限公司
-                </caption>
-                <tbody style="height:88%"> 
-                    <tr style="height:2%">
-                       <td colspan=1 style="font-size: 20;font-weight: bold;font-family:Arial; width:40%">
+ 
+      <span style="height:297mm;width: 210mm; " > 
+            <table style="height:297mm;width:210mm;"   >
+                <tbody > 
+                    <tr style="height:5mm;width:  210mm;">
+                    <td colspan="4" style="text-align: center; font-size: 20pt;font-weight: bold;font-family:微软雅黑;width:210mm;height:10mm;">
+                        北京东方纵横产品检测有限公司
+                    </td>
+                </tr>
+                    <tr style="height:5mm;width:  210mm;">
+                       <td colspan=1 style="font-size: 12pt;font-weight: bold;font-family:Arial; width:80mm">
                         EAAC-GL-07-02(v2.0)</td>
-                    <td colspan=3 style="font-size: 20;font-weight: bold;font-family:微软雅黑;">
+                    <td colspan=3 style="font-size: 12pt;font-weight: bold;font-family:微软雅黑;">
                         委 托 检 验 协 议 书
                     </td>
                     </tr>
-                    <tr style="height:98%">
+                    <tr style="height:240mm;width:  210mm;"  >
+                    <td colspan="4" valign="top">
+                    <table style="width:210mm"  border="1" cellspacing="0">
+                        <tr  style="font-size: 9pt;height:20px;width:  210mm;">
                         <td colspan="4">
-                    <table style="height: 100%;width:100%" border="1" cellspacing="0">
-                        <tr>
-                        <td colspan="4" style="font-size: 9pt;height:20px">
-                            <span style="width:20%;display:inline-block">委托单位名称:</span>
-                            <span style="width:80%;display:inline-block">{{delegatename}}</span>
+                             委托单位名称: 
+                            {{delegatename}} 
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="4" style="font-size: 9pt;height:20px">
-                            <span style="width:20%;display:inline-block">委托单位地址:</span>
-                            <span style="width:80%;display:inline-block"> {{delegateadd}}</span>
+                    <tr style="font-size: 9pt;height:5mm">
+                        <td colspan="4" >
+                            <span style="width:20% ">委托单位地址:</span>
+                            <span style="width:80% "> {{delegateadd}}</span>
                         </td>
                     </tr>
-                    <tr style="height:20px">
-                        <td colspan="4" style="font-size: 9pt;height:20px">
-                            <span style="width:20%;display:inline-block">付款单位名称:</span>
-                            <span style="width:80%;display:inline-block">{{payuser}}</span>
+                    <tr style="height:5mm">
+                        <td colspan="4" style="font-size: 9pt">
+                            <span style="width:20% ">付款单位名称:</span>
+                            <span style="width:80% ">{{payuser}}</span>
                         </td>
                     </tr>
-                    <tr style="height: 20px;">
+                    <tr style="height: 5mm;">
                         <td colspan="4">
-                        <table style="width: 100%;height:100%">
+                        <table style="width: 210mm;height:5mm;">
                             <tr style="font-size: 9pt;">
-                                <td width=50%>联系人: {{delegatecontacter}}</td>
-                                <td width=50%>电话(Tel):{{delegatephone}}</td> 
+                                <td style="width:100mm" >联系人: {{delegatecontacter}}</td>
+                                <td style="width:110mm">电话(Tel):{{delegatephone}}</td> 
                                 </tr>
                         </table>
                         </td>
                             </tr>
-                            <tr height=20px ><td colspan="4" style="font-size: 9pt;"> 
-                                    <span style="font-size: 9pt;width: 20%;display:inline-block">受检单位名称:</span>
-                                    <span style="font-size: 9pt;width: 80%;display:inline-block"> {{inspectuser}}    
+                            <tr style="height:5mm;"><td colspan="4" style="font-size: 9pt;"> 
+                                    <span style="font-size: 9pt;width: 20% ">受检单位名称:</span>
+                                    <span style="font-size: 9pt;width: 80% "> {{inspectuser}}    
                                   </span> 
                           </td></tr>
-                          <tr  height=20px><td colspan="4" style="font-size: 9pt;"> 
-                                  <span style="font-size: 9pt;width: 20%;display:inline-block">生产/受检单位地址:</span>
-                                  <span style="font-size: 9pt;width: 80%;display:inline-block">  {{inspectadd}}</span>
+                          <tr  style="height:5mm;"><td colspan="4" style="font-size: 9pt;"> 
+                                  <span style="font-size: 9pt;width: 20% ">生产/受检单位地址:</span>
+                                  <span style="font-size: 9pt;width: 80%  ">  {{inspectadd}}</span>
                           </td></tr> 
-                    <tr  style="font-size:9pt;height:40px"> 
-                        <td style="text-align: center;">项目号</td><td style="text-align: center;">样品名称</td><td style="text-align: center;">项目号</td><td style="text-align: center;">样品名称</td>
+                    <tr  style="font-size:9pt;height:5mm;"> 
+                        <td style="text-align: center;width:50mm">项目号</td>
+                        <td style="text-align: center;width:40mm">样品名称</td>
+                        <td style="text-align: center;width:50mm">项目号</td>
+                        <td style="text-align: center;width:70mm">样品名称</td>
                       </tr> 
-                      <tr *ngFor="let project of projects" style="font-size:9pt;height:20px">
-                        <td style="text-align: center;">{{project.projectname0}}</td>
-                        <td style="text-align: center;">{{project.samplename0}}</td>
-                        <td style="text-align: center;">{{project.projectname1}}</td>
-                        <td style="text-align: center;">{{project.samplename1}}</td>
+                      <tr *ngFor="let project of projects" style="font-size:9pt;height:5mm;">
+                        <td style="text-align: center;width:50mm">{{project.projectname0}}</td>
+                        <td style="text-align: center;width:40mm">{{project.samplename0}}</td>
+                        <td style="text-align: center;width:50mm">{{project.projectname1}}</td>
+                        <td style="text-align: center;width:70mm">{{project.samplename1}}</td>
                       </tr> 
-                      <tr style="height: 30px;"> 
-                         
+                      <tr style="height:6mm;">  
                         <td style="width:10%">样品来源 </td>
                         <td style="width:45%">
                             <span *ngFor="let samplesource of sampleSource">
@@ -76,120 +79,124 @@
                          见附页 </td>
                         </tr>
                     
-                    <tr style="height:20px">
+                    <tr style="height:5mm;">
                       <td colspan="1">是否分包</td>
                       <td colspan="3">
                       <span *ngFor="let dataextern of dataexterns">
                           <input type="checkbox" [checked]="dataextern.checked">{{dataextern.label}}<br>
                       </span> </td>
                      </tr>
-                     <tr style="height:30px">
+                     <tr style="height:5mm;">
                          <td colspan="1">资质盖章</td>
                          <td colspan="3">
                           <span *ngFor="let seal of seals">
                               <input type="checkbox" [checked]="seal.checked">{{seal.label}}
                           </span> </td>
                      </tr>
-                     <tr style="height:30px">
+                     <tr style="height:5mm;">
                       <td colspan="1">样品处理方式</td>
                       <td colspan="3">
                        <span *ngFor="let process of processes">
                            <input type="checkbox" [checked]="process.checked">{{process.label}}
                        </span> </td>
                       </tr>
-                       <tr style="font-size:9pt;height:60px">
-                        <td style="text-align: center;width:15%" >服务类型</td>
-                        <td colspan=3 width=88% id="fuwuleixing">
+                       <tr style="font-size:9pt;height:20mm">
+                        <td style="text-align: center;width:50mm" >服务类型</td>
+                        <td colspan=3  >
                           <span *ngFor="let service of services">
                               <input type="checkbox" [checked]="service.checked">{{service.label}}<br>
                           </span> 
                         </td>
                        </tr> 
-                       <tr style="font-size:9pt;height:20px">
-                        <td style="text-align: center;width:15%" >请选择报告形式</td>
-                        <td colspan="1"  id="baogaoyoujidizhi" > 
+                       <tr style="font-size:9pt;height:5mm">
+                        <td style="text-align: center;width:50mm" >请选择报告形式</td>
+                        <td> 
                           <span *ngFor="let reportform of reportforms">
                               <input type="checkbox" [checked]="reportform.checked">{{reportform.label}}
                           </span>
                         </td>
-                        <td style="text-align: center;width:12%" >需要报告份数</td>
-                        <td colspan="1"  id="baogaoyoujidizhi" > 
+                        <td style="text-align: center;width:50mm" >需要报告份数</td>
+                        <td> 
                           一式{{reportcount}}份（2份以上每份报告加收 50  元）
                         </td>
                        </tr>
-                       <tr style="font-size:9pt;height:20px">
-                        <td style="text-align: center;width:15%"  >检测费</td>
-                        <td width=38% id="jiancefei"> {{testfee}}</td>
-                        <td width=12% style="text-align: center;">加急费</td>
-                        <td width=38% id="jiajifei">
+                       <tr style="font-size:9pt;height:5mm">
+                        <td style="text-align: center;width:50mm"  >检测费</td>
+                        <td   > {{testfee}}</td>
+                        <td  style="text-align: center;">加急费</td>
+                        <td   >
                            {{urgencyfee}}
                         </td>
                        </tr>
-                       <tr style="font-size:9pt;font-weight: bolder;height:40px">
-                        <td style="text-align: center;" width=8%>声明</td>
-                        <td colspan="3" width=88%> 
+                       <tr style="font-size:9pt;font-weight: bolder;height:6mm">
+                        <td style="text-align: center;" >声明</td>
+                        <td colspan="3" > 
                         对样品及相关资料的真实性负责，并同意背面双方约定条款，委托单正面，背面及相应附件的内容均属委托单位组成部分，委托单位签字表明已看过并理解委托单背面双方约定条款，双方同意履行。
                         </td>
                        </tr>
-                       <tr style="font-size:9pt;height: 40px;">
-                        <td colspan="1" style="text-align: center;" width=12%>备注</td>
-                        <td colspan="3" width=88%></td> 
+                       <tr style="font-size:9pt;height: 6mm;">
+                        <td colspan="1" style="text-align: center;" >备注</td>
+                        <td colspan="3"  ></td> 
                        </tr>
-                       <tr style="font-size:9pt;height:30mm">
-                        <td  colspan="2"  width=50% style="vertical-align: text-top;">
-                            <br>委托单位盖章:<br><br><br>代理人签字:<br>日期:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日
+                       <tr style="font-size:9pt;height:20mm;">
+                        <td  valign="top" colspan="2"  style="vertical-align: text-top;width:50%">
+                           <br>委托单位盖章:<br><br>代理人签字:<br>日期:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日
                         </td>
-                        <td width=50% colspan="2"> 
-                            <br>检测单位:<br> 北京东方纵横产品检测有限公司  检测单位盖章<br><br>业务人员签字:<br>日期:日期:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日
+                        <td valign="top" colspan="2" style="width:50%"> 
+                            <br>检测单位:<br> 北京东方纵横产品检测有限公司  检测单位盖章<br>业务人员签字:<br>日期:日期:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日
                         </td>
                        </tr> 
+                       
                     </table>
                 </td>
                     </tr>
-                </tbody>
-                <tfoot style="height:5%">
-                    <tr>
+                    <tr style="height:20mm;width:210mm">
                         <td colspan="4">
-                            <table style="width: 100%;height:100%">
-                                <tr>
+                            <table style="width: 210mm;height:20mm">
+                                <tr style="height:5mm">
                                     <td colspan="4" style="font-size: 6pt; width:100%">
                                     单位名称:北京东方纵横产品检测有限公司
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr style="height:5mm">
                                     <td colspan="4" style="font-size: 6pt;"> 
                                         通讯地址:北京市通州区马驹桥镇联东U谷工业园西四区121栋 
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr style="height:5mm">
                                     <td colspan="4"  style="font-size: 6pt;">
-                                        <span style="width:60%;display:inline-block"> 开 户 行:中国农业银行股份有限公司北京英家坟支行 </span>
-                                            <span style="width:40%;display:inline-block">账号:11042901040011602</span>
+                                        <span style="width:60%;"> 开 户 行:中国农业银行股份有限公司北京英家坟支行 </span>
+                                            <span style="width:40%;">账号:11042901040011602</span>
                                      </td>
                                 </tr> 
-                                <tr>
+                                <tr style="height:5mm">
                                     <td colspan="4" style="font-size: 6pt;">
-                                        <span style="width:60%;display:inline-block">
+                                        <span style="width:60%;">
                                         邮政编码:101102
                                      </span>
-                                     <span style="width:40%;display:inline-block">
+                                     <span style="width:40%;">
                                     联系电话:(010)56495878/56495858 
                                 </span>
                                     </td>
                                 </tr>
                             </table>
                         </td>
-                    </tr> 
-                </tfoot>
+                    </tr>
+                </tbody> 
+                
             </table>
-        </td>
-      </tr>
-      <tr style="height:297mm;width: 210mm;display:inline-block">
-       <td colspan=4>
-        <table style="height:297mm;width: 210mm;">
-            <caption style="height:5%"> <h2>委托协议服务条款</h2></caption>
-            <tbody style="height:90%"> 
-     <tr ><td valign="top">
+         </span>
+         <span style="height:290mm;width: 210mm;">
+        <table style="height:290mm;width: 210mm;"  >
+            
+            <tbody  >
+                <tr style="height:6mm;font-size: 16pt;text-align: center;">
+                    <td >
+                         <h2>委托协议服务条款</h2> 
+                    </td>
+                </tr> 
+     <tr style="height:240mm">
+        <td valign="top">
          <h4>
         本协议委托单位“代理人”和检测单位“业务人员”签字或盖章后协议生效；<br>
         一、委托方责任与义务<br>
@@ -213,43 +220,44 @@
         本公司的检测周期“以收到样品、委托协议且均完整无误”起开始计算检测周期，一般为7个工作日，特殊项目周期另有约定，加急项目需在协议书上说明。当天12：00之前受理的项目从当天起计算检测周期，12：00之后自次日起计算检测周期。本公司如对样品有疑问或无法按期完成检测工作时，会及时通知委托方进行协商<br></h4>
     </td>
 </tr>
+<tr style="height:20mm">
+    <td colspan="4">
+        <table style="width: 100%;height:100%">
+            <tr style="height:5mm">
+                <td colspan="4" style="font-size: 6pt; width:100%">
+                单位名称:北京东方纵横产品检测有限公司
+                </td>
+            </tr>
+            <tr style="height:5mm">
+                <td colspan="4" style="font-size: 6pt;"> 
+                    通讯地址:北京市通州区马驹桥镇联东U谷工业园西四区121栋 
+                </td>
+            </tr>
+            <tr style="height:5mm">
+                <td colspan="4"  style="font-size: 6pt;">
+                    <span style="width:60%;"> 开 户 行:中国农业银行股份有限公司北京英家坟支行 </span>
+                        <span style="width:40%;">账号:11042901040011602</span>
+                 </td>
+            </tr> 
+            <tr style="height:5mm">
+                <td colspan="4" style="font-size: 6pt;">
+                    <span style="width:60%;">
+                    邮政编码:101102
+                 </span>
+                 <span style="width:40%;">
+                联系电话:(010)56495878/56495858 
+            </span>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr> 
             </tbody>
-            <tfoot style="height:5%">
-                <tr>
-                    <td colspan="4">
-                        <table style="width: 100%;height:100%">
-                            <tr>
-                                <td colspan="4" style="font-size: 6pt; width:100%">
-                                单位名称:北京东方纵横产品检测有限公司
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4" style="font-size: 6pt;"> 
-                                    通讯地址:北京市通州区马驹桥镇联东U谷工业园西四区121栋 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4"  style="font-size: 6pt;">
-                                    <span style="width:60%;display:inline-block"> 开 户 行:中国农业银行股份有限公司北京英家坟支行 </span>
-                                        <span style="width:40%;display:inline-block">账号:11042901040011602</span>
-                                 </td>
-                            </tr>
-                            
-                            <tr>
-                                <td colspan="4" style="font-size: 6pt;">
-                                    <span style="width:60%;display:inline-block">
-                                    邮政编码:101102
-                                 </span>
-                                 <span style="width:40%;display:inline-block">
-                                联系电话:(010)56495878/56495858 
-                            </span>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr> 
-            </tfoot>
+             
+                
+            
   </table>
+</span>
   
             
  
