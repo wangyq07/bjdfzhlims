@@ -17,4 +17,5 @@ public interface AuthUserMapper {
 	 void deleteUserOrg(String leftid);
 	 void deleteUserRole(String leftid);
 	 void deleteUser(String id);
+	 List<AuthUser> getauditcustomuservice();
 	}

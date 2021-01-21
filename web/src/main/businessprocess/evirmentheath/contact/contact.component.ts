@@ -10,6 +10,7 @@ import { FlowService } from 'src/main/flow/flowprocess/flowhandle.service';
 import { RoleDiscountService } from 'src/main/system/rolediscount/rolediscount.service';
 import { BusinessProject, ContactProjectService } from '../businessproject/businessproject.service';
 import { AuditResultService } from 'src/services/transform.data.service';
+import { trim } from 'lodash';
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
@@ -111,59 +112,76 @@ export class ContactComponent extends PageBase implements OnInit {
       break;
       
         case 'submit':
-     var delegatecustomer=  item.contactcustomers.find((x:any)=>x.customertype==1) ;
-     if(delegatecustomer !=undefined&&delegatecustomer.area !=undefined)
-     {
-       this.rolediscountservice.getrolediscountvaluebyid(delegatecustomer.area
-                                   ,this.indexService.auth.user.roles)
-                                .subscribe(
-                                  (x)=>
-                                  { 
-                                    this.flowservice.startflow(
-                                      { 
-                                        customername:delegatecustomer.customername
-                                       ,userid:this.indexService.auth.user.id+''
-                                       ,username:this.indexService.auth.user.name
-                                       ,contactid:item.id
-                                       ,instanceKey:'LimsTestProcess'
-                                       }
-                                    ).subscribe(
-                                      (y)=>
-                                      {
-                                        this.projectservice.getprojects(item.id).subscribe(
-                                          (q)=>{
-                                        this.flowservice.excutetask(
-                                         y.TaskId,
-                                         {
-                                          userid:this.indexService.auth.user.id+''
-                                          ,username:this.indexService.auth.user.name 
-                                          ,contactid:item.id 
-                                          ,limitdiscount:x.discount
-                                          ,ugencytype:item.service.id
-                                         }
-                                        ).subscribe
-                                        (
-                                          (z)=>
-                                          {
-                                             this.msg.success("提交成功");
-                                             this.currentContact.contactstatus=1;
-                                             this.globalaudit.sendAuditResult("contact");
-                                          }
-                                        )
-                                      }
-                                    );
-                                      }
-                                      
-                                    )
-                                  }
-                                    
-                                );
-     }
-        
+          this.currentContact=item;
+            this.visible=true;  
       break;
-        break;
+        
     }
   } 
+  visible=false;
+  SelectUser(item:any)
+  {
+    this.visible =false;
+     
+    if(item !=null)
+    {
+      
+     var delegatecustomer=   this.currentContact.contactcustomers?.find((x:any)=>x.customertype==1) ;
+     if(delegatecustomer !=undefined&&delegatecustomer.area !=undefined)
+     {
+       
+    this.rolediscountservice.getrolediscountvaluebyid(delegatecustomer.area
+      ,this.indexService.auth.user.roles)
+   .subscribe(
+     (x)=>
+     { 
+       this.flowservice.startflow(
+         { 
+           customername:delegatecustomer?.customername
+          ,userid:this.indexService.auth.user.id+''
+          ,username:this.indexService.auth.user.name
+          ,contactid:this.currentContact.id+''
+          ,instanceKey:'LimsTestProcess'
+          ,assignee:`{type:2,object:{id:'${this.indexService.auth.user.id}',name:'${this.indexService.auth.user.name }'}}` 
+          }
+       ).subscribe(
+         (y)=>
+         {
+           this.projectservice.getprojects(this.currentContact.id+'').subscribe(
+             (q)=>{
+               
+           this.flowservice.excutetask(
+            y.TaskId,
+            {
+             userid:this.indexService.auth.user.id+''
+             ,username:this.indexService.auth.user.name 
+             ,contactid:this.currentContact.id+''
+             ,limitdiscount:x.discount
+             ,ugencytype:this.currentContact.service?.id
+             ,isextern:this.currentContact.isextern
+             ,assignee:`{type:2,object:{id:'${trim(item.id)}',name:'${trim(item.name)}'}}` 
+            }
+           ).subscribe
+           (
+             (z)=>
+             {
+                this.msg.success("提交成功");
+                this.currentContact.contactstatus=1;
+                this.globalaudit.sendAuditResult("contact");
+             }
+           )
+         }
+       );
+         }
+         
+       )
+     }
+       
+   );
+    } 
+  }
+
+  }
   currentContact:Contact;
   contactindex=1;
   contactsize=20; 
@@ -179,7 +197,6 @@ export class ContactComponent extends PageBase implements OnInit {
        (x)=>
        { 
          [this.contactdata,this.contacttotal]=[x.list as Contact[],Number(x.total)];  
-         console.log(x.list);
          if(this.contactdata.length>0)
           {
                if(init)
@@ -280,6 +297,7 @@ export class ContactComponent extends PageBase implements OnInit {
   contactIndexChange(index: number)
   {
      this.contactindex=index;
+     this.getcontactdata();
   }  
   submitdisable(row:Contact)
    { 

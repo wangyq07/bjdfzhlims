@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.activiti.engine.TaskService;
+import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -68,6 +70,8 @@ public class FlowNodeController {
 		}
 		return null; 
    }
+	
+	
 	@RequestMapping(value ="contactprojectcustomer/getcontactbyproject",method = {RequestMethod.POST,RequestMethod.PUT},produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public ProjectContactCustomer getContactCustmerByProject(
@@ -80,6 +84,25 @@ public class FlowNodeController {
 			throw new Exception("认证已经过期，请登录");
 		}
 		return pService.getitembyid(Params.getString("contactid"));
+	}
+	@RequestMapping(value ="flownodes/bymaxid",method = {RequestMethod.POST,RequestMethod.PUT},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public JSONObject addFlowNodesbyMaxid (
+			@RequestBody JSONObject Params
+		    ,@RequestHeader(name="Authorization") String headers
+		    ,HttpServletRequest request
+			) throws Exception {  
+				  
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		}
+		String maxflowid=Params.getString("maxid");
+		String currentflowid=Params.getString("currentid");
+		nodeService.addflownodebymaxnode(maxflowid, currentflowid);
+		nodeService.addflowrolebymaxnode(maxflowid, currentflowid);
+		nodeService.addflowrolespecialbymaxnode(maxflowid, currentflowid);
+		return Params;
 	}
 	@RequestMapping(value ="flownodes",method = {RequestMethod.POST,RequestMethod.PUT},produces = "application/json;charset=UTF-8")
 	@ResponseBody
@@ -111,6 +134,11 @@ public class FlowNodeController {
 			} 
 			if(roles.size()>0)
 			nodeService.addflowrole(roles);
+			if(node.getSpecialdispatch().size()>0)
+			{
+				nodeService.deleteflowrolespecial(node.getTasknodeid(),node.getFlowid());
+				nodeService.addflowrolespecial(node.getSpecialdispatch());
+			}
 		}
 		 
 	    return Params;

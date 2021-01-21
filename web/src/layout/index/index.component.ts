@@ -34,7 +34,7 @@ export class IndexComponent implements OnInit,OnDestroy,AfterViewInit {
       if(this.indexService.stomp !=undefined&&this.indexService.auth.user.roles!=undefined 
         )
       {
-        this.flowservice.getTaskListByRoleId(this.indexService.auth.user.roles).subscribe(
+        this.flowservice.getTaskListByRoleId(this.indexService.auth.user.roles,this.indexService.auth.user.id+'').subscribe(
           (x)=>
           {
             if(x!=undefined&&x.list!=undefined&&x.list.length>0)//当前角色有待办任务时发请求
@@ -75,6 +75,7 @@ export class IndexComponent implements OnInit,OnDestroy,AfterViewInit {
    
   ngOnDestroy(): void {
     this.indexService.disconnect();
+    clearInterval();
   }
 
    clickcount=0;

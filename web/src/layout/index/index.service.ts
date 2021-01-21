@@ -78,6 +78,9 @@ export class IndexService {
       var str=`/user/${  this.auth.user.roles[0].id}/message`;
       this.invalidsubscription = this.stomp.subscribe(str, // 服务器端返回的数据接收
         (data:any) => this.handlemessage(data)); 
+      var userstr= `/user/${  this.auth.user.id}/message`;
+      this.subscription=this.stomp.subscribe(userstr, // 服务器端返回的数据接收
+        (data:any) => this.handlemessage(data));
        /*this.stomp.send('/app/queue', {// 向服务器端发送请求数据
         rolename: this.auth.user.roles[0].id,
         msg:'连接成功'
@@ -90,7 +93,7 @@ export class IndexService {
   handlemessage(data:any)
   {
      
-     this.flowservice.getTaskListByRoleId(this.auth.user.roles).subscribe(
+     this.flowservice.getTaskListByRoleId(this.auth.user.roles,this.auth.user.id+'').subscribe(
        (x)=> 
        {
      if(x.length>0)

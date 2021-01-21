@@ -16,6 +16,11 @@ export class SampleService extends RepositoryService<Sample> {
   {
     return this.http.post(`${this.option.controller?.name}/getsamplestandardprice`,{testprojects:contacttestprojects},this.option.controller?.servicetype);
   }
+  getsamplebydate(startdate:string,enddate:string)
+  {
+    
+    return this.http.post(`${this.option.controller?.name}/getsamplebydate`,{beigin:startdate,end:enddate},this.option.controller?.servicetype);
+  }
 }  
 export interface Sample extends Id {  
 samplename?:string;

@@ -1,5 +1,6 @@
-<x-inner class="au-inner">
-    <div class="au-panel au-tree-left" [x-loading]="treeLoading" style="width: 22rem;"> 
+ <x-row>
+   <x-col span=5>
+    <div   class="au-panel au-content" au-adaption [outerHeight]="50" [x-loading]="treeLoading">  
       <h4>
         <span>流程</span>
         <x-link
@@ -21,34 +22,120 @@
       >
       </x-tree>
     </div>
-    <div class="au-form-right">
-      <au-tool top>
-        <x-buttons [space]="0.5">
-          <x-button
-            icon="fto-save"
-            type="primary"
-            plian
-            (click)="!form.formGroup.invalid && !disabled && action('save', selected)"
-            [disabled]="form.formGroup.invalid || disabled"
-          >
-            保存
-          </x-button>
-        </x-buttons>
-      </au-tool>
-      <x-form
-        class="au-panel au-overflow-auto"
-        au-adaption
-        #form
-        [outerHeight]="86"
-        [disabled]="disabled"
-        [controls]="controls"
-        direction="row"
-        labelSuffix=":"
-        labelWidth="6rem"
-        width="24rem"
-        labelAlign="end"
-        span="20"
-        space="2"
-      ></x-form>
-    </div>
-  </x-inner>
+   </x-col>
+   <x-col span=19> 
+      <x-row>
+        <x-col span=2>
+          <x-button icon="ado-save"  [disabled]=" disabled" type="primary" plian
+          (click)=" !disabled && action('save', selected)" 
+        >
+          保存
+        </x-button>
+        </x-col>
+      </x-row>
+     <x-row style="height: 20px;"> 
+     </x-row>
+     <x-row>
+      <x-col span=6>
+        <x-input label="节点名称" [readonly]="true" [ngModel]="nodeName" direction="row"></x-input>
+      </x-col>
+     </x-row>
+     <x-row style="height: 20px;"> 
+    </x-row>
+     <x-row>
+      <x-col span=6>
+      <x-find
+    label="功能连接"
+    [disabled]=" disabled"
+    [(ngModel)]="menuName" 
+    [treeData]="menuData" 
+    direction="row" 
+    dialogWidth="20rem"
+  ></x-find>
+  </x-col>
+     </x-row>
+     <x-row style="height: 20px;"> 
+    </x-row>
+     <x-row>
+      <x-find
+      label="分配角色"
+      direction="row"
+      [disabled]=" disabled"
+      dialogWidth="65rem"
+      [(ngModel)]="selroles"
+      [tableColumns]="rolescolumns"
+      [tableData]="rolesdata"
+      [tableSize]="1000"
+      [tableVirtualScroll]="true"
+      [tableBodyHeight]="420"
+      [treeData]="TreeData"
+      treeTableConnect="organizationId"
+      multiple
+    ></x-find>
+       </x-row>
+       <x-row style="height: 20px;"> 
+      </x-row> 
+      <x-row>
+        <x-col span=6>
+        <x-input label="处理类" [(ngModel)]="handleclass" [readonly]="disabled" direction="row"></x-input>
+      </x-col>
+      </x-row>
+      <x-row style="height: 20px;"> 
+      </x-row>
+      <x-row>
+        下一节点特殊节点指派
+      </x-row> 
+      <x-row>
+        <x-col span=24>
+        <x-table
+        #specialrolesdata
+        [data]="specialroles"
+        [columns]="specialrolecolumns" 
+        [index]="1"
+        [size]="20"
+        [total]="specialroles.length"  
+        [adaptionHeight]="240"
+        [bodyColumnTpl]="{ actions: conditionTpl,role:roleTpl,excpression:excpressionTpl }"
+        [headColumnTpl]="{actions: headerTpl}" 
+        virtualScroll 
+        loading 
+        >
+      </x-table>
+    </x-col>
+      </x-row>
+   </x-col>
+ </x-row>
+ <ng-template #headerTpl let-column="$column" >
+  <div class="au-table-actions">  
+      <x-button  icon="fto-plus" [disabled]="disabled" (click)="!disabled&&add()"   style="width:80" ></x-button>  
+  </div> 
+</ng-template>
+<ng-template #conditionTpl let-column="$column" let-row="$row">
+  <div class="au-table-actions">  
+      <x-select   [disabled]="disabled"  [data]="conditiondata" [(ngModel)]="row.conditionid"></x-select>  
+  </div> 
+</ng-template>
+<ng-template #roleTpl let-column="$column" let-row="$row">
+  <div class="au-table-actions">  
+    <x-find  
+    [disabled]=" disabled"
+    dialogWidth="65rem"
+    [(ngModel)]="row.role"
+    [tableColumns]="rolescolumns"
+    [tableData]="rolesdata"
+    [tableSize]="1000"
+    [tableVirtualScroll]="true"
+    [tableBodyHeight]="420"
+    [treeData]="TreeData"
+    treeTableConnect="organizationId" 
+  ></x-find>
+  </div> 
+</ng-template>
+<ng-template #excpressionTpl let-column="$column" let-row="$row">
+  <div class="au-table-actions">  
+      <x-input   [disabled]="disabled"    [(ngModel)]="row.conditionstring"></x-input>  
+  </div> 
+</ng-template>
+    
+     
+  

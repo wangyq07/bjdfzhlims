@@ -2,40 +2,76 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bjdfzh.businessprocess.dao.SampleMapper">
 <resultMap type="com.bjdfzh.businessprocess.entity.Sample" id="SampleMap">
-<id column="id" property="id"/>
+<id column="sampleid" property="id"/>
 	<result column="projectctid" property="projectctid" />
 	<result column="samplename" property="samplename" />
-	<result column="samplenumber" property="samplenumber" />
-	<result column="testtypeid" property="testtypeid" />
-	<result column="testothertype" property="testothertype" />
-	<result column="samplesourceid" property="samplesourceid" />
+	<result column="samplenumber" property="samplenumber" />  
 	<result column="samplequality" property="samplequality" />
 	<result column="samplespec" property="samplespec" />
-	<result column="samplevolume" property="samplevolume" />
-	<result column="storeid" property="storeid" />
-	<result column="storeother" property="storeother" />
-	<result column="statusid" property="statusid" />
-	<result column="statusother" property="statusother" />
-	<result column="processid" property="processid" />
-	<result column="processother" property="processother" />
-	<result column="sampleuserid" property="sampleuserid" />
+	<result column="samplevolume" property="samplevolume" /> 
 	<result column="sampledate" property="sampledate" />
 	<result column="manufactory" property="manufactory" />
 	<result column="manufactoryaddress" property="manufactoryaddress" />
 	<result column="purty" property="purty" />
 	<result column="brand" property="brand" />
 	<result column="manufactoryphone" property="manufactoryphone" />
-	<result column="manudate" property="manudate" /> 
+	<result column="manudate" property="manudate" />
 	<result column="manuno" property="manuno" />
 	<result column="remark" property="remark" /> 
 	<result column="price" property="price" />
 	<result column="externprice" property="externprice" /> 
-	<result column="standardfee" property="standardfee" />
-	<result column="deleverdate" property="deleverdate"/>
+	<result column="stestproject" property="testproject" /> 
+    <result column="smethodname" property="methodname" />
+    <result column="executestandard" property="executestandard" />
+    <result column="executegrade" property="executegrade" />
+    <result column="wrapherproperties" property="wrapherproperties" />
+    <result column="testtypeother" property="testtypeother" />
+    <result column="processother" property="processother" />
+    <result column="storeother" property="storeother" />
+    <result column="statusother" property="statusother" />
+    <result column="domainid" property="domainid"/> 
+    <result column="deleverdate" property="deleverdate"/>
 	<result column="specialcondition" property="specialcondition" />
-	<result column="avilabletime" property="avilabletime" /> 	 
+    <result column="standardfee" property="standardfee" />
+    <result column="avilabletime" property="avilabletime" /> 	 
 	<result column="leftsamplequality" property="leftsamplequality" />
 	<result column="expireddate" property="expireddate" />
+      <association    property="store" javaType="com.bjdfzh.userprivilage.entity.CommonType" >
+      <id column="storeid" property="id"/>
+      <result column="storename" property="label"/>
+      <result column="storetempreture" property="code" /> 
+     </association>
+      <association    property="status" javaType="com.bjdfzh.userprivilage.entity.CommonType" >
+      <id column="statusid" property="id"/>
+      <result column="statustype" property="label"/> 
+     </association> 
+     <association    property="process" javaType="com.bjdfzh.userprivilage.entity.CommonType" >
+      <id column="processid" property="id"/>
+      <result column="processtype" property="label"/> 
+     </association>
+	 <association    property="testtype" javaType="com.bjdfzh.userprivilage.entity.CommonType" >
+      <id column="testtypeid" property="id"/>
+      <result column="testtype" property="label"/> 
+     </association> 
+    <collection  property="testprojects" ofType="com.bjdfzh.businessprocess.entity.ContactTestProject">  
+	     <id column="tpid" property="id" />  
+		 <result column="sampleid" property="sampleid"/>
+		 <result column="qualificationid" property="qualificationid"  /> 
+		 <result column="realprice" property="price"  />
+		 <result column="testproject" property="testproject"  />
+		 <result column="methodname" property="methodname"  />
+		 <result column="standardname" property="standardname"/>
+		 <result column="outsitecustomerid" property="outsitecustomerid"  />
+		 <result column="remark" property="remark"  /> 
+		 <result column="realprice" property="realprice" />
+		 <result column="testcount" property="testcount"/>
+		 <result column="limitmax" property="limitmax"/>
+		 <result column="limitmin" property="limitmin"/>
+		 <result column="roleid" property="roleid"/>
+		 <result column="userid" property="userid"/>
+		 <result column="testprojectid" property="testprojectid"/>
+		 <result column="standardid" property="standardid"/>
+    </collection>
 </resultMap>
 
     <select id="getsamples" parameterType="string" resultMap="SampleMap">
@@ -52,11 +88,10 @@
 		,samplespec
 		,samplevolume 
 		,sampledate
-		,manufactory
-		,manufactoryaddress
+		 
 		,purty
 		,brand
-		,manufactoryphone
+		 
 		,manudate
 		,manuno
 	 ,avilabletime 
@@ -192,16 +227,12 @@
 		,processid
 		,processother
 		,sampleuserid
-		,sampledate
-		,manufactory
-		,manufactoryaddress
+		,sampledate 
 		,purty
-		,brand
-		,manufactoryphone
+		,brand 
 		,manudate
 		,manuno
-		,remark
-		 
+		,remark 
 		,price 
 		,standardfee
 		,deleverdate
@@ -221,12 +252,9 @@
 		,#{process.id}
 		,#{processother}
 		,#{sampleuserid}
-		,#{sampledate}
-		,#{manufactory}
-		,#{manufactoryaddress}
+		,#{sampledate} 
 		,#{purty}
-		,#{brand}
-		,#{manufactoryphone}
+		,#{brand} 
 		,#{manudate}
 		,#{manuno}
 		,#{remark}
@@ -253,15 +281,12 @@
 			,processother=#{processother}
 			,sampleuserid=#{sampleuserid}
 			,sampledate=#{sampledate}
-			,manufactory=#{manufactory}
-			,manufactoryaddress=#{manufactoryaddress}
+			
 			,purty=#{purty}
-			,brand=#{brand}
-			,manufactoryphone=#{manufactoryphone}
+			,brand=#{brand} 
 			,manudate=#{manudate}
 			,manuno=#{manuno}
-			,remark=#{remark}
-			 
+			,remark=#{remark} 
 			,price=#{price} 
 			,standardfee=#{standardfee}
 			,deleverdate=#{deleverdate}
@@ -284,11 +309,10 @@
 		,processid
 		,processother 
 		,sampledate
-		,manufactory
-		,manufactoryaddress
+		
 		,purty
 		,brand
-		,manufactoryphone
+		
 		,manudate
 		,manuno
 		,remark 
@@ -313,11 +337,10 @@
 		,#{item.process.id}
 		,#{item.processother} 
 		,#{item.sampledate}
-		,#{item.manufactory}
-		,#{item.manufactoryaddress}
+		
 		,#{item.purty}
 		,#{item.brand}
-		,#{item.manufactoryphone}
+		
 		,#{item.manudate}
 		,#{item.manuno}
 		,#{item.remark} 
@@ -466,4 +489,86 @@
 			              sampleid=#{i.id}
 			          </foreach> 
      </update>
+     <select id="getsamplebydate" parameterType="string" resultMap="SampleMap">
+     select
+		ts.sampleid 
+		,ts.projectid
+		,ts.wrapherproperties
+		,ts.standardfee
+		,ts.deleverdate
+		,ts.specialcondition
+		,samplename
+		,samplenumber 
+		,samplequality
+		,samplespec
+		,samplevolume 
+		,sampledate
+		,tp.customername manufactory
+		,tp.customeraddress manufactoryaddress
+		,purty
+		,brand
+		,tp.phone manufactoryphone
+		,manudate
+		,manuno
+		,ts.remark
+		,avilabletime 
+		 ,leftsamplequality 
+		 ,expireddate 
+		,price
+		,tm.testproject
+		,tm.methodname
+		,externprice
+	  ,ts.testtypeid
+	  ,t.testtype
+	  ,ts.testtypeother
+		,ts.storeid,tstore.storetempurature
+		, tstore.storename,ts.storeother
+		 ,case when tp.processid=0 then 2 else tp.processid end processid
+		 ,  tprocess.sampleprocess   processtype
+		 ,ts.processother
+			,ts.statusid 
+			, tsttus.statustype  statustype
+			,ts.statusother
+		  ,ts.executestandard
+			,ts.executegrade
+		 from t_sample ts
+		 inner join 
+		 (
+		    select tproject.projectid, tcu.customername,tcu.customeraddress,tcu.phone,tinfo.processid from t_contact_customer tc 
+				 inner join t_customer tcu
+				 on tcu.id=tc.customerid
+				 inner join t_business_project tproject
+				 on tproject.contactid=tc.contactid
+				 inner join t_contact_info tinfo
+				 on tinfo.contactid=tproject.contactid
+				where customertype=3 
+		 ) tp
+		 on tp.projectid=ts.projectid
+		 left join
+		 (
+		  select
+			 t.sampleid,
+			GROUP_CONCAT(tc.testproject) testproject,
+			GROUP_CONCAT(tstand.standardname) methodname
+			from t_test_project t
+			inner join t_qualification tq
+			on tq.id=t.qualificationid
+			inner join t_test_category tc
+			on tc.id=tq.testprojectid
+			left join t_test_standard tstand
+	         on tstand.id=tq.standardid
+			group by  t.sampleid
+		 ) tm
+		 on   tm.sampleid=ts.sampleid
+		 left join t_test_type t
+		 on t.id=ts.testtypeid
+		 left join t_sapmple_store_type tstore
+		 on tstore.id=ts.storeid
+		 left join t_sample_process_type tprocess
+		 on tprocess.id=tp.processid
+		 left join t_sapmle_status_type tsttus
+		 on tsttus.id=ts.statusid
+		 where ts.sampledate is not null and ts.sampledate between #{begin} and #{end}
+		 order by ts.samplenumber
+     </select>
 </mapper>

@@ -8,6 +8,7 @@ import { AuToolModule } from 'src/share/tool/tool.module';
 import { AuAdaptionModule } from 'src/share/adaption/adaption.module';
 import { NgNestModule } from 'src/share/ng-nest.module';
 import { FlownodeComponent } from './flownode.component';
+import { XButtonModule, XFindModule, XFindPrefix, XInputModule, XLayoutModule, XSelectModule, XTableModule } from '@ng-nest/ui';
 
 
 @NgModule({
@@ -19,6 +20,12 @@ import { FlownodeComponent } from './flownode.component';
     ,AuToolModule
     ,AuAdaptionModule
     ,NgNestModule
+    ,XTableModule
+    ,XLayoutModule
+    ,XButtonModule
+    ,XInputModule
+    ,XFindModule
+    ,XSelectModule
   ]
 })
 export class FlownodeModule { }

@@ -7,6 +7,7 @@
 <result column="flowid" property="flowid" />
 <result column="processkey" property="processkey" />
 <result column="tasknodename" property="label" />
+<result column="handleclass" property="handleclass"/>
   <association property="menu" javaType="com.bjdfzh.userprivilage.entity.Menu"> 
  <id column="menuid" property="id" /> 
  <result column="mlabel" property="label" /> 
@@ -16,6 +17,18 @@
  <id column="roleid" property="id"/>
 <result column="rolename" property="name" />
  </collection> 
+ <collection property="specialdispatch" ofType="com.bjdfzh.flow.entity.FlowSpecialDispatch">
+ <id column="eid" property="id" />
+ <result column="flowid" property="flowid" />
+ <result column="tasknodeid" property="tasknodeid" />
+ <result column="etype" property="conditionid" />
+ <result column="typename" property="conditionname" />
+ <result column="expression" property="conditionstring" /> 
+ <association property="role" javaType="com.bjdfzh.userprivilage.entity.Role"> 
+  <id column="eroleid" property="id"/>
+<result column="erolename" property="name" />
+ </association>
+ </collection>
 </resultMap>
 <select id="getFlowNodes" parameterType="string" resultMap="FlowNodeMap">
 		       select
@@ -24,11 +37,18 @@
 			,tf.name tasknodename
 			,tf.flowid
 			,tf.processkey
+			,tf.handleclass
 			,tm.id menuid
 			,tm.label mlabel
 			,tm.router
 			,tar.roleid
 			,tr.`name` rolename
+			,te.id eid
+			,te.type etype
+			,te.typename
+			,tre.id eroleid
+			,tre.`name` erolename
+			,te.expression
 			from t_task_flow tf
 			inner join t_task_role tar
 			on tar.tasknodeid=tf.id
@@ -37,6 +57,11 @@
 			on tr.id=tar.roleid
 			inner join t_menu tm
 			on tm.id=tf.menuid
+			left join t_task_flow_express te
+			on te.flowid=tf.flowid
+			and te.tasknodeid=tf.id
+			left join t_role tre
+			on tre.id=te.roleid
 			where tf.flowid=#{flowid} 
     </select>  
  <select id="getFlowNodeById" parameterType="string" resultMap="FlowNodeMap">
@@ -46,11 +71,18 @@
 			,tf.name tasknodename
 			,tf.flowid
 			,tf.processkey
+			,tf.handleclass
 			,tm.id menuid
 			,tm.label mlabel
 			,tm.router
 			,tar.roleid
 			,tr.`name` rolename
+			,te.id eid
+			,te.type etype
+			,te.typename
+			,tre.id eroleid
+			,tre.`name` erolename
+			,te.expression
 			from t_task_flow tf
 			inner join t_task_role tar
 			on tar.tasknodeid=tf.id
@@ -59,6 +91,11 @@
 			on tr.id=tar.roleid
 			inner join t_menu tm
 			on tm.id=tf.menuid
+			left join t_task_flow_express te
+			on te.flowid=tf.flowid
+			and te.tasknodeid=tf.id
+			left join t_role tre
+			on tre.id=te.roleid
 			where tf.flowid=#{flowid} and tf.id=#{id}
     </select>  
     <insert id="addflownode" parameterType="com.bjdfzh.flow.entity.TaskNode">
@@ -67,12 +104,14 @@
 							,flowid
 							,processkey
 							,menuid
+							,handleclass
 							)values
 							(#{tasknodeid}
 							,#{label}
 							,#{flowid}
 							,#{processkey}
 							,#{menu.id}
+							,#{handleclass}
 							)
     </insert>
     <insert id="addflowrole" parameterType="java.util.ArrayList">
@@ -81,10 +120,45 @@
      (UUID(),#{item.flowid},#{item.tasknodeid},#{item.roleid})
      </foreach>
     </insert> 
+     <insert id="addflowrolespecial" parameterType="java.util.ArrayList">
+     insert into t_task_flow_express(id,flowid,tasknodeid,roleid,type,typename,expression)values
+     <foreach collection="list" index="index" separator="," item="item">
+     (UUID(),#{item.flowid},#{item.tasknodeid},#{item.role.id},#{item.conditionid},#{item.conditionname},#{item.conditionstring})
+     </foreach>
+    </insert> 
+     <insert id="addflownodebymaxnode" parameterType="string">
+     insert into t_task_flow(id
+							,name
+							,flowid
+							,processkey
+							,menuid
+							,handleclass
+							)
+		select id
+							,name
+							,#{currentflowid}
+							,processkey
+							,menuid
+							,handleclass from t_task_flow
+	     where flowid=#{maxflowid} 
+    </insert> 
+     <insert id="addflowrolebymaxnode" parameterType="string">
+    insert into t_task_role(id,flowid,tasknodeid,roleid)
+		select uuid(),#{currentflowid},tasknodeid,roleid from t_task_role
+	     where flowid=#{maxflowid} 
+    </insert> 
+     <insert id="addflowrolespecialbymaxnode" parameterType="string">
+    insert into t_task_flow_express(id,flowid,tasknodeid,roleid,type,typename,expression)
+		select uuid(),#{currentflowid},tasknodeid,roleid,type,typename,expression  from t_task_flow_express
+	     where flowid=#{maxflowid} 
+    </insert> 
     <delete id="deleteflownode" parameterType="string">
     delete from t_task_flow where id=#{id} and flowid=#{flowid}
     </delete>
     <delete id="deleteflowrole" parameterType="string">
     delete from t_task_role where tasknodeid=#{id} and flowid=#{flowid}
+    </delete>
+    <delete id="deleteflowrolespecial" parameterType="string">
+    delete from t_task_flow_express where tasknodeid=#{id} and flowid=#{flowid}
     </delete>
 </mapper>

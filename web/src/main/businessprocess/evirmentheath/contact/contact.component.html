@@ -1,3 +1,7 @@
+<x-dialog #dialoguser  width="15%" height="20%" [(visible)]="visible"   
+[showConfirm]="false" [showCancel]="false" placement="top" [backdropClose]="false" [hasBackdrop]="false">
+    <app-contactauditassignee #contactauditassignee   style="width:100%;height:100%" (SelectUser)="SelectUser($event)"></app-contactauditassignee>
+</x-dialog>
 <x-row>
     <x-col span=3 > 
         <x-button   icon="fto-plus" plain  [disabled]="!auth['add']" (click)="auth['add'] && cotactaction('add')" >

@@ -9,7 +9,12 @@ import { Action, Menu } from '../menus/menus.service';
 export class UsersService extends RepositoryService<User> {
   constructor(public http: HttpService) {
     super(http, { controller: { name: 'users',servicetype:'userprivilage' } });
+    
   }
+  getauditcustomuservice()
+    {
+      return this.http.post(`${this.option.controller?.name}/getauditcustomuservice`,{},this.option.controller?.servicetype);
+    }
 }
 
 export interface User extends Id {

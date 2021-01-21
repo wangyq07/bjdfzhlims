@@ -1,7 +1,10 @@
 package com.bjdfzh.flow.entity;
 
-import org.activiti.engine.delegate.event.ActivitiEvent;
+import java.util.List;
 
+import com.alibaba.fastjson.JSONObject;
+
+ 
 public interface  ActivitiEventHandler {
-    void handle(ActivitiEvent event);
+    JSONObject handle(JSONObject param,TaskNode node);
 }  

@@ -1,0 +1,18 @@
+<x-row>
+<div style="overflow:scroll;height: 320px;"> 
+    <h4>客服账号</h4>
+    <x-tree
+      #treeCom
+      au-adaption 
+      [data]="users" 
+      [nodeHeight]="1.875"
+      (activatedChange)="action($event)"
+    >
+    </x-tree>
+   </div>
+</x-row>
+<x-row justify="center">
+    <x-col>
+        <x-button (click)="confirm()">确定</x-button>
+    </x-col>
+</x-row>

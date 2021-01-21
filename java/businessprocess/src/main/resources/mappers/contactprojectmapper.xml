@@ -89,7 +89,7 @@
     </collection>
   </collection> 
 </resultMap>
-    <select id="getcontactprojects" parameterType="string" resultMap="ContactProjectMap">
+    <select id="getcontactprojects" parameterType="map" resultMap="ContactProjectMap">
     select 
 		contactid
 		,t.projectid
@@ -167,11 +167,11 @@
 		,samplespec
 		,samplevolume 
 		,sampledate
-		,manufactory
-		,manufactoryaddress
+		,tp.customername manufactory
+		,tp.customeraddress manufactoryaddress
 		,purty
 		,brand
-		,manufactoryphone
+		,tp.phone manufactoryphone
 		,manudate
 		,manuno
 		,ts.remark
@@ -196,6 +196,17 @@
 		  ,ts.executestandard
 			,ts.executegrade
 		 from t_sample ts
+		 left join 
+		 (
+		    select tproject.projectid, tcu.customername,tcu.customeraddress,tcu.phone from t_contact_customer tc 
+				 inner join t_customer tcu
+				 on tcu.id=tc.customerid
+				 inner join t_business_project tproject
+				 on tproject.contactid=tc.contactid
+				where customertype=3
+				
+		 ) tp
+		 on tp.projectid=ts.projectid
 		 left join
 		 (
 		  select
@@ -255,6 +266,7 @@
 	left join t_test_standard tstand
 	on tstand.id=tqf.standardid
 		 where  contactid=#{contactid} and  t.projectstatus !=-1
+		 limit #{start},#{end}
     </select>
      <select id="getcontactproject" parameterType="string" resultMap="ContactProjectMap">
     select 
@@ -334,17 +346,17 @@
 		,samplespec
 		,samplevolume 
 		,sampledate
-		,manufactory
-		,manufactoryaddress
+		,tp.customername manufactory
+		,tp.customeraddress manufactoryaddress
+		,purty
+		,brand
+		,tp.phone manufactoryphone
+		,manudate
+		,manuno
+		,ts.remark
 		,avilabletime 
 		 ,leftsamplequality 
 		 ,expireddate 
-		,purty
-		,brand
-		,manufactoryphone
-		,manudate
-		,manuno
-		,ts.remark 
 		,price
 		,tm.testproject
 		,tm.methodname
@@ -363,6 +375,17 @@
 		  ,ts.executestandard
 			,ts.executegrade
 		 from t_sample ts
+		 left join 
+		 (
+		    select tproject.projectid, tcu.customername,tcu.customeraddress,tcu.phone from t_contact_customer tc 
+				 inner join t_customer tcu
+				 on tcu.id=tc.customerid
+				 inner join t_business_project tproject
+				 on tproject.contactid=tc.contactid
+				where customertype=3
+				
+		 ) tp
+		 on tp.projectid=ts.projectid
 		 left join
 		 (
 		  select
@@ -422,6 +445,7 @@
 	left join t_test_standard tstand
 	on tstand.id=tqf.standardid
 		 where  t.projectid=#{id} and  t.projectstatus !=-1
+		
     </select>
      <insert id="addcontactprojectinfos" parameterType="java.util.ArrayList">
         insert t_business_project_dispatch(

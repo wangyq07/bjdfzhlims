@@ -1,5 +1,7 @@
 package com.bjdfzh.userprivilage.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bjdfzh.userprivilage.dao.HandleAuth;
 import com.bjdfzh.userprivilage.entity.AuthUser;
+import com.bjdfzh.util.EhCacheUtil;
 import com.bjdfzh.util.JwtUtil;
 
 @RestController
@@ -71,42 +74,50 @@ public class AuthController {
 			//orgService.update(Params.toJavaObject(Organization.class));
 		return null; //JSONObject.parseObject(JSONObject.toJSONString(service.getone(Params)));
     }
-	
+	@RequestMapping(value ="users/getauditcustomuservice",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	JSONObject getauditcustomuservice(  
+		@RequestBody JSONObject Params
+	    ,@RequestHeader(name="Authorization") String headers  ) throws Exception { 
+	String OrgId=null;
+	if(Params==null)
+	{
+		throw new Exception("参数错误");
+	}
+	if(!JwtUtil.isExpire(headers))
+	{
+		throw new Exception("认证已经过期，请登录");
+	}
+	List<AuthUser> users= authService.getUserServices();
+	JSONObject jo=new JSONObject();
+	jo.put("list", users);
+	jo.put("query", Params);
+	jo.put("total", users.size());
+    return   jo;
+	}
 	@RequestMapping(value ="users/{Params.size}/{Params.index}",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public String GetUsers (
-			@RequestBody String Params
+	public JSONObject GetUsers (
+			@RequestBody JSONObject Params
 		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception { 
 		String OrgId=null;
-		 JSONObject paramobj=null;
-		 if(Params !=null&&!Params.equals(""))
-		 {
-			 paramobj=JSONObject.parseObject(Params);
-		 }
-		 JSONArray filter=paramobj.getJSONArray("filter");
+		if(Params==null)
+		{
+			throw new Exception("参数错误");
+		}
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		}
+		 JSONArray filter=Params.getJSONArray("filter");
 		 if(filter.size()>0)
 		 {
 			 JSONObject jo= filter.getJSONObject(0);
 			 if(jo !=null)
 				 OrgId=jo.getString("value");
 		 }
-		 JSONArray orgs=authService.getalluser(OrgId);
-		 JSONArray retorgs=new JSONArray();
-		 int size=paramobj.getIntValue("size"),
-		 index=paramobj.getIntValue("index");
-		 for(int i=(index-1)*size;i<size*index;i++)
-		 {
-			 if(i>orgs.size()-1)
-			 {
-				 break;
-			 }
-			 retorgs.add(orgs.get(i));
-		 }
-		if(!JwtUtil.isExpire(headers))
-		{
-			throw new Exception("认证已经过期，请登录");
-		}
-	    return   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", retorgs.toJSONString(),orgs.size(),Params);
+		 JSONArray orgs=authService.getalluser(OrgId);  
+	    return    EhCacheUtil.getRetObjects(Params, orgs);
    }
 	@RequestMapping(value ="users/{Params}",method = {RequestMethod.GET,RequestMethod.DELETE},produces = "application/json;charset=UTF-8")
     @ResponseBody

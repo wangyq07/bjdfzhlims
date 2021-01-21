@@ -31,6 +31,7 @@ import com.bjdfzh.businessprocess.entity.Customer;
 import com.bjdfzh.businessprocess.entity.Qualification;
 import com.bjdfzh.businessprocess.entity.Sample;
 import com.bjdfzh.userprivilage.entity.CommonType;
+import com.bjdfzh.util.EhCacheUtil;
 import com.bjdfzh.util.JwtUtil;
 
 @RestController
@@ -64,9 +65,9 @@ public class ContactController {
 		}
 		return new JSONObject();
     }
-	@RequestMapping(value ="contacts/20/1",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@RequestMapping(value ="contacts/{Params.size}/{Params.index}",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public String getContacts (
+	public JSONObject getContacts (
 			@RequestBody JSONObject Params
 		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
 				  
@@ -75,14 +76,22 @@ public class ContactController {
 			throw new Exception("认证已经过期，请登录");
 		}
 		JSONArray ja=Params.getJSONArray("filter");
+		JSONObject jo=new JSONObject();
 		if(ja.size()>0)
 		{
 			//JSONArray jja=contactservice.getcontactjsonobject(ja.getJSONObject(0).getIntValue("value"));
 		 List<Contact> contacts=contactservice.getcontactbycustomer(ja.getJSONObject(0).getIntValue("value"),ja.getJSONObject(1).getString("value"));
-	    return   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", JSONObject.toJSONString(contacts),contacts.size(),Params);
+	      jo=EhCacheUtil.getRetObjects(Params, contacts);
   
 		}
-		return String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", "[]",0,Params);
+		else
+		{
+			jo.put("list", new ArrayList<Contact>());
+			jo.put("total", 0);
+			jo.put("query", Params);
+		}
+		
+		return jo;
 	}
 	@Autowired
 	ContactProjectMapper projectService;

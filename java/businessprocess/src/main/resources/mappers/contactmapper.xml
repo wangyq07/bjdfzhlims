@@ -139,6 +139,7 @@
 			group by t.contactid
 	 ) tp
 	 on tp.contactid=t.contactnumber
+	 order by t.signdate desc,t.contactnumber
     </select>
     <select id="getcontactbyid" parameterType="string" resultMap="ContactMap">
     select 

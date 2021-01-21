@@ -23,7 +23,7 @@
       <x-row style="height: 20px;"></x-row>
       <x-row>
         <x-col span=5><x-button icon="ado-check" [disabled]="auditdisabled" style="color: green;" plain type="primary" (click)="acction(1)">同意</x-button></x-col>
-        <x-col span=5><x-button icon="ado-close" [disabled]="auditdisabled" style="color: green;" plain type="primary" (click)="acction(1)">拒绝</x-button></x-col>    
+        <x-col span=5><x-button icon="ado-close" [disabled]="auditdisabled" style="color: green;" plain type="primary" (click)="acction(0)">拒绝</x-button></x-col>    
         </x-row>
         <x-row style="height: 20px;"></x-row>
         <x-row>
@@ -36,19 +36,22 @@
         <x-col span=4>资质盖章:{{seal}}</x-col>
         <x-col span=4>服务类型:{{servicetype}}</x-col>
         </x-row>
-        <x-row style="height: 20;"></x-row>
-        <x-row [hidden]="showprice">  
-                <x-col span=4>总费用:{{totalfee}}</x-col>
-                <x-col span=4>业务费:{{businessfee}}</x-col>
-                <x-col span=4>采样费:{{collectionfee}}</x-col> 
-                <x-col span=4>外包费:{{externfee}}</x-col> 
-        </x-row>
-        <x-row>
-          <x-col span=4>成交价格:{{testfee}}</x-col>
-                <x-col span=4>标准检测费:{{standfee}} </x-col>
-                <x-col span=4>折扣:{{getroundvalue(testfee,standfee)}}</x-col> 
+        <x-row style="height: 20px;"></x-row> 
+        <x-row>  
+                <x-col span=4><div [style.display]="showtablecel">总费用:{{totalfee}}</div></x-col>
+                <x-col span=4><div [style.display]="showtablecel">业务费:{{businessfee}}</div></x-col>
+                <x-col span=4><div [style.display]="showtablecel">采样费:{{collectionfee}}</div></x-col> 
+                <x-col span=4><div [style.display]="showtablecel">外包费:{{externfee}}</div></x-col> 
         </x-row>
         <x-row style="height: 20px;"></x-row>
+        <x-row>
+          <x-col span=4><div [style.display]="showtablecel">成交价格:{{testfee}}</div></x-col>
+                <x-col span=4><div [style.display]="showtablecel">标准检测费:{{standfee}}</div> </x-col>
+                <x-col span=4><div [style.display]="showtablecel">折扣:{{getroundvalue(testfee,standfee)}}</div></x-col> 
+        </x-row>
+        <x-row style="height: 20px;"></x-row>
+       
+      
         <x-row >
           <x-col span=24> 
          
@@ -58,10 +61,10 @@
                 <td  style=" width:5%; text-align: center;">报告</td>
                 <td  style=" width:10%; text-align: center;">领域</td>
                 <td  style=" width:10%; text-align: center;">样品</td>
-                <td [style.display]="showtablecel"   style="width:5%;text-align: center;">检测费</td>
+                <td [style.display]="showtablecel" >检测费</td>
                 <td  style=" width:10%; text-align: center">检测项目</td>
                 <td  style="width:40%;  text-align: center">检测标准</td>
-                <td  style=" width:5%; text-align: center">标准费用</td>
+                <td  [style.display]="showtablecel">标准费用</td>
                 <td  style=" width:5%; text-align: center">外包</td>
                 <td  style=" width:5%; text-align: center">次数</td>
               </thead>
@@ -70,10 +73,10 @@
                 <td [attr.rowspan]="item.projectrowspan" *ngIf="item.projectindex==i">{{item.reportcount}}</td> 
                 <td [attr.rowspan]="item.projectrowspan" *ngIf="item.projectindex==i">{{item.domain}}</td> 
                 <td [attr.rowspan]="item.samplerowspan" *ngIf="item.sampleindex==i">{{item.samplename}}</td> 
-                <td [attr.rowspan]="item.samplerowspan" *ngIf="item.sampleindex==i">{{item.sampleprice}}</td> 
+                <td [attr.rowspan]="item.samplerowspan" *ngIf="item.sampleindex==i && showprice">{{item.sampleprice}}</td> 
                 <td >{{item.testproject}}</td> 
                 <td>{{item.standardname}}</td>
-                <td>{{item.price}}</td>  
+                <td *ngIf="showprice">{{item.price}}</td>  
                 <td>{{item.extern}}</td> 
                 <td>{{item.testcount}}</td>  
               </tr> 

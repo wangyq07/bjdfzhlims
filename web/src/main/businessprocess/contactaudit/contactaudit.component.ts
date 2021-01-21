@@ -34,33 +34,49 @@ export class ContactauditComponent extends PageBase implements OnInit,AfterViewI
   taskid="";
   acction(audit:number)
   {
+    if(!this.printed)
+    {
+      this.genera(false);
+    }
     this.roleauditservice.getauditvariable(this.indexService.auth.user.roles,audit,this.auditaddvice).subscribe
     (
       (x)=>
       {
-        
+         
           var selectrow=this.currenttask;
           if(selectrow !=undefined)
-          {
+          {  
+             
           x.username=this.indexService.auth.user.name;
           x.userid=this.indexService.auth.user.id;
           x.contactid=selectrow.contactid; 
-          x.qupricediscount=this.CurrentContact.discount;
+          x.qupricediscount= this.CurrentContact.discount;
+          x.limitdiscount=selectrow.limitdiscount;
+          x.urgency=this.CurrentContact.service?.id;
+          x.isextern=this.CurrentContact.isextern;
           x.customername=selectrow.customername; 
           x.standardfee=this.CurrentContact.standardfee;
-          x.roles=this.indexService.auth.user.roles; 
-          this.flowservice.excutetask(selectrow.taskid+'',x).subscribe
+          x.roles=this.indexService.auth.user.roles;
+          x.taskid=selectrow.taskid; 
+          console.log(x);
+          this.flowservice.getassignees(x).subscribe
           (
-            (x)=>
+            (y)=>
             {
-               
-              this.cleardata();
-              this.msg.success("提交成功");
-              this.submitdisable=true;
-               this.globalaudit.sendAuditResult("成功");
-              
+              this.flowservice.excutetask(selectrow.taskid+'',y).subscribe
+              (
+                (z)=>
+                { 
+                  this.cleardata();
+                  this.msg.success("提交成功");
+                  this.submitdisable=true;
+                   this.globalaudit.sendAuditResult("成功");
+                  
+                }
+              )
             }
-          );
+          ); 
+           
          }
         }
       
@@ -228,19 +244,23 @@ showtablecel:string="none";//"table-cell";
     this.cleardata();
      this.getCurrentdata(tsk.contactid+'');  
     }
-     
+     printed=false;
     @ViewChild('iframeprint') iframe: OutputlistComponent;
-    genera(typ:number)
+    genera(isprint:boolean)
     {
+      this.printed=true;
       this.contactservice.updateprojectnumer(this.CurrentContact.id+'',this.standfee).subscribe(
         (x)=>
         {
-          this.sampledata=ProjectUtil.getMareData(x.projects,this.ispanding);
+          if(isprint)
+          {
+          this.sampledata=ProjectUtil.getMareData(x.projects,this.ispanding); 
         this.iframe.setprojects(x.projects,x.contact); 
         setTimeout(() => {
           printJS({ printable: 'iframeprint', type: 'html',maxWidth:'98%',targetStyles:['*'],style:'@media print{@page {size:portrait}}' });
           
         }, x.projects.length*10);
+      }
         
         });
       
@@ -263,9 +283,9 @@ showtablecel:string="none";//"table-cell";
   getData() {
     if(this.indexService.auth.user.roles!=undefined )
     { 
-    this.flowservice.getTaskListByRoleId(this.indexService.auth.user.roles).subscribe((x)=>
+    this.flowservice.getTaskListByRoleId(this.indexService.auth.user.roles,this.indexService.auth.user.id+'').subscribe((x)=>
     { 
-      [this.data, this.total] = [(x.list as Task[]).filter((p)=>p.taskdefinid=='task_customerserviceaudit'), x.list.length];
+      [this.data, this.total] = [x.list as Task[], x.list.length];
         if(this.taskid!=undefined&&this.taskid!='')
         {
             var findex=this.data.findIndex((x)=>x.taskid==this.taskid);

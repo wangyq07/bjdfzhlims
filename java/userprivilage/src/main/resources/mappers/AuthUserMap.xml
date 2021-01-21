@@ -208,6 +208,47 @@
 					 and sur.roleId=sr.id
 					  and suo.organizationId=#{orgId}
     </select> 
+    <select id="getauditcustomuservice" parameterType="string" resultMap="AuthUserMap">
+        select su.id uid,
+				su.account,
+				su.password,
+				su.email,
+				su.phone,
+				su.name uname,
+				null aid,
+				null scode,
+				 null icon,
+				 null menuId,
+				null aname,
+				 null asort,
+				null mid,
+				null micon,
+				null label,
+				null spid,
+				null spath,
+				null srouter,
+				null msort,
+				so.id oid,
+				so.icon oicon,
+				so.label olabel,
+				so.parentId opid,
+				so.path opath,
+				so.sort osort,
+				so.type otype,
+				so.checkprice,
+				sr.id rid, 
+				sr.name rname,
+				sr.organizationId sorgid
+        from t_user su, 
+				t_user_role sur, 
+				t_user_organization suo,
+				t_organization so,
+				t_role sr 
+				where su.id=sur.userId  
+					 and suo.userId=su.id and suo.organizationId=so.id
+					 and sur.roleId=sr.id
+					  and suo.organizationId='6695dfb3-1097-5524-cc31-09e2167571b0'
+    </select> 
     <insert id="addUserOrg" parameterType="java.util.ArrayList">
      insert t_user_organization(userId,organizationId)values
      <foreach collection="list" index="index" separator="," item="item">

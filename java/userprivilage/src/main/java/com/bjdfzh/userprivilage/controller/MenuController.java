@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bjdfzh.userprivilage.dao.ActionMapper;
 import com.bjdfzh.userprivilage.dao.MenuMapper;
 import com.bjdfzh.userprivilage.entity.Menu;
+import com.bjdfzh.util.EhCacheUtil;
 import com.bjdfzh.util.JwtUtil;
 
 @RestController
@@ -31,17 +32,19 @@ public class MenuController {
     private MenuMapper menuService;
     @Autowired
     private ActionMapper actionService;
-	@RequestMapping(value ="menus/9007199254740991/1",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@RequestMapping(value ="menus/{Params.size}/{Params.index}",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
     @ResponseBody
 	public JSONObject GetMenus (
-			@RequestBody String Params
+			@RequestBody JSONObject Params
 		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception { 
-		List<Menu> orgs=menuService.getmenus(); 
+		 
 		if(!JwtUtil.isExpire(headers))
 		{
 			throw new Exception("认证已经过期，请登录");
 		}
-        return JSONObject.parseObject(String.format( "{\"list\":%s,\"total\":%d,\"query\":%s}",JSONObject.toJSONString(orgs),orgs.size(),Params));
+		List<Menu> orgs=menuService.getmenus();
+		 
+        return EhCacheUtil.getRetObjects(Params, orgs);
     }
 	
 	@RequestMapping(value ="menus/{Params}",method = {RequestMethod.GET,RequestMethod.PUT,RequestMethod.DELETE},produces = "application/json;charset=UTF-8")

@@ -15,5 +15,6 @@ void updatesample(Sample sample);
 void deletesamplebycontact(String id);
 void deletesample(String id);
 void supplimentupdatesamples(List<Sample> samples);
+List<Sample> getsamplebydate(String begin,String end);
 }
 

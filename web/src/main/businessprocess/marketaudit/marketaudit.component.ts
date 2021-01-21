@@ -41,6 +41,7 @@ export class MarketauditComponent  extends PageBase implements OnInit,AfterViewI
         if(this.currenttask!=null)
         {
           var selectrow=this.currenttask;
+          console.log(this.currenttask);
           if(selectrow !=undefined)
           {
           x.username=this.indexService.auth.user.name;
@@ -81,6 +82,7 @@ export class MarketauditComponent  extends PageBase implements OnInit,AfterViewI
             if(x.complete ==undefined)
             {
               this.taskid=x.taskid;
+              console.log(x.taskid);
               this.getData();
             }
             else
@@ -101,6 +103,7 @@ export class MarketauditComponent  extends PageBase implements OnInit,AfterViewI
           this.showtablecel = "table-cell";
           break;
          }
+          
        }
     }
   ngAfterViewInit(): void {
@@ -215,11 +218,10 @@ showtablecel:string="none";//"table-cell";
   setproject(tsk:Task)
   {
      this.currenttask=tsk;
+     console.log(tsk);
      this.cleardata();
      this.getcontactdata(tsk.contactid+'');
-   
-    
-    }
+  }
      
     sampledata:any[]=[];
  
@@ -231,14 +233,15 @@ showtablecel:string="none";//"table-cell";
   }
   @ViewChild("tablecom")tablecom:XTableComponent;
   getData() {
+    
     if(this.indexService.auth.user.roles!=undefined )
     { 
-    this.flowservice.getTaskListByRoleId(this.indexService.auth.user.roles).subscribe((x)=>
+    this.flowservice.getTaskListByRoleId(this.indexService.auth.user.roles,this.indexService.auth.user.id+'').subscribe((x)=>
     { 
-      [this.data, this.total] = [(x.list as Task[]).filter((p)=>p.taskdefinid=='task_marketaudit'), x.list.length];
+       [this.data, this.total] = [x.list,Number(x.list.length)];
         if(this.taskid!=undefined&&this.taskid!='')
         {
-            var findex=this.data.findIndex((x)=>x.taskid==this.taskid);
+            var findex=this.data.findIndex((x)=>x.taskid==this.taskid); 
             if(findex!=-1)
             {
               //this.tablecom.activatedRow=   this.data[findex];

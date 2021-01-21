@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +109,11 @@ public class ProjectNumberHandle {
 	{
 		JSONObject jb=new JSONObject();
 	    jb.put("contact", contactService.getcontactbyid(contactid))	;
-	   List<ContactProject> projects= contactProjectService.getcontactprojects(contactid);
+	    Map<String,Object>  map=new ConcurrentHashMap<>();
+		map.put("contactid",contactid);
+		map.put("start",0);
+		map.put("end", 20);
+	   List<ContactProject> projects= contactProjectService.getcontactprojects(map);
 	   projects.sort((c1,c2)->c1.getCreatedate().compareTo(c2.getCreatedate()));
 		jb.put("projects", projects);
 		return jb;

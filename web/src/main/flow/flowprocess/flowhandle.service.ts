@@ -17,9 +17,9 @@ export class FlowService {
     {
       return this.http.post(`${this.name}/start`,entkty,this.getservicetype());
     }
-    getTaskListByRoleId(rlids:Role[]):Observable<any> 
+    getTaskListByRoleId(rlids:Role[],uid:string):Observable<any> 
     {
-      return this.http.post(`${this.name}/gettasksbypara`,{roles:rlids,iscomplete:false},this.getservicetype()); 
+      return this.http.post(`${this.name}/gettasksbypara`,{roles:rlids,userid:uid,iscomplete:false},this.getservicetype()); 
     }
     getTaskListByUserId(uid:string):Observable<any> 
     {
@@ -49,12 +49,17 @@ export class FlowService {
      {
       return this.http.post(`contactprojectcustomer/getcontactbyproject`,{contact:prid},this.getservicetype()); 
      }
+     getassignees(param:any)
+     {
+      return this.http.post(`${this.name}/getassignees`, param ,this.getservicetype()); 
+     }
   }
   export interface Flow extends XId{
     contactid?:string; 
     username?:string;
     userid?:string|number;
     roles?:Role[];
+    assignee?:String;
     customername?:string;
     instanceKey?:string;
   }
@@ -73,6 +78,10 @@ export class FlowService {
     customername?:string;
     router?:string;
     contactid?:string;
+    urgency?:number;
+    limitdiscount?:number;
+    qupricediscount?:number;
+    isextern?:number;
     endTime?:Date|string; 
   }
   

@@ -101,7 +101,7 @@ samplesource: string='';
                      z[m]= (this.modifisample.curentsample as any)[m];
                    }
                  }
-                 ProjectUtil.setsamplelabel(z,this.currentcontact,this.processes);
+                 ProjectUtil.setsamplelabel(z,this.currentcontact.processid+'',this.processes);
               }
             }
           )
@@ -187,7 +187,8 @@ samplesource: string='';
             iscollection:this.currentcontact.samplesource?.id==1?0:1,
             userid:this.indexService.auth.user.id+''
             ,username:this.indexService.auth.user.name 
-            ,contactid:this.currentcontact.id 
+            ,contactid:this.currentcontact.id
+           
           }
         ).subscribe(
           (z)=>
@@ -274,7 +275,7 @@ samplesource: string='';
              y.executestandard=this.modifisample.curentsample.executestandard;
              y.status=this.modifisample.curentsample.status;
              y.process=this.modifisample.curentsample.process;
-             ProjectUtil.setsamplelabel(y,this.currentcontact,this.processes);
+             ProjectUtil.setsamplelabel(y,this.currentcontact.processid+'',this.processes);
            }
          );
           
@@ -289,7 +290,7 @@ samplesource: string='';
      (
       (x:any)=>
       { 
-        ProjectUtil.setsamplelabel(x,this.currentcontact,this.processes);
+        ProjectUtil.setsamplelabel(x,this.currentcontact.processid+'',this.processes);
         this.sampledata.push(x);
         
       }

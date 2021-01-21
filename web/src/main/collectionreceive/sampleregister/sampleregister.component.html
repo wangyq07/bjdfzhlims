@@ -1,0 +1,40 @@
+<x-row>
+    <x-col span=4>
+        <x-date-picker label="开始" direction="row" [(ngModel)]="startdate"></x-date-picker>
+    </x-col>
+    <x-col span=4>
+        <x-date-picker label="结束" direction="row" [(ngModel)]="enddate"></x-date-picker>
+    </x-col>
+    <x-col span=2>
+        <x-button plain icon="fto-search" (click)="search()">查询</x-button>
+    </x-col>
+    <x-col span=4> 
+        <x-button icon="ado-save" type="primary" plain (click)="export()" >样品登记表/样品处置记录</x-button>
+    </x-col>
+    <x-col span=3>
+        <x-input-number [(ngModel)]="pagesize" label="每页行数" direction="row"></x-input-number>
+    </x-col>
+</x-row>
+<x-row> 
+    <x-col span='24'>
+    <x-table
+    #samplelist
+    [data]="sampledata"
+    [columns]="columns" 
+    [(index)]="index"
+    [(size)]="size"
+    [total]="total"  
+    [query]="query"
+    [adaptionHeight]="140" 
+    virtualScroll
+    (activatedRowChange)="activechange($event)" 
+    (indexChange)="IndexChange($event)"
+    loading 
+    >
+  </x-table>
+</x-col>
+</x-row>
+<div style="display: none;">
+<app-registerfoodsample #printtable id='printtable' style=" height:100%;width:100%"></app-registerfoodsample>
+
+</div>

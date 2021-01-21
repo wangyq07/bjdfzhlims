@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import * as printJS from 'print-js';
 import { IndexService } from 'src/layout/index/index.service';
 import { BusinessProject, CommonType, ContactCustomer, SealService } from 'src/main/businessprocess/evirmentheath/businessproject/businessproject.service';
-import { OutputadditionallistComponent } from 'src/main/businessprocess/outputadditionallist/outputadditionallist.component';
+
 import { FlowService } from 'src/main/flow/flowprocess/flowhandle.service';
 import { RegisterfoodsampleComponent } from 'src/main/outputtemplete/registersample/registerfoodsample/registerfoodsample.component';
 import { SampleDomainService } from 'src/main/qualification/qualification.service';
@@ -236,11 +236,11 @@ samplesource: string='';
     (
      (x:any)=>
      { 
-      ProjectUtil.setsamplelabel(x,this.currentcontact,this.process); 
+      ProjectUtil.setsamplelabel(x,this.currentcontact.processid+'',this.process); 
        this.sampledata.push(x);
      }
     );
-    console.log(this.sampledata);   
+    //console.log(this.sampledata);   
  }
  genu()
  { 
@@ -255,8 +255,8 @@ samplesource: string='';
    { id: 'samplenumber',left:380,  label: '样品编号', width: 150, sort: true }, 
    { id: 'brand', label: '商标', width: 150, sort: true }, 
    { id: 'samplespec', label: '净含量/规格', width: 150, sort: true } ,
-   {id:'manuuser',label:'生产单位',width:150},
-   {id:'manuaddr',label:'生产单位地址',width:150},
+   {id:'manufactory',label:'生产单位',width:150},
+   {id:'manufactoryaddress',label:'生产单位地址',width:150},
    { id: 'samplequality', label: '样品数量', width: 150, sort: true }, 
    { id: 'manudatelabel', label: '生产日期', width: 150, sort: true } , 
    { id: 'executestandard', label: '执行标准', width: 150, sort: true },

@@ -92,7 +92,7 @@ getData() {
   if(this.indexService.auth.user.roles!=undefined )
   {
    
-  this.flowservice.getTaskListByRoleId(this.indexService.auth.user.roles).subscribe((x)=>
+  this.flowservice.getTaskListByRoleId(this.indexService.auth.user.roles,this.indexService.auth.user.id+'').subscribe((x)=>
   {
     console.log(x);
     if(x.list !=undefined)

@@ -29,7 +29,21 @@ public class TaskNode implements Serializable {
 		this.processkey = processkey;
 	}
 	String tasknodeid;
+	String handleclass;
 	List<Role> roles;
+	List<FlowSpecialDispatch> specialdispatch;
+	public String getHandleclass() {
+		return handleclass;
+	}
+	public void setHandleclass(String handleclass) {
+		this.handleclass = handleclass;
+	}
+	public List<FlowSpecialDispatch> getSpecialdispatch() {
+		return specialdispatch;
+	}
+	public void setSpecialdispatch(List<FlowSpecialDispatch> specialdispatch) {
+		this.specialdispatch = specialdispatch;
+	}
 	public Menu getMenu() {
 		return menu;
 	}

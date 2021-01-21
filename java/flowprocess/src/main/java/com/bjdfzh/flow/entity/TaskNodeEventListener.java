@@ -6,11 +6,14 @@ import java.util.concurrent.ExecutionException;
 
 import javax.servlet.ServletContextEvent;
 
+import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.ExecutionListener;
 import org.activiti.engine.delegate.TaskListener;
 import org.activiti.engine.impl.persistence.entity.VariableInstance;
+import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
@@ -87,21 +90,41 @@ public class TaskNodeEventListener implements ExecutionListener,TaskListener {
 		 if(getservice==null)
 		 {
 			 getservice=(CacheGet)ApplicationContextHanler.getBean("cacheGet");
-		 }
+		 } 
+		   String asignee=delegateTask.getAssignee();
+		   if(StringUtils.isBlank(asignee))
+		   {
 			TaskNode tn= getservice.getTaskNodeBytaskdefine(delegateTask.getProcessDefinitionId(), delegateTask.getTaskDefinitionKey());
 		        for(Role role:tn.getRoles())
 		        {
 				 JSONObject jo=new JSONObject();
 				  jo.put("rolename", role.getId());
 				  jo.put("msg", delegateTask.getName());
+				  delegateTask.setName("dsdsfsfewrewr");
 				 try {
 					stompclient.SendMessage(jo.toJSONString());
 				} catch (UnsupportedEncodingException | ExecutionException | InterruptedException e) {
 					// TODO 自动生成的 catch 块
 					e.printStackTrace();
 				}
-		        }
-		 
+		        } 
+		   }
+		   else
+		   {
+			   try
+			   { 
+				   JSONObject user=JSONObject.parseObject(asignee);
+				   JSONObject jo=new JSONObject();
+					  jo.put("rolename", user.getJSONObject("object").getString("id"));
+					  jo.put("msg", delegateTask.getName());
+					  delegateTask.setName("dsdsfsfewrewr");
+					  stompclient.SendMessage(jo.toJSONString());
+			   }
+			   catch (Exception e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				}
+		   }
 		 break;
 	 default:
 		 break;

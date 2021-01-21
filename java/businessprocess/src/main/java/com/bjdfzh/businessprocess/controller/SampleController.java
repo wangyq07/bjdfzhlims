@@ -140,4 +140,25 @@ public class SampleController {
 		}
 		return jo;
 	}
+	@RequestMapping(value ="samples/getsamplebydate",method = {RequestMethod.POST,RequestMethod.PUT},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	JSONObject getsamplebydate(
+			@RequestBody JSONObject Params
+		    ,@RequestHeader(name="Authorization") String headers,
+		    HttpServletRequest request
+			) throws Exception {  
+				  
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		}
+		JSONObject jo=new JSONObject();
+		String begin=Params.getString("beigin");
+		String end=Params.getString("end");
+		List<Sample> samples=sampleservice.getsamplebydate(begin, end);
+		jo.put("list", samples);
+		jo.put("query", Params);
+		jo.put("total", samples.size());
+		return jo;
+	}
 }

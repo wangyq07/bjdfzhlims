@@ -3,7 +3,10 @@ package com.bjdfzh.businessprocess.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List; 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.servlet.http.HttpServletRequest; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,6 +28,7 @@ import com.bjdfzh.businessprocess.entity.Contact;
 import com.bjdfzh.businessprocess.entity.ContactProject;
 import com.bjdfzh.businessprocess.entity.ContactTestProject; 
 import com.bjdfzh.businessprocess.entity.Sample;
+import com.bjdfzh.util.EhCacheUtil;
 import com.bjdfzh.util.JwtUtil;
 
 @RestController
@@ -61,9 +65,9 @@ public class ContactProjectController {
 		return new JSONObject();
     }
 	
-	@RequestMapping(value ="contactprojects/20/1",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@RequestMapping(value ="contactprojects/{Params.size}/{Params.index}",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public String getContactProjects (
+	public JSONObject getContactProjects (
 			@RequestBody JSONObject Params
 		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
 				  
@@ -72,12 +76,26 @@ public class ContactProjectController {
 			throw new Exception("认证已经过期，请登录");
 		}
 		JSONArray ja=Params.getJSONArray("filter");
+		JSONObject jo=new JSONObject();
+		
 		if(ja.size()>0)
 		{  
-		 List<ContactProject> contacts=cprojectservice.getcontactprojects(ja.getJSONObject(0).getString("value"));
-	    return   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", JSONObject.toJSONString(contacts),contacts.size(),Params);
+			Map<String,Object>  map=new ConcurrentHashMap<>();
+			map.put("contactid",ja.getJSONObject(0).getString("value"));
+			map.put("start", (Params.getIntValue("index")-1)*Params.getIntValue("size"));
+			map.put("end", (Params.getIntValue("index")-1)*Params.getIntValue("size")+Params.getIntValue("size")-1);
+		    List<ContactProject> contacts=cprojectservice.getcontactprojects(map); 
+			jo.put("list", contacts);
+			jo.put("total", 0);
+			jo.put("query", Params);
 		}
-		return String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", "[]",0,Params);
+		else
+		{
+			jo.put("list", new ArrayList<Contact>());
+			jo.put("total", 0);
+			jo.put("query", Params);
+		}
+		return jo;
 	}
 	@RequestMapping(value ="contactprojects",method = {RequestMethod.POST,RequestMethod.PUT},produces = "application/json;charset=UTF-8")
 	@ResponseBody
@@ -136,7 +154,11 @@ public class ContactProjectController {
 		{
 			throw new Exception("认证已经过期，请登录");
 		}
-		List<ContactProject> contacts=cprojectservice.getcontactprojects(Params.getString("id"));
+		Map<String,Object>  map=new ConcurrentHashMap<>();
+		map.put("contactid",Params.getString("id"));
+		map.put("start",0);
+		map.put("end", 20);
+	    List<ContactProject> contacts=cprojectservice.getcontactprojects(map);  
 		Contact cont=new Contact();
 		cont.setId(Params.getString("id"));
 		SimpleDateFormat  sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

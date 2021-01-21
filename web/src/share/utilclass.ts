@@ -246,20 +246,20 @@ import * as moment from 'moment';
     } 
     return chnStr;
   }
-  static setsamplelabel(x:any,contact:any,processes:any[])
+  static setsamplelabel(x:any,processid:string,processes:any[])
  {
    x.storelabel=x.store?.label;
    x.testtypelabel=x.testtype?.label;
    x.statuslabel=x.status?.label; 
-  var contactCustomer = contact.contactcustomers?.find((x:any)=>x.customertype=3); 
+  /*var contactCustomer = contact.contactcustomers?.find((x:any)=>x.customertype=3); 
   if(contactCustomer !=undefined)
   {
-    x.manuuser=contactCustomer.customername+'';
-    x.manuaddr=contactCustomer.customeraddress+'';
-  }
-   if(contact!=undefined&&contact.processid!=undefined)
+    x.manufactory=contactCustomer.customername+'';
+    x.manufactoryaddress=contactCustomer.customeraddress+'';
+  }*/
+   if(processid!=undefined)
    {
-     var process= processes.find((x)=>x.id==contact.processid);
+     var process= processes.find((x)=>x.id==processid);
      if(process !=undefined)
      x.processlabel=process.label;
    }
@@ -280,9 +280,11 @@ import * as moment from 'moment';
    if(x.expireddate !=null&&x.expireddate !=undefined)
    {
     x.expireddate=new Date(moment( x.sampledate).format('YYYY-MM-DD'));
+    x.expireddatelabel=moment( x.expireddate).format('YYYY.MM.DD');
    }
    if(x.avilabletime !=null&&x.avilabletime !=undefined)
    {
+    x.avilabletimelabel=moment( x.avilabletime).format('YYYY.MM.DD');
     x.avilabletime=new Date(moment( x.avilabletime).format('YYYY-MM-DD'));
    }
  }

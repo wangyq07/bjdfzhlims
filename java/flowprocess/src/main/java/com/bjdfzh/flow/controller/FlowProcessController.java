@@ -65,12 +65,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.bjdfzh.ApplicationContextHanler;
 import com.bjdfzh.flow.cache.CacheGet;
 import com.bjdfzh.flow.dao.FlowNodeMapper;
 import com.bjdfzh.flow.dao.RoleDiscountMapper;
+import com.bjdfzh.flow.entity.ActivitiEventHandler;
 import com.bjdfzh.flow.entity.ActivitiUtils;
 import com.bjdfzh.flow.entity.CustomProcessDiagramGenarate;
-import com.bjdfzh.flow.entity.FlowUtil; 
+import com.bjdfzh.flow.entity.FlowUtil;
+import com.bjdfzh.flow.entity.TaskNode;
+import com.bjdfzh.util.JwtUtil; 
 @RestController
 @RequestMapping("activity")
 @CrossOrigin
@@ -178,16 +182,30 @@ public class FlowProcessController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/allprocess",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public JSONArray getAllProcess(@RequestParam(required=false)String Params)
+	public JSONObject getAllProcess(@RequestParam(required=false)String Params)
 	{  
+		  JSONObject retjo=new JSONObject();
 		  JSONArray ja=new JSONArray(); 
 		  try
 		  {
 	     Supplier<Stream<ProcessDefinition>> depids=()-> repositoryService.createProcessDefinitionQuery().list().stream() ;
 	     List<Integer> versions=  depids.get().map(ProcessDefinition::getVersion).distinct().collect(Collectors.toList());
 	     List<String> processkeys= depids.get().map(ProcessDefinition::getKey).distinct().collect(Collectors.toList());
-		  Collections.sort(processkeys);
-		  Collections.sort(versions);
+		   processkeys.sort((x1,x2)->x1.compareTo(x2));
+		 versions.sort((x1,x2)->x1.compareTo(x2)); 
+		 
+		  int maxversion=1,currentversion=1;
+		  if(versions.size()>1)
+		  {
+			  
+			  maxversion=versions.get(versions.size()-2); 
+			  currentversion=versions.get(versions.size()-1);
+		  }
+		  else
+		  {  
+			  maxversion=versions.get(0); 
+			  currentversion=versions.get(0);
+		  }
 		  for(String processkey:processkeys)
 		  {
 			  for(int version:versions)
@@ -196,6 +214,14 @@ public class FlowProcessController {
 				if(st !=null&&st.get().count()>0)
 				{
 				ProcessDefinition dep=st.get().findFirst().get();
+				if( version==maxversion)
+				{
+					retjo.put("maxid", dep.getId());
+				}
+				if( version==currentversion)
+				{
+					retjo.put("currentid", dep.getId());
+				}
 				JSONObject jo=new JSONObject();
 				jo.put("id", dep.getId());
 				jo.put("processkey", dep.getKey());
@@ -225,7 +251,8 @@ public class FlowProcessController {
 			  logger.error("错误信息:{}",e.getMessage());
 			  logger.error("错误:{}",e.getStackTrace());
 		  }
-		 return ja;
+		  retjo.put("list", ja);
+		 return retjo;
 	}
 	
 	@RequestMapping(value="/excutetask",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
@@ -237,19 +264,28 @@ public class FlowProcessController {
 		JSONObject jo=new JSONObject();
 		try
 		{
+		
 	   Task t= taskService.createTaskQuery().taskId(formparm.getString("taskid")).singleResult();
+	  
 		if(t !=null)
 		{
-	   
 			JSONObject jb=formparm.getJSONObject("formkey");
+			
+			
 			if(jb !=null)
 			{
-			    
+				JSONObject joo=new JSONObject();
+				joo.put("type", 2);
+				JSONObject object=new JSONObject();
+				object.put("id",  jb.get("userid"));
+				object.put("name",  jb.get("username"));
+				joo.put("object",object ); 
 				jb.put("token", headers);
-				jb.put("updataprojecturl", this.modifyprojectno );
-			 
+				jb.put("updataprojecturl", this.modifyprojectno ); 
+				 taskService.setAssignee(formparm.getString("taskid"), joo.toJSONString());
 			} 
-		taskService.setVariablesLocal(formparm.getString("taskid"), jb);
+		     taskService.setVariablesLocal(formparm.getString("taskid"), jb);
+		
 	    taskService.complete(formparm.getString("taskid"));
 		}
 	
@@ -310,13 +346,16 @@ public class FlowProcessController {
     	return retmap;
     }
     @SuppressWarnings("unused")
-	private List<HistoricTaskInstance> getTasksByRoleId(Supplier<Stream<HistoricTaskInstance>> instancetasks,String roleid)
+	private List<HistoricTaskInstance> getTasksByRoleId(Supplier<Stream<HistoricTaskInstance>> instancetasks,String roleid,boolean iscomplete)
     {
     	List<HistoricTaskInstance> taskList=new ArrayList<HistoricTaskInstance>();
     	Map<String,Map<String,String>> maptaskids=getDefineidTasks(instancetasks,roleid);
 		List<HistoricTaskInstance> tqs=instancetasks.get().collect(Collectors.toList());
 		for(HistoricTaskInstance ta : tqs)
 		{
+			String assignee=ta.getAssignee();
+		 if(StringUtils.isBlank(assignee)  )
+		 {
 		 if(maptaskids.containsKey(ta.getProcessDefinitionId())
 				 &&maptaskids.get(ta.getProcessDefinitionId())
 				 .containsKey(ta.getTaskDefinitionKey()))
@@ -324,6 +363,22 @@ public class FlowProcessController {
 			 if(ta.getEndTime()==null)
 			 taskList.add(ta);
 			}
+		 }
+		 else if(StringUtils.isNotBlank(assignee))
+		 {
+			 try
+			 {
+			 JSONObject jo=JSONObject.parseObject(assignee);
+				if(!iscomplete&&jo.getInteger("type")==1&&jo.getJSONObject("object").getString("id").contentEquals(roleid)&&ta.getEndTime()==null)
+				{    
+					taskList.add(ta); 
+				}
+			 }
+			 catch(Exception ex) 
+			 {
+				 ex.printStackTrace();
+			 }
+		 }
 	  }
 		return taskList;
     }
@@ -332,19 +387,54 @@ public class FlowProcessController {
     	List<HistoricTaskInstance> usertasks=new ArrayList<HistoricTaskInstance>();
     	for(HistoricTaskInstance task:tasks)
     	{
-    		JSONObject jb=FlowUtil.getVariables(historyService, task);
-    		if(jb !=null&&jb.containsKey("userid")&&jb.getString("userid").contentEquals(userid))
-    		{
-    			if(iscomplete&&task.getEndTime() !=null)
-    			usertasks.add(task);
-    			else if(!iscomplete&&task.getEndTime() ==null)
+    		try
+			{
+    			String assignee=task.getAssignee();
+    			if(StringUtils.isNotBlank(assignee))
     			{
-    				usertasks.add(task);
+    				JSONObject jo=JSONObject.parseObject(assignee);
+    				if(jo.getInteger("type")==2&&jo.getJSONObject("object").getString("id").contentEquals(userid))
+    				{
+    					if(iscomplete&&task.getEndTime() !=null)
+    					usertasks.add(task);
+    					else if(!iscomplete&&task.getEndTime()==null)
+    					{
+    						usertasks.add(task);
+    					}
+    				}
+    				
+    			 
     			}
+			}
+    		catch(Exception ex)
+    		{
+    			
     		}
+    		 
     	}
     	return usertasks;
     }
+    @Autowired
+    private FlowNodeMapper nodeService;
+    @RequestMapping(value="getassignees",method = {RequestMethod.POST,RequestMethod.PUT},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	JSONObject getassignees(@RequestBody JSONObject Params
+			 ,@RequestHeader(name="Authorization") String headers
+			) throws Exception
+	{
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		}
+		 
+		Task task=taskService.createTaskQuery().taskId(Params.getString("taskid")).singleResult();
+		TaskNode node= nodeService.getFlowNodeById(task.getTaskDefinitionKey(), task.getProcessDefinitionId());
+		
+		ActivitiEventHandler handler=(ActivitiEventHandler)	ApplicationContextHanler.getBean(node.getHandleclass());
+		return handler.handle(Params, node);
+		 
+		
+	}
     @RequestMapping(value="/gettasksbypara",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public JSONObject toShowTaskbyParams(@RequestBody JSONObject params) { 
@@ -368,18 +458,14 @@ public class FlowProcessController {
 			{
 				taskList=this.getTaskbyUserid(userid, instancetasks.get().collect(Collectors.toList()),iscomplete);
 			}
-			else if(roleids!=null&&roleids.size()>0)
+			if(roleids!=null&&roleids.size()>0)
 			{
 				for(int i=0;i<roleids.size();i++)
 				{
 				  String roleid=roleids.getJSONObject(i).getString("id");
-				  taskList.addAll( getTasksByRoleId(instancetasks,roleid));
+				  taskList.addAll( getTasksByRoleId(instancetasks,roleid,iscomplete));
 				}
-			}
-			else
-			{
-				taskList =instancetasks.get().collect(Collectors.toList());
-			}
+			} 
 		 }
 		 else if(instanceid ==null)
 		 {
@@ -388,20 +474,17 @@ public class FlowProcessController {
 				 taskList=this.getTaskbyUserid(userid, tasks.get().collect(Collectors.toList()),iscomplete);
 					
 				}
-			 else if(roleids!=null&&roleids.size()>0)
+			   if(roleids!=null&&roleids.size()>0)
 				{
 				 for(int i=0;i<roleids.size();i++)
 					{
 						String roleid=roleids.getJSONObject(i).getString("id");
-					List<HistoricTaskInstance> addtasks=	getTasksByRoleId(tasks,roleid);
+					List<HistoricTaskInstance> addtasks=	getTasksByRoleId(tasks,roleid,iscomplete);
 					if(addtasks.size()>0)
 					  taskList.addAll( addtasks);
 					}
 				}
-				else
-				{
-					taskList =tasks.get().collect(Collectors.toList());
-				}
+				 
 		 }
 		 }
 		if(taskList == null || taskList.size() == 0) {
@@ -416,11 +499,26 @@ public class FlowProcessController {
 		 */
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		for(HistoricTaskInstance task : taskList) { 
+			String assignee=task.getAssignee();
 			Map<String, Object> map = new HashMap<String, Object>(); 
 			map.put("id", UUID.randomUUID().toString());
 			map.put("taskid", task.getId()); 
 			map.put("taskkey", task.getTaskDefinitionKey());
+			if(StringUtils.isBlank(assignee))
 			map.put("name", task.getName()); 
+			else
+			{
+				JSONObject j=JSONObject.parseObject(assignee);
+				String assigneeName= j.getString("assigneeName");
+				if(StringUtils.isBlank(assigneeName))
+				{
+					map.put("name", task.getName()); 
+				}
+				else
+				{
+					map.put("name", assigneeName); 
+				}
+			}
 			if(task.getEndTime()!=null)
 			map.put("endTime", dateformat.format(task.getEndTime()));
 			map.put("createtime", dateformat.format(task.getCreateTime()));
@@ -434,12 +532,14 @@ public class FlowProcessController {
 			{
 			    Map<String,Object> varis=hitory.getJSONObject("Varibles");
 				map.put("contactid", varis.get("contactid"));
+				map.put("qupricediscount",  varis.get("qupricediscount"));
+				map.put("limitdiscount", varis.get("limitdiscount"));
 				map.put("customername",varis.get("customername"));
-				map.put("preuser", varis.get("username"));
-			    map.put("contact", varis.get("contact"));
-			    map.put("projects", varis.get("projects"));
-				map.put("from", hitory==null?"流程启动":hitory.getString("Name"));
+				map.put("preuser", varis.get("username")); 
+				map.put("ugencytype", varis.get("ugencytype"));
+				map.put("isextern", varis.get("isextern"));
 			}
+			map.put("from", hitory==null?"流程启动":hitory.getString("Name"));
 			map.put("router",cacheService.getTaskRouterBytaskdefine(task.getProcessDefinitionId(), task.getTaskDefinitionKey()));
 			resultList.add(map); 
 		} 

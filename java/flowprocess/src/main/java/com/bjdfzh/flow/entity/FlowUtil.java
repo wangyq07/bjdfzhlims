@@ -1,6 +1,7 @@
 package com.bjdfzh.flow.entity;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -102,7 +103,7 @@ public class FlowUtil {
          jb.put("Name", taskInstance.getName());
          jb.put("Id", taskInstance.getId());
          //jb.put("Varibles", new ConcurrentHashMap<String,Object>());
-         
+       //Map<String,Object> objects=  taskInstance.getProcessVariables();
          jb.put("Varibles", getVariables(historyService,taskInstance));
         return jb;
     }
@@ -112,7 +113,7 @@ public class FlowUtil {
                .createHistoricVariableInstanceQuery()
                .processInstanceId(task.getProcessInstanceId())
                .taskId(task.getId())
-               .list();
+               .list(); 
 				JSONObject jjb=new JSONObject();
 				for(HistoricVariableInstance hi:ins)
 				{

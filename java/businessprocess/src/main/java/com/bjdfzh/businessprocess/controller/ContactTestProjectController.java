@@ -1,5 +1,6 @@
 package com.bjdfzh.businessprocess.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.bjdfzh.businessprocess.dao.ContactTestProjectMapper;
+import com.bjdfzh.businessprocess.entity.Contact;
 import com.bjdfzh.businessprocess.entity.ContactTestProject;
+import com.bjdfzh.util.EhCacheUtil;
 import com.bjdfzh.util.JwtUtil;
 @RestController
 @RequestMapping("")
@@ -25,9 +28,9 @@ import com.bjdfzh.util.JwtUtil;
 public class ContactTestProjectController {
 	@Autowired
 	 ContactTestProjectMapper contacttestservice;
-	@RequestMapping(value ="contacttests/20/1",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@RequestMapping(value ="contacttests/{Params.size}/{Params.index}",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public String getContacttests (
+	public JSONObject getContacttests (
 			@RequestBody JSONObject Params
 		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
 				  
@@ -36,15 +39,23 @@ public class ContactTestProjectController {
 			throw new Exception("认证已经过期，请登录");
 		}
 		JSONArray ja=Params.getJSONArray("filter");
+		JSONObject jo=new JSONObject();
 		if(ja.size()>0)
 		{
 			
 		 List<ContactTestProject> contacts=contacttestservice.getcontacttestprojects(ja.getJSONObject(0).getString("value"),ja.getJSONObject(1).getString("value"));
-	     String retstr=   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", JSONObject.toJSONString(contacts),contacts.size(),Params);
+	     //String retstr=   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", JSONObject.toJSONString(contacts),contacts.size(),Params);
            
-	     return retstr; 
-		}
-		return String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", "[]",0,Params);
+	     jo=EhCacheUtil.getRetObjects(Params, contacts);
+	     
+	   		}
+	   		else
+	   		{
+	   			jo.put("list", new ArrayList<Contact>());
+	   			jo.put("total", 0);
+	   			jo.put("query", Params);
+	   		}
+		return  jo;
 	}
 	@RequestMapping(value ="contacttests",method = {RequestMethod.POST,RequestMethod.GET,RequestMethod.DELETE},produces = "application/json;charset=UTF-8")
 	@ResponseBody

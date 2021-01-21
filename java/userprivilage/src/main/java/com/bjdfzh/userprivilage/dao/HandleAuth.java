@@ -42,6 +42,10 @@ public class HandleAuth {
 		authmapper.deleteUserRole(u.getId());
 		this.addmapuser(user);
 	}
+	public List<AuthUser> getUserServices()
+	{
+		return authmapper.getauditcustomuservice();
+	}
 	public void deleteUser(String UserId)
 	{
 		 usermapper.detete(UserId);

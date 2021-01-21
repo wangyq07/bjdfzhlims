@@ -1,6 +1,8 @@
 package com.bjdfzh.businessprocess.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 import com.bjdfzh.businessprocess.dao.CustomerMapper;
 import com.bjdfzh.businessprocess.entity.Customer;
+import com.bjdfzh.util.EhCacheUtil;
 import com.bjdfzh.util.JwtUtil;
 @RestController
 @RequestMapping("")
@@ -24,9 +27,9 @@ import com.bjdfzh.util.JwtUtil;
 public class CustomerController {
 	@Autowired
 	 CustomerMapper customerservice;
-	@RequestMapping(value ="customers/50/1",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@RequestMapping(value ="customers/{Params.size}/{Params.index}",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public String getCustomers (
+	public JSONObject getCustomers (
 			@RequestBody JSONObject Params
 		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
 				  
@@ -34,9 +37,16 @@ public class CustomerController {
 		{
 			throw new Exception("认证已经过期，请登录");
 		}
-		
-		 List<Customer> customers=customerservice.getcustomers(Params.getJSONArray("filter").getJSONObject(0).getString("value"));
-	    return   String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", JSONObject.toJSONString(customers),customers.size(),Params);
+		Map<String,Object>  map=new ConcurrentHashMap<>();
+		map.put("userid", Params.getJSONArray("filter").getJSONObject(0).getString("value"));
+		map.put("start", (Params.getIntValue("index")-1)*Params.getIntValue("size"));
+		map.put("end", (Params.getIntValue("index")-1)*Params.getIntValue("size")+Params.getIntValue("size")-1);
+		 List<Customer> customers=customerservice.getcustomers(map);
+		 JSONObject retobjects=new JSONObject();
+		 retobjects.put("list", customers);
+		 retobjects.put("total", customers.size());
+		 retobjects.put("query", Params);
+         return retobjects;
    }
 	@RequestMapping(value ="customers",method = {RequestMethod.POST,RequestMethod.PUT},produces = "application/json;charset=UTF-8")
 	@ResponseBody

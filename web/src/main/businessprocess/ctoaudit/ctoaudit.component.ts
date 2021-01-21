@@ -281,7 +281,7 @@ showtablecel:string="none";//"table-cell";
     this.setclear();
     if(this.indexService.auth.user.roles!=undefined )
     { 
-    this.flowservice.getTaskListByRoleId(this.indexService.auth.user.roles).subscribe((x)=>
+    this.flowservice.getTaskListByRoleId(this.indexService.auth.user.roles,this.indexService.auth.user.id+'').subscribe((x)=>
     { 
       [this.data, this.total] = [(x.list as Task[]).filter((p)=>p.taskdefinid=='task_ctoaudit'), x.list.length];
         if(this.taskid!=undefined&&this.taskid!='')

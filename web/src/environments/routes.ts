@@ -271,6 +271,16 @@ export const layoutRoutes: Routes = [
   }
   
 },
+// 样品登记表
+{
+  path: 'sampleregister',
+  loadChildren: () => import('../main/collectionreceive/sampleregister/sampleregister.module').then((x) => x.SampleregisterModule),
+  canLoad: [AuthGuard],
+  data: {
+    animation: 'sampleregister'
+  }
+  
+},
   // 示例功能
   // { path: 'examples', loadChildren: 'src/main/examples/example.module#ExampleModule', canLoad: [AuthGuard] },
   // // 工作型首页

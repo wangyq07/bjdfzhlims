@@ -26,7 +26,8 @@ export class RegisterfoodsampleComponent implements OnInit {
            this.sampledatas.push({pagenumber:ProjectUtil.NumberToChinese(q+1),data:[]});
            q=q+1;
          }
-         sampledata[i].expireddate=moment(sampledata[i].expireddate).format("YYYY-MM-DD");
+         sampledata[i].expireddate=moment(sampledata[i].expireddate).format("YYYY.MM.DD");
+         sampledata[i].avilabletime=moment(sampledata[i].avilabletime).format("YYYY.MM.DD");
          this.sampledatas[this.sampledatas.length-1].data.push(sampledata[i]);
       }
       if(this.sampledatas.length>0&&this.sampledatas[this.sampledatas.length-1].data.length<10)

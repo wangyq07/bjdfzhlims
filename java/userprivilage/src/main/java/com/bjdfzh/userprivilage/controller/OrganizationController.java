@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSONObject;
 import com.bjdfzh.userprivilage.dao.OrganizationMapper;
 import com.bjdfzh.userprivilage.entity.Organization;
+import com.bjdfzh.util.EhCacheUtil;
 import com.bjdfzh.util.JwtUtil;
 
 @RestController
@@ -25,17 +26,19 @@ import com.bjdfzh.util.JwtUtil;
 public class OrganizationController {
 	@Autowired
 	private OrganizationMapper orgService;
-	@RequestMapping(value ="organization/9007199254740991/1",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@RequestMapping(value ="organization/{Params.size}/{Params.index}",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
     @ResponseBody
 	public JSONObject GetOrgnization (
-			@RequestBody(required = false) String Params
+			@RequestBody(required = false) JSONObject Params
 		    ,@RequestHeader(name="Authorization") String headers  ) throws Exception { 
-		List<Organization> orgs=orgService.getall(); 
+		
 		if(!JwtUtil.isExpire(headers))
 		{
 			throw new Exception("认证已经过期，请登录");
 		}
-        return JSONObject.parseObject(String.format( "{\"list\":%s,\"total\":%d,\"query\":%s}",JSONObject.toJSONString(orgs),orgs.size(),Params));
+		List<Organization> orgs=orgService.getall(); 
+		
+		 return    EhCacheUtil.getRetObjects(Params, orgs);
     }
 	@RequestMapping(value ="organization/{Params}",method = {RequestMethod.GET,RequestMethod.DELETE},produces = "application/json;charset=UTF-8")
     @ResponseBody

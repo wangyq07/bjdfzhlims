@@ -62,6 +62,11 @@ export class RepositoryService<Entity extends Id> {
     query.size=size;
     query.index=index;
   }
+  else
+  {
+    query={size:size,index:index,filter:[]};
+  }
+  console.log(query);
     return this.http.post(`${this.option.controller?.name}/${size}/${index}`, query,this.getservicetype());
   }
 

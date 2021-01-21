@@ -21,7 +21,7 @@
  </association>
 </resultMap>
 
-    <select id="getcustomers" parameterType="string" resultMap="CustomerMap">
+    <select id="getcustomers" parameterType="map" resultMap="CustomerMap">
        select
 		tc.id
 		,userid
@@ -41,6 +41,8 @@
 		 inner join t_customer_type ty
 		 on ty.id=tc.customertypeid
 		 where userid=#{userid}
+		 limit #{start},#{end}
+		 
     </select> 
     <select id="getcustomer" parameterType="string" resultMap="CustomerMap">
        select

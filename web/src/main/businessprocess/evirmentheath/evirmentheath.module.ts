@@ -18,14 +18,15 @@ import { SampleComponent } from './sample/sample.component';
 import { BusinessprojectComponent } from './businessproject/businessproject.component';
 import { AddbusinessprojectComponent } from './businessproject/addbusinessproject/addbusinessproject.component';
 import { XInputNumberModule } from '@ng-nest/ui/input-number';
-import { XDialogModule, XSelectModule, XTagModule } from '@ng-nest/ui';
+import { XDialogModule, XSelectModule, XTagModule, XTreeModule } from '@ng-nest/ui';
 import { QualificationModule } from 'src/main/qualification/qualification.module'; 
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
+import { ContactauditassigneeComponent } from './contact/contactauditassignee/contactauditassignee.component'; 
 @NgModule({
   declarations: [EvirmentheathComponent, AddcustomersComponent
     , CustomerComponent, ContactComponent
     , BusinessprojectComponent, AddbusinessprojectComponent,
-    SampleComponent,AddsampleComponent],
+    SampleComponent,AddsampleComponent, ContactauditassigneeComponent],
   imports: [ 
     CommonModule,
     EvirmentheathRoutingModule,
@@ -38,6 +39,7 @@ import { CommonModule } from '@angular/common';
     ShareModule,
     AuAdaptionModule,
     XTableModule,
+    XTreeModule,
     XInputModule,
     AuToolModule,
     XRadioModule,
