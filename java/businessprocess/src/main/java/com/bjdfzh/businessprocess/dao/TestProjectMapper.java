@@ -10,4 +10,6 @@ public interface TestProjectMapper {
 List<TestProject>	gettestprojects();
 void addtestProject(TestProject tp);
 void updatetestproject(TestProject tp);
+TestProject gettestprojectbyname(String name,String pid);
+
 }

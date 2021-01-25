@@ -16,4 +16,5 @@ public interface CommonTypeMapper {
 	List<CommonType> getsampleprocess();
 	List<CommonType> getsampletesttype();
    List<ServiceType>	getservicetype();
+  List<CommonType> getspecialdispatchspecial(String code);
 }

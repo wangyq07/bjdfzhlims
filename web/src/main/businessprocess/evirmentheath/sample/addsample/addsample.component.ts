@@ -4,11 +4,12 @@ import {   XInputComponent , XMessageService, XQuery, XTableColumn, XTableRow  }
 import { Contact, ContactTestProject } from 'src/services/ContactService';
 import {  Sample, SampleService } from 'src/services/sample.service';
  
-import {  SampleDomainService } from 'src/main/qualification/qualification.service';
+import {  QualificationService, SampleDomainService, TestProjectService } from 'src/main/qualification/qualification.service';
  
 import { ProjectUtil } from 'src/share/utilclass';
 import { CommonType, SealService } from '../../businessproject/businessproject.service';
 import { QualificationComponent } from 'src/main/qualification/qualification.component';
+import { AddexterntestprojectComponent } from './addexterntestproject/addexterntestproject.component';
 
 @Component({
   selector: 'app-addsample',
@@ -124,6 +125,7 @@ return false;
   ];
   externprojectcolumns:XTableColumn[]=[ 
     {id:'actions',label:'操作',width:80},
+    {id:'companyname',label:'供应商',width:80},
     { id: 'testproject', label: '检测项目', width: 200, sort: true } 
   ];
   process:CommonType[]=[];
@@ -137,6 +139,7 @@ return false;
       this.processid=Number(this.currentsample.process?.id);
       else
       this.processid=2;
+      console.log(this.currentsample.testprojects);
      this.currentsample.testprojects?.map
        ( (x)=>
        { 
@@ -167,7 +170,62 @@ return false;
   externprojectquery:XQuery={filter:[]};
   exterquaconfirm()
   {
-    this.externprojectdata=[];   
+   var sel= this.externselqual.sealdata.find((x)=>x.id==this.externselqual.seal);
+   if(sel !=null)
+   {
+     console.log(sel.code);
+   this.qService.addexterqualification(this.externselqual.provider
+                                       ,this.externselqual.testproject
+                                       ,sel.code
+                                       ).subscribe
+    (
+      (x)=>
+      {
+       if(this.externtype=="add")
+       {
+       var ffindex= this.externprojectdata.findIndex((y)=>y.qualificationid==x.qualification.id);
+       if(ffindex==-1)
+       {
+        this.externprojectdata.push({
+          id:ProjectUtil.JsNewGuid() 
+          ,sampleid:this.currentsample?.id+''
+          ,qualificationid:x.qualification.id
+          ,testproject:x.qualification.testproject
+          ,companyname:x.qualification.companyname
+          ,companyid:x.qualification.companyid
+          ,testprojectid:x.qualification.testprojectid
+          ,isextern:1 
+           });
+         
+       }
+      }
+      else
+      {
+        var ffindex=this.externprojectdata.findIndex((y)=>y.id==this.externitem.id);
+        if(ffindex !=-1)
+        {
+          this.externprojectdata.splice(ffindex,1);
+          this.externprojectdata.splice(
+            ffindex,0,{
+              id:ProjectUtil.JsNewGuid() 
+              ,sampleid:this.currentsample?.id+''
+              ,qualificationid:x.qualification.id
+              ,testproject:x.qualification.testproject
+              ,companyname:x.qualification.companyname
+              ,companyid:x.qualification.companyid
+              ,testprojectid:x.qualification.testprojectid
+              ,isextern:1 
+               }
+          );
+        }
+      }
+      this.externtotal=this.externprojectdata.length;
+      this.externprojectdata=[...this.externprojectdata];
+    }
+   
+    );
+  }
+    /*this.externprojectdata=[];   
     for(var i=0;i<this.externselqual.selquali.length;i++)
     {
      this.externprojectdata.push({
@@ -179,18 +237,30 @@ return false;
                              });
                              
     }
-    this.externtotal=this.externprojectdata.length;
-  }
-  @ViewChild("externselqual")externselqual:QualificationComponent;
+    this.externtotal=this.externprojectdata.length;*/
+
+  } 
+  provider="";
+  seal=1;
+  testproject="";
+  @ViewChild("externselqual")externselqual:AddexterntestprojectComponent;
+  externtype='info';
+  externitem:any;
   externprojectaction(type:string,item?:XTableRow)
   {
-    this.externselqual.getData(true);
+    //this.externselqual.getData(true);
+    this.externtype=type;
+    this.externitem=item;
     switch(type)
     {
       case 'add': 
-        if(this.type =='add'||this.type=='edit')
+        
           this.qexternvisible=true;
-          this.externselqual.selquali=[];
+          this.externselqual.seal=this.externselqual.sealdata[0].id;
+          this.provider="";
+          this.testproject="";
+          
+          /*this.externselqual.selquali=[];
           
           this.externprojectdata.forEach(
             (x)=>
@@ -198,8 +268,29 @@ return false;
               this.externselqual.selquali.push({id:Number(x.qualificationid),testproject:x.testproject,testcount:x.testcount});
             }
           ); 
-          this.externselqual.refreshdata();
+          this.externselqual.refreshdata();*/
       break;
+      case 'edit':
+        this.qService.getqualificaitonbycompanyidprojectid(item?.companyid,item?.testprojectid).subscribe(
+          (x)=>
+          {
+           
+            this.qexternvisible=true; 
+            var sel= this.externselqual.sealdata.find((y)=>y.code==x.qualification.firstid);
+              if(sel !=null)
+              {
+                this.seal=Number(sel.id);
+                this.externselqual.seal=Number(sel.id);
+              }
+          
+            this.testproject=x.qualification.testproject;
+            this.externselqual.testproject=x.qualification.testproject;
+            this.externselqual.provider=x.qualification.companyname;
+            this.provider=x.qualification.companyname;
+           
+          }
+        );
+        break;
       case 'delete': 
              this.deleteprojectmethod(item?.id+'',this.externprojectdata);  
              this.externprojectdata=[...this.externprojectdata];
@@ -208,13 +299,12 @@ return false;
   }
   
   constructor(  
-    private service:SampleService,
-    private commonservice:SealService,
-    private message: XMessageService  
-    ,private domainservice:SampleDomainService
-  ) {
-    
-  }
+    private service:SampleService, 
+    private message: XMessageService, 
+    private  qService:QualificationService, 
+    private domainservice:SampleDomainService
+  ) 
+  {}
   ngDoCheck(): void {
     
   }

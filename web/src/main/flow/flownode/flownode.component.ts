@@ -3,7 +3,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '
 import { XControl, XFormComponent, XMessageBoxAction, XMessageBoxService, XMessageService, XQuery, XTableColumn, XTreeAction, XTreeComponent, XTreeNode } from '@ng-nest/ui';
 import { map, tap } from 'rxjs/operators';
 import { IndexService } from 'src/layout/index/index.service';
-import { FlowNodeService, FlowRole, FlowTask, FlowSpecialDispatch } from './flownode.service';
+import { FlowNodeService, FlowRole, FlowTask, FlowSpecialDispatch, CommonTypeService } from './flownode.service';
 import { PageBase } from 'src/share/base/base-page';
 import {MenusService } from 'src/main/system/menus/menus.service';
 import { RolesService } from 'src/main/system/roles/roles.service';
@@ -77,6 +77,7 @@ export class FlownodeComponent extends PageBase implements OnInit,AfterViewInit 
     private roleservice:RolesService
     ,private organization:OrganizationService
     ,private cd: ChangeDetectorRef
+    ,private commonservice:CommonTypeService
   ) {
     super(indexService);
   }
@@ -150,20 +151,7 @@ export class FlownodeComponent extends PageBase implements OnInit,AfterViewInit 
     
    
   }
-  conditiondata:any[]=[
-    {
-     id:1,
-     label:'打折审核' 
-    },
-    {
-      id:2,
-      label:'外包审核'
-     },
-     {
-      id:3,
-      label:'加急审核'
-     }
-  ];
+  conditiondata:any[]=[];
   specialroles:any[]=[];
   specialrolecolumns:XTableColumn[]=[
     {id:'actions',width:150,label:'条件'}, 
@@ -183,6 +171,12 @@ export class FlownodeComponent extends PageBase implements OnInit,AfterViewInit 
   }
   action(type: string, node: FlowTask) {
     this.cd.detectChanges();
+    this.commonservice.getspecialdispatch(node.tasknodeid+'').subscribe(
+      (x)=>
+      {
+        this.conditiondata=x.list;
+      }
+    )
     switch (type) {
       case 'info':
         this.type = type;

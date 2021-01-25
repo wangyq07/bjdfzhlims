@@ -44,6 +44,8 @@ public class QualificationController {
 	@Autowired
 	 QualificationCompanyMapper companyservice;
 	@Autowired
+	TestProjectMapper testProjectService;
+	@Autowired
 	CommonTypeMapper commonservice;
 	@RequestMapping(value ="qualificationcompanys/20/1",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 	@ResponseBody
@@ -317,8 +319,77 @@ public class QualificationController {
 		 
 		return String.format("{\"list\":%s,\"total\":%d,\"query\":%s}", "[]",0,Params);
 	}
-	
-
+	@RequestMapping(value ="qualifications/getqualificaitonbycompanyidprojectid",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public JSONObject	getqualificaitonbycompanyidprojectid(@RequestBody(required = false) JSONObject Params
+			    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
+		  
+			if(!JwtUtil.isExpire(headers))
+			{
+				throw new Exception("认证已经过期，请登录");
+			}
+			String companyname= Params.getString("companyid");
+			String testproject=Params.getString("testprojectid"); 
+		   Qualification q=qualificationservice.getqualificaitonbycompanyidprojectid(companyname, testproject); 
+		  JSONObject jo=new  JSONObject();
+		  jo.put("qualification", q);
+		  jo.put("msg", "success");
+		    return jo;
+	}
+	@RequestMapping(value ="qualifications/addexterqualification",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public JSONObject	addexterqualification(@RequestBody(required = false) JSONObject Params
+			    ,@RequestHeader(name="Authorization") String headers  ) throws Exception {  
+		  
+			if(!JwtUtil.isExpire(headers))
+			{
+				throw new Exception("认证已经过期，请登录");
+			}
+			String companyname= Params.getString("companyname");
+			String testproject=Params.getString("testpproject");
+			String selid=Params.getString("sealid");
+		   QualificationCompany company=	companyservice.getqualificationcompanybyname(companyname);
+		   if(company ==null)
+		   {
+			   company=new QualificationCompany();
+			   company.setLabel(companyname);
+			   companyservice.addcompany(company);
+		   }
+		   TestProject ttp=testProjectService.gettestprojectbyname("外包项目",selid);
+		   if(ttp==null)
+		   {
+			   ttp=new TestProject();
+			   ttp.setLabel("外包项目");
+			   ttp.setLevel(2);
+			   ttp.setPid(selid);
+			   testProjectService.addtestProject(ttp); 
+		   }
+		   TestProject tp=testProjectService.gettestprojectbyname(testproject,ttp.getId());
+		   if(tp==null)
+		   {
+			   tp=new TestProject();
+			   tp.setLabel(testproject);
+			   tp.setLevel(3);
+			   tp.setPid(ttp.getId());
+			   testProjectService.addtestProject(tp); 
+		   }
+		   Qualification q=qualificationservice.getqualificaitonbycompanyidprojectid(String.format("%s", company.getId()) , tp.getId());
+		   if(q==null)
+		   {
+			   q=new Qualification();
+			   q.setCompanyid(company.getId());
+			   q.setTestprojectid( tp.getId());
+			   q.setTestproject(tp.getLabel());
+			   q.setCompanyname(companyname); 
+			   q.setFirstid(Integer.parseInt(selid));
+			   qualificationservice.addqualification(q);
+		   }
+		  JSONObject jo=new  JSONObject();
+		  jo.put("qualification", q);
+		  jo.put("msg", "success");
+		    return jo;
+	}
+ 
 		@RequestMapping(value ="qualifications/addqualification",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
 		@ResponseBody
 		public Qualification	addqualification(@RequestBody(required = false) JSONObject Params
@@ -362,6 +433,22 @@ public class QualificationController {
 			CacheGetBusinessModel.setqualifm(tp,tm,qlf,tstand,Params,true);
 			   cmService.updateQualification(tp, tm,tstand, qlf);
 		    return   qlf;
+	    }
+		@RequestMapping(value ="commontypes/getspecialdispatch",method = {RequestMethod.POST,RequestMethod.GET},produces = "application/json;charset=UTF-8")
+		@ResponseBody
+	   public JSONObject	getspecialdispatch(@RequestBody(required = false) JSONObject Params
+			    ,@RequestHeader(name="Authorization") String headers  ) throws Exception
+		 {  
+		  
+			if(!JwtUtil.isExpire(headers))
+			{
+				throw new Exception("认证已经过期，请登录");
+			} 
+			JSONObject jo=new JSONObject();
+			List<CommonType> list=commonservice.getspecialdispatchspecial(Params.getString("code"));
+			jo.put("list", list);
+			jo.put("total", list.size());
+		    return   jo;
 	    }
 	
 }

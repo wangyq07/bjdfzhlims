@@ -9,8 +9,12 @@
 </resultMap>
 
     <select id="gettestprojects" parameterType="string" resultMap="TestProjectMap">
-        select id,testproject,pid,level from t_test_category 
+        select id,testproject,pid,level from t_test_category where isextern=0 
     </select>
+      <select id="gettestprojectbyname" parameterType="string" resultMap="TestProjectMap">
+        select id,testproject,pid,level from t_test_category where testproject=replace(#{name},' ','') and pid=#{pid} limit 1
+    </select>
+    
    <insert id="addtestProject" 
                parameterType="com.bjdfzh.businessprocess.entity.TestProject"
               useGeneratedKeys="true" keyProperty="id">
@@ -21,7 +25,21 @@
 							     )
 							    values
 							    (
-							      #{label},#{pid},#{level}
+							      replace(#{label},' ',''),#{pid},#{level}
+							    )
+   </insert>
+     <insert id="addtestProjectextern" 
+               parameterType="com.bjdfzh.businessprocess.entity.TestProject"
+              useGeneratedKeys="true" keyProperty="id">
+     insert into t_test_category( 
+							testproject
+							,pid
+							,level
+							,isextern
+							     )
+							    values
+							    (
+							      replace(#{label},' ',''),#{pid},#{level},1
 							    )
    </insert>
    <update id="updatetestproject" parameterType="com.bjdfzh.businessprocess.entity.TestProject">

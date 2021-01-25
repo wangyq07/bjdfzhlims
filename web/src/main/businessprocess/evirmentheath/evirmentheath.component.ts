@@ -122,10 +122,16 @@ export class EvirmentheathComponent extends PageBase implements OnInit,AfterCont
       }
       );
       if(this.contactlist.currentContact.service?.id==2)
+      {
       this.contactlist.currentContact.standardfee=Number(this.contactlist.currentContact.standardfee)*2;
+      this.contactlist.currentContact.testfee=Number(this.contactlist.currentContact.testfee)*2;
+      }
       if(this.contactlist.currentContact.service?.id==3)
+      {
       this.contactlist.currentContact.standardfee=Number(  this.contactlist.currentContact.standardfee)*1.5; 
-     if(this.contactlist.currentContact.standardfee !=0)
+      this.contactlist.currentContact.testfee=Number(this.contactlist.currentContact.testfee)*1.5;
+       }
+      if(this.contactlist.currentContact.standardfee !=0)
      this.contactlist.currentContact.discount=round(Number( this.contactlist.currentContact.testfee)/Number(  this.contactlist.currentContact.standardfee)*100)/100;
      this.contactlist.currentContact.totalfee=round((Number(this.contactlist.currentContact.testfee)
                                               +Number(this.contactlist.currentContact.businessfee)

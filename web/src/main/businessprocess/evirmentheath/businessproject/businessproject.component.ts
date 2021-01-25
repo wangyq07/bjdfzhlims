@@ -224,9 +224,9 @@ export class BusinessprojectComponent extends PageBase implements OnInit {
 }
 @Input() auth: { [code: string]: boolean } = {};
 submitdisabled:any;
-   disabled(item?:any)
+ get  disabled()
    {
-      if(item !=null&&item.submit)
+      if(this.currentcontact?.contactstatus==1)
       {
          return true;
       }

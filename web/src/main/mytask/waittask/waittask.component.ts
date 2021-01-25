@@ -70,7 +70,7 @@ export class WaittaskComponent  extends PageBase implements OnInit,AfterViewInit
   }
   action(info:string,row:Task)
   { 
-       let params={contactid:row.contactid,taskid:row.taskid};
+       let params={contactid:row.contactid,taskid:row.taskid}; 
        this.router.navigate([`${row.router}`,params]);
   }
 browsediagram(row:Task)

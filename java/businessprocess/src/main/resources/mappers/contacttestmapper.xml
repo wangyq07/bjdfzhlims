@@ -13,7 +13,9 @@
 	 <result column="remark" property="remark"  /> 
 	 <result column="realprice" property="realprice" />
 	 <result column="limitmax" property="limitmax"/>
-	  <result column="limitmin" property="limitmin"/>
+	  <result column="limitmin" property="limitmin"/> 
+	  <result column="limitvalue" property="limitvalue"/>
+         <result column="judgementstandard" property="judgementstandard"/>
 </resultMap>
 
     <select id="getcontacttestprojects" parameterType="string" resultMap="ContactTestProjectMap">
@@ -30,6 +32,8 @@
 			,isextern
 			,limitmax
 			,limitmin
+			,limitvalue
+			,judgementstandard
 			from t_test_project t
 			inner join t_qualification tq
 			on tq.id=t.qualificationid
@@ -53,6 +57,8 @@
 		,testcount
 		,limitmax
 		,limitmin
+		,limitvalue
+		,judgementstandard
 		,remark
        )values
        <foreach collection="list" index="index" separator="," item="item">
@@ -66,6 +72,8 @@
 			,#{item.testcount}
 			,#{item.limitmax}
 			,#{item.limitmin}
+			,#{item.limitvalue}
+			,#{item.judgementstandard}
 			,#{item.remark} 
 			) 
          </foreach>

@@ -3,10 +3,10 @@
  > 
   <app-qualification #selqual [tablespan]=15 [modify]=1 [treespan]=5 style="width:100%;height:100%" [producthidden]="producthidden" [qualitreeheight]="qualitreeheight" ></app-qualification>
 </x-dialog>
-<x-dialog #dialogexterqulification width="35%" height="50%"   [(visible)]="qexternvisible"  
+<x-dialog #dialogexterqulification width="15%" height="20%"   [(visible)]="qexternvisible"  
 (confirm)="exterquaconfirm()" placement="top" [backdropClose]="false" [hasBackdrop]="false"
  > 
-  <app-qualification #externselqual [modify]=1 [tablespan]=10 [treespan]=10 style="width:100%;height:100%" ></app-qualification>
+  <app-addexterntestproject #externselqual  [seal]="seal" [provider]="provider" [testproject]="testproject"  style="width:100%;height:100%" ></app-addexterntestproject>
 </x-dialog> 
 <x-inner class="au-inner au-column">
   <x-row><x-col span=4> 
@@ -117,5 +117,6 @@
     <ng-template #exprojectTpl let-column="$column" let-row="$row">
       <div class="au-table-actions">
         <x-link [disabled]="formInvalid||disabled" icon="fto-trash-2" (click)="!disabled&&!methodInvalid && externprojectaction('delete', row)" title="删除"></x-link>
+        <x-link [disabled]="formInvalid||disabled" icon="fto-edit" (click)="!disabled&&!methodInvalid && externprojectaction('edit', row)" title="编辑"></x-link>
       </div>
     </ng-template> 

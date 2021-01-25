@@ -9,6 +9,20 @@ public class ContactTestProject {
 	public void setIsextern(int isextern) {
 		this.isextern = isextern;
 	}
+	String limitvalue ;
+	public String getLimitvalue() {
+		return limitvalue;
+	}
+	public void setLimitvalue(String limitvalue) {
+		this.limitvalue = limitvalue;
+	}
+	public String getJudgementstandard() {
+		return judgementstandard;
+	}
+	public void setJudgementstandard(String judgementstandard) {
+		this.judgementstandard = judgementstandard;
+	}
+	String judgementstandard ;
 	 String qualificationid;
 	 String outsitecustomerid;
 	 String remark; 
@@ -131,5 +145,18 @@ public class ContactTestProject {
 		else
 		this.testcount = testcount;
 	}
-	
+	String companyid;
+	public String getCompanyid() {
+		return companyid;
+	}
+	public void setCompanyid(String companyid) {
+		this.companyid = companyid;
+	}
+	public String getCompanyname() {
+		return companyname;
+	}
+	public void setCompanyname(String companyname) {
+		this.companyname = companyname;
+	}
+	String companyname;
 }

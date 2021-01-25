@@ -6,7 +6,7 @@
 <result column="firstid" property="firstid"/> 
 <result column="firstname" property="firstname"/> 
 <result column="secondid" property="secondid"/> 
-<result column="secondname" property="secondname"/>
+<result column="secondname" property="secondname"/> 
 <result column="testprojectid" property="testprojectid" />
  <result column="methodid" property="methodid" />
  <result column="standardid" property="standardid" />
@@ -18,6 +18,7 @@
   <result column="limitcomment" property="limitcomment" />
  <result column="price" property="price" />
  <result column="companyid" property="companyid" /> 
+ <result column="companyname" property="companyname"/>
 </resultMap>
 
     <select id="getqualifications" parameterType="integer" resultMap="QualificationMap">
@@ -161,8 +162,38 @@
 							left join t_test_standard tstand
 							on tstand.id=t.standardid
 		where companyid=1 and (t3.testproject like  #{projectname} and tstand.standardname like #{methodname})
-		order by t.projectsort,t.methodsort
+		order by t1.id,t2.id, t.projectsort,t.methodsort
     </select> 
+    <select id="getqualificaitonbycompanyidprojectid" parameterType="string" resultMap="QualificationMap">
+   select  
+				t1.id firstid
+				,t1.testproject firstname
+			 	,t2.id secondid
+				,t2.testproject secondname
+				,t.id
+				,t.companyid
+				,tc.companyname
+				,t.testprojectid
+				, null standardid
+				, null methodid
+				,t.projectsort
+				,t3.testproject
+				, null standardname
+				, null methodname
+				,t.methodsort
+				,t.limitcomment
+				,t.price
+						from t_qualification t
+						inner join  t_test_category t3
+							on t3.id=t.testprojectid
+						inner join t_test_category t2
+						on t2.id=t3.pid
+						inner join t_test_category t1
+						on t1.id=t2.pid   
+						inner join t_qualification_company tc
+						on tc.id=t.companyid
+						 where t.companyid=#{companyid} and t.testprojectid=#{testprojectid}
+    </select>
     <select id="getqualificationsearchnon" parameterType="string" resultMap="QualificationMap">
          select  
 				t1.id firstid

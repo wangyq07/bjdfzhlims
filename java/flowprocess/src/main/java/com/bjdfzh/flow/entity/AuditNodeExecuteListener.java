@@ -27,8 +27,7 @@ import com.bjdfzh.ApplicationContextHanler;
 	            return;
 	        }
 	//获取当前任务执行人
-	        String assignee = task.getAssignee();
-	        System.out.println(assignee);
+	        String assignee = task.getAssignee(); 
 	//通过流程图中表单字段id获取表单字段值，即用户点击审批，在输入框中填入的'yes' 或'no'
 	        String s = "isaudit";
 	        Object o = variables.get(s);

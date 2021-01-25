@@ -72,6 +72,7 @@
 	     <id column="tpid" property="id" />  
 		 <result column="sampleid" property="sampleid"/>
 		 <result column="qualificationid" property="qualificationid"  /> 
+		 <result column="tpisextern" property="isextern"/>
 		 <result column="realprice" property="price"  />
 		 <result column="testproject" property="testproject"  />
 		 <result column="methodname" property="methodname"  />
@@ -86,6 +87,10 @@
 		 <result column="userid" property="userid"/>
 		 <result column="testprojectid" property="testprojectid"/>
 		 <result column="standardid" property="standardid"/>
+		  <result column="companyid" property="companyid" /> 
+         <result column="companyname" property="companyname"/>
+         <result column="limitvalue" property="limitvalue"/>
+         <result column="judgementstandard" property="judgementstandard"/>
     </collection>
   </collection> 
 </resultMap>
@@ -108,6 +113,8 @@
     ,tqf.standardid
     ,tqf.testprojectid
     ,ts.deleverdate
+    ,company.companyname
+    ,company.id companyid
 		,ts.specialcondition
 		,ts.samplename
 		,ts.samplenumber 
@@ -143,6 +150,8 @@
 		,tp.isextern tpisextern
 		,tp.limitmax
 		,tp.limitmin
+		,tp.limitvalue
+		,tp.judgementstandard
 		,tp.testcount
 	  ,tc.testproject
 	  ,tm.methodname
@@ -237,6 +246,8 @@
 	on tp.sampleid=ts.sampleid
 	left join t_qualification tqf
 	on tqf.id=tp.qualificationid
+	left join t_qualification_company company
+	on company.id=tqf.companyid
 	left join 
 						( 
 					 select 
@@ -287,6 +298,8 @@
     ,tqf.standardid
     ,tqf.testprojectid
     ,ts.deleverdate
+    ,company.companyname
+    ,company.id companyid
 		,ts.specialcondition
 		,ts.samplename
 		,ts.samplenumber 
@@ -322,6 +335,8 @@
 		,tp.isextern tpisextern
 		,tp.limitmax
 		,tp.limitmin
+		,tp.limitvalue
+		,tp.judgementstandard
 		,tp.testcount
 	  ,tc.testproject
 	  ,tm.methodname
@@ -329,7 +344,7 @@
 		,tqr.userid
 	from t_business_project t 
 	left join t_business_project_dispatch td
-	on td.projectid=t.projectid
+	on td.projectid=t.projectid 
 	left join t_sample_domain tsd
 	on tsd.id=t.domainid
 	left join (
@@ -416,6 +431,8 @@
 	on tp.sampleid=ts.sampleid
 	left join t_qualification tqf
 	on tqf.id=tp.qualificationid
+	left join t_qualification_company company
+	on company.id=tqf.companyid
 	left join 
 						( 
 					 select 
@@ -492,6 +509,29 @@
 		,domainid=#{domain.id}  
 		 where projectid=#{id} 
     </update>
+    <update id="updatelimitvalue" parameterType="list">
+            update t_test_project
+            <trim prefix="set" suffixOverrides=",">
+             <trim prefix="limitvalue =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when id=#{i.id} then #{i.limitvalue}
+                         </if>
+                         </foreach>
+                         </trim>
+                         <trim prefix="judgementstandard =case" suffix="end,">
+                 <foreach collection="list" item="i" index="index">
+                         <if test="i.id!=null">
+                          when id=#{i.id} then #{i.judgementstandard}
+                         </if>
+                         </foreach>
+                         </trim>   
+                         </trim>
+                          where
+			            <foreach collection="list" separator="or" item="i" index="index" >
+			              id=#{i.id}
+			          </foreach> 
+     </update>
     <delete id="deletecustomer"  parameterType="string">
      delete from  t_business_project_customer t where  projectid=#{id}
     </delete>

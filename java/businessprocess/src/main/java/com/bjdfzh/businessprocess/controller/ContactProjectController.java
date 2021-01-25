@@ -42,6 +42,27 @@ public class ContactProjectController {
 	ContactTestProjectMapper ctestprojectservice;
 	@Autowired
 	SampleMapper sampleservice; 
+	 
+	@RequestMapping(value ="contactprojects/updatelimitvalue",method = {RequestMethod.POST,RequestMethod.PUT},produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public JSONObject updatelimitvalue(
+			@RequestBody JSONObject Params
+		    ,@RequestHeader(name="Authorization") String headers
+		    ,HttpServletRequest request
+			) throws Exception {  
+				  
+		if(!JwtUtil.isExpire(headers))
+		{
+			throw new Exception("认证已经过期，请登录");
+		}
+		 List<ContactTestProject> projects=JSONArray.parseArray(Params.getJSONArray("testprojects").toJSONString(),ContactTestProject.class);  
+		 
+		 if(projects !=null&&projects.size()>0&&request.getMethod().contentEquals("POST"))
+		 { 	
+			 cprojectservice.updatelimitvalue(projects);
+		 }
+	    return Params;
+   }
 	@RequestMapping(value ="contactprojects/{Params}",method = {RequestMethod.GET,RequestMethod.PUT,RequestMethod.DELETE},produces = "application/json;charset=UTF-8")
     @ResponseBody
 	public JSONObject updateContactProject(

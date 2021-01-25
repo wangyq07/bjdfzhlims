@@ -16,5 +16,5 @@ public interface QualificationMapper {
 	void deletequalification(int id);
 	List<Qualification> getqualificationsearch(String projectname,String methodname);
 	List<Qualification> getqualificationsearchnon(String companyid,String projectname);
-	 
+	Qualification getqualificaitonbycompanyidprojectid(String companyid,String testprojectid);
 }

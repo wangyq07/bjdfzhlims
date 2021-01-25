@@ -20,4 +20,5 @@ List<ContactProject>	getcontactprojects(Map<String,Object> map);
  void deletecustomer(String id);
  void deletesamplebyprojectinfos(String ids);
  void addcontactprojectinfos(List<ContactProject> contactinfos);
+ void updatelimitvalue(List<ContactTestProject> projects);
 }

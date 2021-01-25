@@ -281,6 +281,46 @@ export const layoutRoutes: Routes = [
   }
   
 },
+// 样品管理浏览
+{
+  path: 'sampletaskbrowse',
+  loadChildren: () => import('../main/samplemanager/samplebrowsetask/samplebrowsetask.module').then((x) => x.SamplebrowsetaskModule),
+  canLoad: [AuthGuard],
+  data: {
+    animation: 'sampletaskbrowse'
+  }
+  
+},
+// 限值设定
+{
+  path: 'limitvaluesetting',
+  loadChildren: () => import('../main/Laboratory/limitvaluesetting/limitvaluesetting.module').then((x) => x.LimitvaluesettingModule),
+  canLoad: [AuthGuard],
+  data: {
+    animation: 'limitvaluesetting'
+  }
+  
+},
+// 限值审核
+{
+  path: 'limitvalueaudit',
+  loadChildren: () => import('../main/Laboratory/limitvalueaudit/limitvalueaudit.module').then((x) => x.LimitvalueauditModule),
+  canLoad: [AuthGuard],
+  data: {
+    animation: 'limitvalueaudit'
+  }
+  
+},
+// 工作组
+{
+  path: 'workgroups',
+  loadChildren: () => import('../main/Laboratory/workgroups/workgroups.module').then((x) => x.WorkgroupsModule),
+  canLoad: [AuthGuard],
+  data: {
+    animation: 'workgroups'
+  }
+  
+},
   // 示例功能
   // { path: 'examples', loadChildren: 'src/main/examples/example.module#ExampleModule', canLoad: [AuthGuard] },
   // // 工作型首页

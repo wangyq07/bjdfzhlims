@@ -101,7 +101,7 @@ import * as moment from 'moment';
           rnd += Math.floor(Math.random() * 10);
       return rnd;
   }  
-  static getMareData(projects:any[],judgement:string)
+  static getMareData(projects:any[],judgement:string,isextern?:boolean)
   {
     var p=0;var q=0;
     var pindex=0;var qindex=0;
@@ -119,14 +119,17 @@ import * as moment from 'moment';
               y.testprojects?.map(
                 (z:any)=>
                 { 
-                  if(z.testproject!=undefined&&z.testproject!='')
+                  if(z.testproject!=undefined&&z.testproject!=''
+                   &&((isextern&&z.isextern==0)||!isextern)
+                  )  
                   {
                   p=p+1;
-                  q=q+1;
+                  q=q+1; 
                    data.push(
                     {
                       projectid:x.id,
                       sampleid:y.id,
+                      testid:z.id,
                       projectname:x.projectnumber,
                       reportcount:x.reportcount,
                       domain:x.domain.label, 
@@ -159,7 +162,9 @@ import * as moment from 'moment';
                       methodname:z.methodname,
                       methodid:z.methodid,
                       price:z.price,
-                      realprice:z.realprice
+                      realprice:z.realprice,
+                      limitvalue:z.limitvalue,
+                      judgementstandard:z.judgementstandard
                     }
                   
                   ); 
@@ -322,10 +327,11 @@ export interface AdditionalData
   methodname?:string;
   testprojectindex?:number;
   testprojecrowspan?:number;
-  qualificationid?:number;
+  qualificationid?:number; 
   testcount?:number;
   price?:number;
   realprice?:number;
+  testid?:string;
   reportcount?:number;
   domain?:string;
   beforeuserid?:string;
@@ -333,4 +339,6 @@ export interface AdditionalData
   beforequalificationid?:number;
   dispatchtime?:string|Date;
   samplenumber?:string;
+  limitvalue?:string;
+  judgementstandard?:string;
 }

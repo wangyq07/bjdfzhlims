@@ -5,6 +5,7 @@ import { XTreeNode } from '@ng-nest/ui/tree';
 import { XId } from '@ng-nest/ui';
 import { Menu } from 'src/main/system/menus/menus.service';
 import { Role } from 'src/main/system/roles/roles.service';
+import { CommonType } from 'src/main/businessprocess/evirmentheath/businessproject/businessproject.service';
  
 
 @Injectable({ providedIn: 'root' })
@@ -15,6 +16,16 @@ export class FlowNodeService extends RepositoryService<FlowTask> {
   bymaxid(maxid:string,currentid:string)
   {
     return this.http.post(`${this.option.controller?.name}/bymaxid`,{maxid:maxid,currentid:currentid},this.option.controller?.servicetype);
+  }
+}
+@Injectable({ providedIn: 'root' })
+export class CommonTypeService extends RepositoryService<CommonType> {
+  constructor(public http: HttpService) {
+    super(http, { controller: { name: 'commontypes',servicetype:'businessprocess' } });
+  }
+  getspecialdispatch(nodeid:string)
+  {
+    return this.http.post(`${this.option.controller?.name}/getspecialdispatch`,{code:nodeid},this.option.controller?.servicetype);
   }
 }
 

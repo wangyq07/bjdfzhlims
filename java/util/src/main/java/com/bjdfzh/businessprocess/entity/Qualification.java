@@ -11,7 +11,14 @@ int id;
   public int getId() {
 	return id;
 }
- int companyid;
+  String companyname;
+ public String getCompanyname() {
+	return companyname;
+}
+public void setCompanyname(String companyname) {
+	this.companyname = companyname;
+}
+int companyid;
 public int getCompanyid() {
 	return companyid;
 }

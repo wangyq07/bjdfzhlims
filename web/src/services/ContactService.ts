@@ -83,4 +83,8 @@ limitmax?:string|number;
 limitmin?:string|number;
 roleid?:string;
 userid?:string;
+companyname?:string;
+companyid?:string;
+limitvalue?:string;
+judgementstandard?:string;
 }

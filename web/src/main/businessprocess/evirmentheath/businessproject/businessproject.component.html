@@ -4,12 +4,12 @@
 </x-dialog>
 <x-row>
     <x-col span=6 > 
-        <x-button   icon="fto-plus" plain  [disabled]="!auth['add']" (click)="auth['add'] && action('add')" >
+        <x-button   icon="fto-plus" plain  [disabled]="!auth['add'] || disabled" (click)="!disabled&&auth['add'] && action('add')" >
            新增   
         </x-button> 
     </x-col>
     <x-col span=5 > 
-        <x-button   icon="fto-plus" plain  [disabled]="!auth['add']" (click)="auth['add'] && copayaction('add')" >
+        <x-button   icon="fto-plus" plain  [disabled]="!auth['add']|| disabled" (click)=" !disabled&&auth['add'] && copayaction('add')" >
            复制新增   
         </x-button> 
     </x-col>
@@ -37,8 +37,8 @@
 <ng-template #contactTpl let-column="$column" let-row="$row">
     <div class="au-table-actions"> 
         <x-link [disabled]="!auth['info']" icon="fto-eye" (click)="auth['info'] && action('info', row)" title="查看"></x-link>
-        <x-link [disabled]="!auth['edit']||disabled(row)" icon="fto-edit" (click)="!disabled(row)&&auth['edit'] && action('edit', row)" title="修改"></x-link>
-        <x-link [disabled]="!auth['delete']||disabled(row)" icon="fto-trash-2" (click)="!disabled(row)&&auth['delete'] && action('delete', row)" title="删除"></x-link> 
+        <x-link [disabled]="!auth['edit']||disabled" icon="fto-edit" (click)="!disabled&&auth['edit'] && action('edit', row)" title="修改"></x-link>
+        <x-link [disabled]="!auth['delete']||disabled" icon="fto-trash-2" (click)="!disabled&&auth['delete'] && action('delete', row)" title="删除"></x-link> 
        
     </div>
   </ng-template>

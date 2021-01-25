@@ -21,12 +21,13 @@ import { XInputNumberModule } from '@ng-nest/ui/input-number';
 import { XDialogModule, XSelectModule, XTagModule, XTreeModule } from '@ng-nest/ui';
 import { QualificationModule } from 'src/main/qualification/qualification.module'; 
 import { CommonModule } from '@angular/common';
-import { ContactauditassigneeComponent } from './contact/contactauditassignee/contactauditassignee.component'; 
+import { ContactauditassigneeComponent } from './contact/contactauditassignee/contactauditassignee.component';
+import { AddexterntestprojectComponent } from './sample/addsample/addexterntestproject/addexterntestproject.component'; 
 @NgModule({
   declarations: [EvirmentheathComponent, AddcustomersComponent
     , CustomerComponent, ContactComponent
     , BusinessprojectComponent, AddbusinessprojectComponent,
-    SampleComponent,AddsampleComponent, ContactauditassigneeComponent],
+    SampleComponent,AddsampleComponent, ContactauditassigneeComponent, AddexterntestprojectComponent],
   imports: [ 
     CommonModule,
     EvirmentheathRoutingModule,

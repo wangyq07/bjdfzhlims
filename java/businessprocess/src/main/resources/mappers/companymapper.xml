@@ -10,5 +10,12 @@
  </select> 
  <select id="getallqualificationcompanys" parameterType="integer" resultMap="QualificationCompanyMap">
     select id,companyname label from t_qualification_company 
- </select>  
+ </select> 
+ <select id="getqualificationcompanybyname" parameterType="string" resultMap="QualificationCompanyMap">
+    select id,companyname label from t_qualification_company where isexternal=1 and companyname=(replace(#{name},' ',''))
+ </select> 
+  <insert id="addcompany" parameterType="com.bjdfzh.businessprocess.entity.QualificationCompany"  useGeneratedKeys="true" keyProperty="id">
+   insert into t_qualification_company(companyname,isexternal)
+   values(replace(#{label},' ',''),1)
+ </insert>  
 </mapper>

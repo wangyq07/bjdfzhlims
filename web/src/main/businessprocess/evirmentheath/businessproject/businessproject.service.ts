@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { XId } from '@ng-nest/ui';
+import { ContactTestProject } from 'src/services/ContactService';
 import { HttpService } from 'src/services/http.service';
 import { RepositoryService } from 'src/services/repository.service';
 import { Sample } from 'src/services/sample.service';
@@ -15,6 +16,10 @@ export class ContactProjectService extends RepositoryService<BusinessProjects> {
   addcontactprojectinfos(pjs:BusinessProject[])
   {
     return this.http.post(`${this.option.controller?.name}/addcontactprojectinfos`,{projects:pjs},this.option.controller?.servicetype);
+  }
+  updatelimitvalue(tpjs:ContactTestProject[])
+  {
+    return this.http.post(`${this.option.controller?.name}/updatelimitvalue`,{testprojects:tpjs},this.option.controller?.servicetype);
   }
 }
 @Injectable({ providedIn: 'root' })

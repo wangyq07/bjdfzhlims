@@ -58,6 +58,8 @@ export class SampleComponent extends PageBase implements OnInit,DoCheck {
       
    var coloneobj=  ProjectUtil.deepClone(item);
    coloneobj.id=ProjectUtil.JsNewGuid();
+   coloneobj.samplenumber='';
+   coloneobj.sampledate=undefined;
    this.sampledata.push(coloneobj);
    
    this.sampledata=[...this.sampledata];

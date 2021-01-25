@@ -52,6 +52,18 @@ export class QualificationService extends RepositoryService<Qualification> {
   {
     return this.http.post(`${this.option.controller?.name}/deletequalification`,{qualificationid:id},this.option.controller?.servicetype);
   }
+  addexterqualification(companyname:String,testpproject:String,sealid:String)
+  {
+    return this.http.post(`${this.option.controller?.name}/addexterqualification`
+    ,{companyname:companyname,testpproject:testpproject,sealid:sealid}
+    ,this.option.controller?.servicetype);
+  }
+  getqualificaitonbycompanyidprojectid(companyid:String,testprojectid:String)
+  {
+    return this.http.post(`${this.option.controller?.name}/getqualificaitonbycompanyidprojectid`
+    ,{companyid:companyid,testprojectid:testprojectid}
+    ,this.option.controller?.servicetype);
+  }
 }
 @Injectable({ providedIn: 'root' })
 export class QualificationServicebyid extends RepositoryService<Qualification> {
@@ -88,6 +100,8 @@ testprojectid?:string | number;
   beforeuserid?:string;
   beforeroleid?:string; 
   beforemethodname?:string;
+  companyid?:string;
+  companyname?:string;
 }
 @Injectable({ providedIn: 'root' })
 export class QualificationCompanyService extends RepositoryService<QualificationCompany> {

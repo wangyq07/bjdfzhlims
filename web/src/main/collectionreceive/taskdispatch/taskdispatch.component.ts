@@ -68,24 +68,33 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
     .subscribe(
       (x)=>
       {
-        this.flowservice.excutetask(
-          this.taskid,
-          { 
-            userid:this.indexService.auth.user.id+''
-            ,username:this.indexService.auth.user.name 
-            ,contactid:this.currentcontact.id 
-          }
-        ).subscribe(
-          (z)=>
+        var param:any={};
+       param.taskid=this.taskid;
+       param.roles=[];
+        this.data.map((y)=>
+        {
+          param.roles.push(y.roleid);
+        }
+        );
+        this.flowservice.getassignees(param).subscribe
+        (
+          (y)=>
           {
-            
-            this.msg.success("提交成功！");
-            this.disabled=true;
-            
+             y.userid=this.indexService.auth.user.id;
+             y.username=this.indexService.auth.user.name;
+             y.contactid=this.currentcontact.id;
+             this.flowservice.excutetask(this.taskid,
+                    y).subscribe(
+                      (z)=>
+                      { 
+                        this.msg.success("提交成功！");
+                        this.disabled=true; 
+                      }
+                    );
           }
         ); 
       }
-    )
+    );
     
   }
   
@@ -93,57 +102,7 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
    taskid="";
   ngOnInit(): void {
   }
-  treeLoading = true;
-  treeData =[];
-  currentRoletest:RoleTestProject={};
-  action( item: RoleTestProject) {
-    console.log(item); 
-    this.currentRoletest=item;
-    this.projecttreeCom.setCheckedKeys(); 
-    var keys:string[]=[];
-     item.taskdispatchs?.map(
-      (x:any)=>
-        {
-          keys.push(x.testid);
-        }
-    ); 
-    this.projecttreeCom.setCheckedKeys(keys);  
-    this.projecttreeCom.nodes.map(
-      (x)=>
-      {
-        this.recursionNodeDisable(x,item);
-      }
-    );
-     
-  }
-  currentkeys:string[]=[];
-  recursionNodeDisable(node:TaskDispatch,item: RoleTestProject)
-  {
-    if(item==undefined)
-    return;
-    if(node.level==2)
-    {
-     var findex= this.currentkeys.findIndex((x)=>x==node.id);
-     var ffindex=item.taskdispatchs?.findIndex((x)=>x.testid==node.id); 
-     this.projecttreeCom.updateNode(node,{id:node.id,pid:node.pid,label:node.label,disabled:false});
-     if(findex !=undefined&&findex !=-1&&ffindex==-1)
-     {
-      console.log(ffindex);console.log(findex);
-        
-        this.projecttreeCom.updateNode(node,{id:node.id,pid:node.pid,label:node.label,disabled:true});
-     }
-    }
-    else if(node.level !=2)
-    {
-       node.children?.map(
-         (x)=>
-         {
-          this.recursionNodeDisable(x,item);
-         }
-       );
-    }
-  }
-  taskTreeData:TaskDispatch[]=[];
+   
   currentcontact:any;
   projects:any[]=[];
   delegatecustomer:string="";
@@ -161,91 +120,13 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
   //点击不同点显示不同内容
   currentSample:Sample={};
   currentProject:BusinessProject={};
-  currentTestProject:ContactTestProject={};
-  checkaction(row:TaskDispatch)
-  {
-     
-    if(row.level==2&&row.checked)
-    {
-      if(!row.disabled)
-      {
-        this.currentkeys.push(row.id);
-        this.currentRoletest.taskdispatchs?.push({
-          roleid:this.currentRoletest.id,
-          id:ProjectUtil.JsNewGuid(),
-          testid:row.id
-         });
-      }
-     
-                                                 
-    }
-    else if(row.level==2&&!row.checked)
-    {
-      var findex=this.currentRoletest.taskdispatchs?.findIndex((x)=>x.testid==row.id);
-      if(findex !=undefined&&findex!=-1)
-      {
-        this.currentRoletest.taskdispatchs?.splice(findex,1);
-      }
-      findex=this.currentkeys.findIndex((x)=>x==row.id);
-      if(findex !=undefined&&findex!=-1)
-      {
-        this.currentkeys.splice(findex,1);
-      }
-    }
-    else if(row.level !=2)
-    {
-      row.children?.map(
-        (x)=>
-        {
-          this.checkaction(x);
-        }
-      );
-    }
-  }
-  projectaction(row:TaskDispatch)
-    {
-      this.testprojecthidden='none';
-      this.projecthidden='none';
-      this.samplehidden='none'; 
-      switch(row.level)
-      {
-        case 0:
-          this.projecthidden='inline';
-          this.samplehidden='none';
-          this.testprojecthidden='none';
-          this.currentProject=this.projects.find((x)=>x.id==row.id);
-          break;
-        case 1:
-            this.projecthidden='none';
-            this.samplehidden='inline';
-            this.testprojecthidden='none';
-            this.currentSample=this.samples.find((x)=>x.id==row.id);
-            if(this.currentSample==undefined)
-            this.currentSample={};
-            console.log(this.currentSample);
-          break;
-        case 2:
-            this.projecthidden='none';
-            this.samplehidden='none';
-            this.testprojecthidden='inline';
-            this.currentTestProject=this.testproect.find((x)=>x.id==row.id);
-            if(this.currentTestProject==undefined)
-            this.currentTestProject={};
-          break;
-        default:
-            this.projecthidden='none';
-            this.samplehidden='none';
-            this.testprojecthidden='none';
-          break;
-      }
-    }
+  currentTestProject:ContactTestProject={}; 
    getprojectdata(id:string)
    {
     this.contactservice.getcontactproject(id).subscribe(
       (x)=>
       {  
-        this.currentcontact=x.contact;
-        console.log(x);
+        this.currentcontact=x.contact; 
        this.projects=x.projects as any[];
        if(this.currentcontact !=null)
          { 
@@ -285,10 +166,9 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
                 {
                   this.roles=y;
                 }
-              );
-              console.log(this.projects);
-               this.data=ProjectUtil.getMareData(this.projects,this.ispanding);
-               console.log(this.data);
+              ); 
+               this.data=ProjectUtil.getMareData(this.projects,this.ispanding,true);
+                
       }
     }
      
@@ -297,8 +177,7 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
    }
   getData()
   {
-    this.taskTreeData=[];
-    this.treeData=[];
+ 
    this.service.getroletaskdispatchs(this.contactid).subscribe(
      (p)=>
      {
@@ -356,46 +235,8 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
     this.editvisible=false;
   }
   roles:RoleTestProject[]=[];
-  data:any[]=[];
-  settreeData()
-  { 
-    this.projects.map(
-      (y)=>
-      {
-      this.projecttreeCom.addNode({
-           id:y.id,
-           pid:undefined,
-           label:y.projectnumber 
-        });
-        y.samples.map(
-          (z:any)=>
-          {
-            this.projecttreeCom.addNode({
-              id:z.id,
-              pid:y.id,
-              label:z.samplename 
-           });
-           this.samples.push(z);
-           var i=0;
-           z.testprojects.map(
-             (q:any)=>
-             { 
-               this.testproect.push(q);
-               this.projecttreeCom.addNode({
-                id:q.id,
-                pid:z.id,
-                checked:false,
-                label:q.testproject 
-             }); 
-             }
-           );
-          }
-          );
-      }
-    );
-  }
-  @ViewChild("projecttreeCom")projecttreeCom:XTreeComponent;
-  @ViewChild("treeCom")treeCom:XTreeComponent;
+  data:any[]=[]; 
+ 
    contactid="";
    rowchange(item:any)
   {
@@ -409,9 +250,4 @@ export class TaskdispatchComponent extends PageBase implements OnInit {
   }
 }
 
-export interface TaskDispatch extends XTreeNode
-{
- pid?:string;
- label?:string;
- level?:number;
-}
+ 

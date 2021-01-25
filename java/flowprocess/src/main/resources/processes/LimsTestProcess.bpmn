@@ -17,7 +17,7 @@
     <sequenceFlow id="flow_general" name="一般流程" sourceRef="exclusivegateway1" targetRef="task_samplemantain">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{qupricediscount>limitdiscount&&isextern==0&&urgency==1}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="taskaudit" name="特殊合同审批(多人会签)" activiti:assignee="#{assignee}">
+    <userTask id="task_audit" name="特殊合同审批(多人会签)" activiti:assignee="#{assignee}">
       <extensionElements>
         <activiti:executionListener event="end" class="com.bjdfzh.flow.entity.AuditNodeExecuteListener"></activiti:executionListener>
         <activiti:taskListener event="create" class="com.bjdfzh.flow.entity.TaskNodeEventListener"></activiti:taskListener>
@@ -27,11 +27,11 @@
         <completionCondition>${(isaudit==0)||(nrOfCompletedInstances/nrOfInstances==1)}</completionCondition>
       </multiInstanceLoopCharacteristics>
     </userTask>
-    <sequenceFlow id="flow90" name="特殊流程(外包、加急、打折)" sourceRef="exclusivegateway1" targetRef="taskaudit">
+    <sequenceFlow id="flow90" name="特殊流程(外包、加急、打折)" sourceRef="exclusivegateway1" targetRef="task_audit">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{qupricediscount<=limitdiscount||isextern!=0||urgency!=1}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway7" name="Exclusive Gateway"></exclusiveGateway>
-    <sequenceFlow id="flow91" sourceRef="taskaudit" targetRef="exclusivegateway7"></sequenceFlow>
+    <sequenceFlow id="flow91" sourceRef="task_audit" targetRef="exclusivegateway7"></sequenceFlow>
     <sequenceFlow id="flow92" sourceRef="exclusivegateway7" targetRef="task_samplemantain">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{pass==1}]]></conditionExpression>
     </sequenceFlow>
@@ -41,62 +41,71 @@
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway8" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow94" sourceRef="task_samplemantain" targetRef="exclusivegateway8"></sequenceFlow>
-    <userTask id="usertask1" name="收样登记"></userTask>
-    <sequenceFlow id="flow95" name="收样" sourceRef="exclusivegateway8" targetRef="usertask1">
+    <userTask id="task_registersample" name="收样登记"></userTask>
+    <sequenceFlow id="flow95" name="收样" sourceRef="exclusivegateway8" targetRef="task_registersample">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{iscollection==0}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask2" name="采样任务" activiti:assignee="#{assignee}"></userTask>
-    <sequenceFlow id="flow96" name="采样" sourceRef="exclusivegateway8" targetRef="usertask2">
+    <userTask id="task_collectiontask" name="采样任务" activiti:assignee="#{assignee}"></userTask>
+    <sequenceFlow id="flow96" name="采样" sourceRef="exclusivegateway8" targetRef="task_collectiontask">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{iscollection==1}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusivegateway9" name="Exclusive Gateway"></exclusiveGateway>
-    <sequenceFlow id="flow97" sourceRef="usertask2" targetRef="exclusivegateway9"></sequenceFlow>
+    <sequenceFlow id="flow97" sourceRef="task_collectiontask" targetRef="exclusivegateway9"></sequenceFlow>
     <sequenceFlow id="flow98" name="不符合采样条件" sourceRef="exclusivegateway9" targetRef="task_submitcontact">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{iscondition==0}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow99" name="符合采样条件" sourceRef="exclusivegateway9" targetRef="usertask1">
+    <sequenceFlow id="flow99" name="符合采样条件" sourceRef="exclusivegateway9" targetRef="task_registersample">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{iscondition==1}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask3" name="任务下达"></userTask>
-    <sequenceFlow id="flow100" sourceRef="usertask1" targetRef="usertask3"></sequenceFlow>
+    <userTask id="task_dispatch" name="任务下达"></userTask>
+    <sequenceFlow id="flow100" sourceRef="task_registersample" targetRef="task_dispatch"></sequenceFlow>
     <parallelGateway id="parallelgateway1" name="Parallel Gateway"></parallelGateway>
-    <sequenceFlow id="flow101" sourceRef="usertask3" targetRef="parallelgateway1"></sequenceFlow>
-    <userTask id="usertask4" name="样品管理" activiti:assignee="#{sampleassignee}"></userTask>
-    <sequenceFlow id="flow102" sourceRef="parallelgateway1" targetRef="usertask4"></sequenceFlow>
-    <userTask id="usertask5" name="限值设定" activiti:assignee="#{limitassignee}"></userTask>
-    <sequenceFlow id="flow103" sourceRef="parallelgateway1" targetRef="usertask5"></sequenceFlow>
-    <userTask id="usertask6" name="工作组工作" activiti:assignee="#{assignee}">
-      <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="#{assigneeList}" activiti:elementVariable="assignee"></multiInstanceLoopCharacteristics>
+    <sequenceFlow id="flow101" sourceRef="task_dispatch" targetRef="parallelgateway1"></sequenceFlow>
+    <userTask id="task_samplemanage" name="样品管理" activiti:assignee="#{sampleassignee}"></userTask>
+    <sequenceFlow id="flow102" sourceRef="parallelgateway1" targetRef="task_samplemanage"></sequenceFlow>
+    <userTask id="task_limitvaluesetting" name="限值设定" activiti:assignee="#{limitassignee}"></userTask>
+    <sequenceFlow id="flow103" sourceRef="parallelgateway1" targetRef="task_limitvaluesetting"></sequenceFlow>
+    <userTask id="task_workgroup" name="工作组工作" activiti:assignee="#{assignee}">
+      <extensionElements>
+        <activiti:executionListener event="end" class="com.bjdfzh.flow.entity.WorkGroupExecuteListener"></activiti:executionListener>
+      </extensionElements>
+      <multiInstanceLoopCharacteristics isSequential="false" activiti:collection="#{assigneeList}" activiti:elementVariable="assignee">
+        <completionCondition>${nrOfCompletedInstances/nrOfInstances==1}</completionCondition>
+      </multiInstanceLoopCharacteristics>
     </userTask>
-    <sequenceFlow id="flow104" sourceRef="parallelgateway1" targetRef="usertask6"></sequenceFlow>
-    <userTask id="usertask7" name="限值审核"></userTask>
-    <sequenceFlow id="flow105" sourceRef="usertask5" targetRef="usertask7"></sequenceFlow>
+    <sequenceFlow id="flow104" sourceRef="parallelgateway1" targetRef="task_workgroup"></sequenceFlow>
+    <userTask id="task_limitvalueaudit" name="限值审核">
+      <extensionElements>
+        <activiti:executionListener event="end" class="com.bjdfzh.flow.entity.LimitValueAudit"></activiti:executionListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow105" sourceRef="task_limitvaluesetting" targetRef="task_limitvalueaudit"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway10" name="Exclusive Gateway"></exclusiveGateway>
-    <sequenceFlow id="flow106" sourceRef="usertask7" targetRef="exclusivegateway10"></sequenceFlow>
-    <userTask id="usertask8" name="录入实验结果"></userTask>
-    <sequenceFlow id="flow108" name="审核不通过" sourceRef="exclusivegateway10" targetRef="usertask5">
+    <sequenceFlow id="flow106" sourceRef="task_limitvalueaudit" targetRef="exclusivegateway10"></sequenceFlow>
+    <userTask id="task_inputtestresult" name="录入实验结果"></userTask>
+    <sequenceFlow id="flow108" name="审核不通过" sourceRef="exclusivegateway10" targetRef="task_limitvaluesetting">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{isaudit==0}]]></conditionExpression>
     </sequenceFlow>
     <parallelGateway id="parallelgateway2" name="Parallel Gateway"></parallelGateway>
-    <sequenceFlow id="flow109" sourceRef="usertask4" targetRef="parallelgateway2"></sequenceFlow>
-    <sequenceFlow id="flow110" sourceRef="usertask6" targetRef="parallelgateway2"></sequenceFlow>
+    <sequenceFlow id="flow109" sourceRef="task_samplemanage" targetRef="parallelgateway2"></sequenceFlow>
+    <sequenceFlow id="flow110" sourceRef="task_workgroup" targetRef="parallelgateway2"></sequenceFlow>
     <sequenceFlow id="flow111" name="审核通过" sourceRef="exclusivegateway10" targetRef="parallelgateway2">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{isaudit==1}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="flow112" sourceRef="parallelgateway2" targetRef="usertask8"></sequenceFlow>
-    <userTask id="usertask9" name="报告审核"></userTask>
-    <sequenceFlow id="flow113" sourceRef="usertask8" targetRef="usertask9"></sequenceFlow>
+    <sequenceFlow id="flow112" sourceRef="parallelgateway2" targetRef="task_inputtestresult"></sequenceFlow>
+    <userTask id="task_reportaudit" name="报告审核"></userTask>
+    <sequenceFlow id="flow113" sourceRef="task_inputtestresult" targetRef="task_reportaudit"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway11" name="Exclusive Gateway"></exclusiveGateway>
-    <sequenceFlow id="flow114" sourceRef="usertask9" targetRef="exclusivegateway11"></sequenceFlow>
-    <sequenceFlow id="flow115" name="不通过" sourceRef="exclusivegateway11" targetRef="usertask8">
+    <sequenceFlow id="flow114" sourceRef="task_reportaudit" targetRef="exclusivegateway11"></sequenceFlow>
+    <sequenceFlow id="flow115" name="不通过" sourceRef="exclusivegateway11" targetRef="task_inputtestresult">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{isaudit==0}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="usertask10" name="报告签发"></userTask>
-    <sequenceFlow id="flow116" sourceRef="exclusivegateway11" targetRef="usertask10">
+    <userTask id="task_deleverreport" name="报告签发"></userTask>
+    <sequenceFlow id="flow116" sourceRef="exclusivegateway11" targetRef="task_deleverreport">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{isaudit==1}]]></conditionExpression>
     </sequenceFlow>
     <endEvent id="endevent6" name="End"></endEvent>
-    <sequenceFlow id="flow117" sourceRef="usertask10" targetRef="endevent6"></sequenceFlow>
+    <sequenceFlow id="flow117" sourceRef="task_deleverreport" targetRef="endevent6"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_LimsTestProcess">
     <bpmndi:BPMNPlane bpmnElement="LimsTestProcess" id="BPMNPlane_LimsTestProcess">
@@ -115,7 +124,7 @@
       <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="BPMNShape_exclusivegateway1">
         <omgdc:Bounds height="40.0" width="40.0" x="461.0" y="157.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="taskaudit" id="BPMNShape_taskaudit">
+      <bpmndi:BPMNShape bpmnElement="task_audit" id="BPMNShape_task_audit">
         <omgdc:Bounds height="55.0" width="153.0" x="405.0" y="351.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway7" id="BPMNShape_exclusivegateway7">
@@ -127,49 +136,49 @@
       <bpmndi:BPMNShape bpmnElement="exclusivegateway8" id="BPMNShape_exclusivegateway8">
         <omgdc:Bounds height="40.0" width="40.0" x="900.0" y="157.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">
+      <bpmndi:BPMNShape bpmnElement="task_registersample" id="BPMNShape_task_registersample">
         <omgdc:Bounds height="55.0" width="105.0" x="1040.0" y="150.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask2" id="BPMNShape_usertask2">
+      <bpmndi:BPMNShape bpmnElement="task_collectiontask" id="BPMNShape_task_collectiontask">
         <omgdc:Bounds height="55.0" width="105.0" x="868.0" y="460.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway9" id="BPMNShape_exclusivegateway9">
         <omgdc:Bounds height="40.0" width="40.0" x="1079.0" y="470.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask3" id="BPMNShape_usertask3">
+      <bpmndi:BPMNShape bpmnElement="task_dispatch" id="BPMNShape_task_dispatch">
         <omgdc:Bounds height="55.0" width="105.0" x="1220.0" y="150.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="parallelgateway1" id="BPMNShape_parallelgateway1">
         <omgdc:Bounds height="40.0" width="40.0" x="1420.0" y="162.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask4" id="BPMNShape_usertask4">
+      <bpmndi:BPMNShape bpmnElement="task_samplemanage" id="BPMNShape_task_samplemanage">
         <omgdc:Bounds height="55.0" width="105.0" x="1510.0" y="50.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask5" id="BPMNShape_usertask5">
+      <bpmndi:BPMNShape bpmnElement="task_limitvaluesetting" id="BPMNShape_task_limitvaluesetting">
         <omgdc:Bounds height="55.0" width="105.0" x="1520.0" y="155.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask6" id="BPMNShape_usertask6">
+      <bpmndi:BPMNShape bpmnElement="task_workgroup" id="BPMNShape_task_workgroup">
         <omgdc:Bounds height="55.0" width="105.0" x="1530.0" y="274.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask7" id="BPMNShape_usertask7">
+      <bpmndi:BPMNShape bpmnElement="task_limitvalueaudit" id="BPMNShape_task_limitvalueaudit">
         <omgdc:Bounds height="55.0" width="105.0" x="1680.0" y="154.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway10" id="BPMNShape_exclusivegateway10">
         <omgdc:Bounds height="40.0" width="40.0" x="1860.0" y="162.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask8" id="BPMNShape_usertask8">
+      <bpmndi:BPMNShape bpmnElement="task_inputtestresult" id="BPMNShape_task_inputtestresult">
         <omgdc:Bounds height="55.0" width="105.0" x="2080.0" y="154.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="parallelgateway2" id="BPMNShape_parallelgateway2">
         <omgdc:Bounds height="40.0" width="40.0" x="1970.0" y="162.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask9" id="BPMNShape_usertask9">
+      <bpmndi:BPMNShape bpmnElement="task_reportaudit" id="BPMNShape_task_reportaudit">
         <omgdc:Bounds height="55.0" width="105.0" x="2280.0" y="155.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway11" id="BPMNShape_exclusivegateway11">
         <omgdc:Bounds height="40.0" width="40.0" x="2470.0" y="162.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="usertask10" id="BPMNShape_usertask10">
+      <bpmndi:BPMNShape bpmnElement="task_deleverreport" id="BPMNShape_task_deleverreport">
         <omgdc:Bounds height="55.0" width="105.0" x="2600.0" y="155.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent6" id="BPMNShape_endevent6">

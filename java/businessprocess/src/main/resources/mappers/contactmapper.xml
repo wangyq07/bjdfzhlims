@@ -72,7 +72,8 @@
 	 ,tinfo.externfee
 	 ,tinfo.isextern
 	 ,ifnull(tinfo.businessfee,0)+ifnull(tinfo.collectionfee,0)
-	  +ifnull(tp.reportfee,0)+ifnull(tp.testfee,0)+ifnull(tinfo.externfee,0) totalfee
+	  +ifnull(tp.reportfee,0)+(tp.testfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		                when 3 then 1.5 end)+ifnull(tinfo.externfee,0) totalfee
 		,tp.testfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
 		                when 3 then 1.5 end testfee
 		,(tp.testfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
@@ -169,7 +170,8 @@
 	 ,tinfo.externfee
 	 ,tinfo.isextern
 	 ,ifnull(tinfo.businessfee,0)+ifnull(tinfo.collectionfee,0)
-	  +ifnull(tp.reportfee,0)+ifnull(tp.testfee,0)+ifnull(tinfo.externfee,0) totalfee
+	  +ifnull(tp.reportfee,0)+(tp.testfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
+		                when 3 then 1.5 end)+ifnull(tinfo.externfee,0) totalfee
 		,tp.testfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
 		                when 3 then 1.5 end testfee
 		,(tp.testfee*case tinfo.serviceid when 1 then 1 when 2 then 2 
